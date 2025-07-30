@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../estilos/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <title>LOGIN</title>
+
+</head>
+<body>
+    <div class="login-container">
+        <h1>Control de Empleados - Inicio de Sesión</h1>
+        <div class="logo-container-interno"> 
+
+            <img src="../src/logos/logo_login.jpeg" alt="Logo" class="logo-login">
+            <form action="/login" method="post">
+                
+                <input type="text" id="username" name="username" placeholder="Usuario" required>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" placeholder="Contraseña" required>
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">
+                        <!-- Ícono visible por defecto (ojo abierto) -->
+                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-eye h-4 w-4 text-primary">
+                            <path
+                                d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0">
+                            </path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                </div>
+                <br>
+                <button type="submit">Login</button>
+
+            </form>
+        </div>
+        
+    </div>
+    
+    <script src="../js/login.js"></script>
+</body>
+</html>
+
+
+
+
+

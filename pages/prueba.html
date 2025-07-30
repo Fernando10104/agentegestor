@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Créditos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #333; /* Dark background for the top bar */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .controls label {
+            font-weight: bold;
+        }
+        .controls select,
+        .controls input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .controls button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .controls button:hover {
+            background-color: #0056b3;
+        }
+        .controls .limit-records {
+            margin-left: auto; /* Pushes it to the right */
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #343a40; /* Darker header background */
+            color: white;
+            font-weight: normal; /* To match the image's thin font */
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tbody tr:hover {
+            background-color: #ddd;
+        }
+        .footer-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end; /* Align to the right */
+            gap: 10px;
+        }
+        .footer-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .footer-buttons .export-excel {
+            background-color: #28a745; /* Green for export */
+            color: white;
+        }
+        .footer-buttons .export-excel:hover {
+            background-color: #218838;
+        }
+        .footer-buttons .view-disbursed {
+            background-color: #6c757d; /* Grey for view disbursed */
+            color: white;
+        }
+        .footer-buttons .view-disbursed:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Historial de Créditos</h1>
+        </div>
+
+        <div class="controls">
+            <label for="filter_by">Filtrar por:</label>
+            <select id="filter_by" name="filter_by">
+                <option value="num_operacion">num_operacion</option>
+                </select>
+            <button>FILTRAR</button>
+            <div class="limit-records">
+                <input type="checkbox" id="limit_records" name="limit_records">
+                <label for="limit_records">Limitar 50 registros</label>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>num_operacion</th>
+                    <th>nombre</th>
+                    <th>documento_cliente</th>
+                    <th>documento_credito</th>
+                    <th>contacto</th>
+                    <th>marca</th>
+                    <th>tipo</th>
+                    <th>faja</th>
+                    <th>categoria</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Nestor Azcurra</td>
+                    <td>5.574.417</td>
+                    <td>5.574.417</td>
+                    <td>971582993</td>
+                    <td>Tu Financiera 1 - 5</td>
+                    <td>Crédito</td>
+                    <td>I</td>
+                    <td>ASALARIADO CON IPS</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>RAMON MAZACOTE</td>
+                    <td>6.021.893</td>
+                    <td>6.021.893</td>
+                    <td>982883377</td>
+                    <td>Solar 1 - 5</td>
+                    <td>Crédito</td>
+                    <td>L</td>
+                    <td>ASALARIADO CON IPS</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>ROMINA MARTINEZ</td>
+                    <td>5.031.065</td>
+                    <td>5.031.065</td>
+                    <td>976489146</td>
+                    <td>Solar 1 - 5</td>
+                    <td>Crédito</td>
+                    <td>L</td>
+                    <td>ASALARIADO CON IPS</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>BLAS GUERRERO</td>
+                    <td>4.607.950</td>
+                    <td>4.607.950</td>
+                    <td>985389908</td>
+                    <td>Solución 1-5</td>
+                    <td>Crédito</td>
+                    <td>L</td>
+                    <td>ASALARIADO CON IPS</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>JOSE GODOY</td>
+                    <td>3.737.373</td>
+                    <td>3.737.373</td>
+                    <td>972882872</td>
+                    <td>Ágil Central 1 - 5</td>
+                    <td>Crédito</td>
+                    <td>L</td>
+                    <td>ASALARIADO CON IPS</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>ARIEL ESPINOLA</td>
+                    <td>3.778.367</td>
+                    <td>3.778.367</td>
+                    <td>982389272</td>
+                    <td>Tu Financiera 1 - 5</td>
+                    <td>-</td>
+                    <td>L</td>
+                    <td>ASALARIADO CON IPS</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>ARIEL CANTERO</td>
+                    <td>3.784.927</td>
+                    <td>3.784.927</td>
+                    <td>984938088</td>
+                    <td>Solución 1-5</td>
+                    <td>Crédito</td>
+                    <td>L</td>
+                    <td>ASALARIADO CON IPS</td>
+                </tr>
+                </tbody>
+        </table>
+
+        <div class="footer-buttons">
+            <button class="export-excel">Exportar a excel</button>
+            <button class="view-disbursed">Ver más créditos desembolsados</button>
+        </div>
+    </div>
+</body>
+</html>
