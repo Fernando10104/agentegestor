@@ -4,7 +4,7 @@
                 
                 <div class="user-img">
                     
-                    <img src="../src/users/user2.avif" alt="">
+                    <img src="./src/users/user2.avif" alt="">
                     <p>FERNANDO ENCISO</p>
                 </div>
                 <div class="user-details">
