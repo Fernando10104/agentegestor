@@ -1,11 +1,11 @@
-    function mostrarInicio() {
-      document.getElementById('contenido').innerHTML = `
+function mostrarInicio() {
+  document.getElementById('contenido').innerHTML = `
             <div class="user-info">
                 
                 <div class="user-img">
                     
-                    <img src="./src/users/user2.avif" alt="">
-                    <p>FERNANDO ENCISO</p>
+                    <img src="./src/users/user12.webp" alt="">
+                    <p>super seis</p>
                 </div>
                 <div class="user-details">
                     <h3 class="detail-item">MI GRUPO : ₲ 47.000.000</h3>
@@ -20,10 +20,10 @@
                 </div>
             </div>
       `;
-    }
+}
 
-    function mostrarHistorial() {
-      document.getElementById('contenido').innerHTML = `
+function mostrarHistorial() {
+  document.getElementById('contenido').innerHTML = `
         <div class="header">
           <h1>Historial de Créditos</h1>
             </div>
@@ -118,85 +118,53 @@
           <button class="view-disbursed">Ver más créditos desembolsados</button>
             </div>
             `;
-    }
+}
 
-    function mostrarCreditos() {
-      document.getElementById('contenido').innerHTML = `
-            <div class="header">
-              <h1>Registros credito</h1>
-            </div>
-
-            <div class="controls">
-              <label for="filter_by">Filtrar Clientes:</label>
-              <select id="filter_by" name="filter_by">
-              
-              <option value="nombre">Nombre</option>
-              <option value="documento">Documento</option>
-              <option value="contacto">Contacto</option>
-              <option value="direccion">Dirección</option>
-              <option value="correo">Correo</option>
-              <option value="estados_creditos">Estados Créditos</option>
-              <option value="asesor">Asesor</option>
-              </select>
-              <button onclick="mostrarCargarCliente()">CARGAR CLIENTES</button>
-              <button onclick="mostrarCargarCredito()">CARGAR CREDITO</button>
-              <div class="limit-records">
-              <input type="checkbox" id="limit_records" name="limit_records">
-              <label for="limit_records">Limitar 50 registros</label>
-              </div>
-            </div>
-
-            <div class="table-responsive">  <table>
-              <thead>
-                <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Documento</th>
-                <th>Contacto</th>
-                <th>Direccion</th>
-                <th>Correo</th>
-                <th>Faja Inforcomf</th>
-                <th>Estado Credito</th>
-                <th>Asesor</th>
-                <th>Fecha Registro</th>
-
-                </tr>
-              </thead>
-              <tbody>
-            
-                <tr>
-                <td>3</td>
-                <td>ROMINA gonzalez</td>
-                <td>5.031.065</td>
-                <td>0981123456</td>
-                <td>nemby</td>
-                <td>none</td>
-                <td>k</td>
-                <td>anulado</td>
-                <td>nestor</td>
-                <td>2025-07-30</td>
-
-
-                </tr>
-                <tr>
-                <td>3</td>
-                <td>ROMINA MARTINEZ</td>
-                <td>5.031.065</td>
-                <td>0981123456</td>
-                <td>nemby</td>
-                <td>none</td>
-                <td>k</td>
-                <td>anulado</td>
-                <td>nestor</td>
-                <td>2025-07-30</td>
-
-                </tr>
-
-                
-              </tbody>
-              </table>
-            </div> 
-            <div class="cargar-credito" id="cargar-credito" style="display: none;">
+function mostrarCreditos() {
+  document.getElementById('contenido').innerHTML = `
+    <div class="header">
+      <h1>Registros credito</h1>
+    </div>
+    <div class="controls">
+      <label for="filter_by">Filtrar Clientes:</label>
+      <select id="filter_by" name="filter_by">
+        <option value="nombre">Nombre</option>
+        <option value="documento">Documento</option>
+        <option value="contacto">Contacto</option>
+        <option value="direccion">Dirección</option>
+        <option value="correo">Correo</option>
+        <option value="estados_creditos">Estados Créditos</option>
+        <option value="asesor">Asesor</option>
+      </select>
+      <button onclick="mostrarCargarCliente()">CARGAR CLIENTES</button>
+      <button onclick="mostrarCargarCredito()">CARGAR CREDITO</button>
+      <div class="limit-records">
+        <input type="checkbox" id="limit_records" name="limit_records">
+        <label for="limit_records">Limitar 50 registros</label>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Contacto</th>
+            <th>Direccion</th>
+            <th>Correo</th>
+            <th>Faja Inforcomf</th>
+            <th>Estado Credito</th>
+            <th>Asesor</th>
+            <th>Fecha Registro</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-clientes">
+          <tr><td colspan="10" style="text-align:center;">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+              <div class="cargar-credito" id="cargar-credito" style="display: none;">
               <form class="cargar-credito-form">
               <label for="cedula">Cédula:</label><br>
               <input type="text" id="cedula" name="cedula"><br>
@@ -265,13 +233,39 @@
               </form>
 
             </div>
-            
-            
-            `;
-    }
+  `;
 
-    function mostrar() {
-      document.getElementById('contenido').innerHTML = `
+  // Fetch y renderizado de clientes
+  fetch('https:///word.puntodigitalpy.online/clientes')
+    .then(res => res.json())
+    .then(clientes => {
+      const tbody = document.getElementById('tbody-clientes');
+      if (!clientes.length) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;">Sin datos</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = clientes.map(cliente => `
+        <tr>
+          <td>${cliente.id_cliente ?? ''}</td>
+          <td>${cliente.nombre ?? ''}</td>
+          <td>${cliente.documento ?? ''}</td>
+          <td>${cliente.contacto ?? ''}</td>
+          <td>${cliente.direccion ?? ''}</td>
+          <td>${cliente.correo ?? ''}</td>
+          <td>${cliente.faja_inforcomf ?? ''}</td>
+          <td>${cliente.estado_cred ?? ''}</td>
+          <td>${cliente.e_registro ?? ''}</td>
+          <td>${(cliente.fecha_registro ?? '').split('T')[0]}</td>
+        </tr>
+      `).join('');
+    })
+    .catch(err => {
+      const tbody = document.getElementById('tbody-clientes');
+      tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:red;">Error al cargar datos</td></tr>`;
+    });
+}
+function mostrar() {
+  document.getElementById('contenido').innerHTML = `
         <h1>Configuración</h1>
         <label>Tema: 
           <select>
@@ -280,9 +274,9 @@
           </select>
         </label>
       `;
-    }
-    function mostrarComisiones() {
-      document.getElementById('contenido').innerHTML = `
+}
+function mostrarComisiones() {
+  document.getElementById('contenido').innerHTML = `
             <div id="comisiones-template" >
               <div class="header">
                 <h1>Comisiones</h1>
@@ -345,32 +339,32 @@
               </div>
             </div>
           `;
-    }
+}
 
-    function mostrarCargarCredito() {
-      const contenedor = document.getElementById('cargar-credito');
-      if (contenedor) {
-        contenedor.style.display = 'block';
-      }
-    }
-    function ocultarCargarCredito() {
-      const contenedor = document.getElementById('cargar-credito');
-      if (contenedor) {
-        contenedor.style.display = 'none';
-      }
-    }
+function mostrarCargarCredito() {
+  const contenedor = document.getElementById('cargar-credito');
+  if (contenedor) {
+    contenedor.style.display = 'block';
+  }
+}
+function ocultarCargarCredito() {
+  const contenedor = document.getElementById('cargar-credito');
+  if (contenedor) {
+    contenedor.style.display = 'none';
+  }
+}
 
-    function mostrarCargarCliente() {
-      const contenedor = document.getElementById('cargar-cliente');
-      if (contenedor) {
-        contenedor.style.display = 'block';
-      }
-    }
-    function ocultarCargarCliente() {
-      const contenedor = document.getElementById('cargar-cliente');
-      if (contenedor) {
-        contenedor.style.display = 'none';
-      }
-    }
+function mostrarCargarCliente() {
+  const contenedor = document.getElementById('cargar-cliente');
+  if (contenedor) {
+    contenedor.style.display = 'block';
+  }
+}
+function ocultarCargarCliente() {
+  const contenedor = document.getElementById('cargar-cliente');
+  if (contenedor) {
+    contenedor.style.display = 'none';
+  }
+}
 
-    mostrarInicio()
+mostrarInicio()

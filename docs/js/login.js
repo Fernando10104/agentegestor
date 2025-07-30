@@ -36,3 +36,41 @@
             eyeIcon.parentNode.innerHTML = eyeOpenSVG;
         }
     }
+document.getElementById("login-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    // Formato que espera FastAPI con OAuth2PasswordRequestForm
+    const formData = new URLSearchParams();
+    formData.append("username", username);
+    formData.append("password", password);
+
+    try {
+        const response = await fetch("https:///word.puntodigitalpy.online/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData.toString()
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const token = data.access_token;
+
+            // Guardar JWT y opcionalmente el rol
+            localStorage.setItem("token", token);
+            localStorage.setItem("rol", data.rol); // si lo necesitás más adelante
+
+            window.location.href = "/sistema_web/docs/index.html";
+        } else {
+            const errorData = await response.json();
+            alert("Error de inicio de sesión: " + (errorData.detail || "Credenciales inválidas"));
+        }
+    } catch (error) {
+        console.error("Error al intentar iniciar sesión:", error);
+        alert("No se pudo conectar al servidor.");
+    }
+});
