@@ -65,7 +65,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
             localStorage.setItem("token", token);
             localStorage.setItem("rol", data.rol); // si lo necesitás más adelante
 
-            window.location.href = "/index.html";
+            window.location.href = "/agentegestor/index.html";
         } else {
             const errorData = await response.json();
             alert("Error de inicio de sesión: " + (errorData.detail || "Credenciales inválidas"));
