@@ -1,0 +1,625 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #384252;
+    color: #f5f6fa;
+    min-height: 100vh;
+    
+    display: flex;
+    font-family: sans-serif;
+}
+
+
+nav {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    background: #282C34;
+    color: white;
+    height: 100vh;
+    padding: 10px;
+    flex-shrink: 0; 
+    gap: 10px;
+    position:sticky;
+    top: 0;
+    justify-content: space-between;
+
+    
+    
+}
+nav button {
+    display: block;
+    margin: 10px 0;
+    background: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: 16px;
+}
+
+.container-principal {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    flex-grow: 1;
+}
+
+
+#contenido {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.sidebar{
+    display: flex;
+    background: #282C34;
+    color: white;
+    padding: 20px;  
+    justify-content: space-between;
+
+}
+.user-info {
+    display: flex;
+    flex-direction: row;
+    background-color: #282C34;
+    padding:  20px;
+    gap: 10px;
+    width: auto;
+}
+.user-img {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: first baseline;
+    gap: 10px;
+    
+}
+.user-img img {
+    width: 80%;
+    height: 80%;
+    border-radius: 1rem;
+    object-fit: cover;
+}
+.user-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.detail-item {
+    display: flex;
+    min-width: 260px; /* Ajusta según tu diseño */
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 500;
+    background: #23272f;
+    padding: 6px 16px;
+    border-radius: 6px;
+    color: #f5f6fa;
+    letter-spacing: 1px;
+}
+.user-details button{
+    background-color: #0e1fb6; /* Verde */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.usuario-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #384252; /* Azul */
+    color: white;
+    border-radius: 50%;
+    font-size: 20px;
+    margin-left: auto; /* Para alinear a la derecha */
+}
+.opciones_usuario {
+    display: none; /* Oculto por defecto */
+    flex-direction: column;
+    position: absolute;
+    background-color: #384252; /* Fondo oscuro */
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    top: 60px; /* Ajusta según sea necesario */
+    right: 20px; /* Ajusta según sea necesario */
+    width: 150px; /* Ancho fijo */
+    z-index: 150;
+    height: 150px; /* Altura fija */
+    
+}
+.opciones_usuario button {
+    background-color: #2D313B; /* Azul */
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    margin: 4px 0; /* Espacio entre botones */
+    text-align: center;
+    text-decoration: none;
+    display: block; /* Para que ocupe todo el ancho */
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+
+#contenido {
+    background-color: #384252;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    max-width: none;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: transparent; /* Dark background for the top bar */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px 8px 0 0;
+}
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    padding: 10px 0;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+.controls label {
+    font-weight: bold;
+}
+.controls select,
+.controls input[type="text"],
+.controls input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.controls button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.controls button:hover {
+    background-color: #0056b3;
+}
+.controls .limit-records {
+    margin-left: auto; /* Pushes it to the right */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.table-responsive {
+    overflow-x: auto; /* Horizontal scroll for the table */
+    -webkit-overflow-scrolling: touch;
+    margin-top: 0; /* Adjusted, as #contenido has padding */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    flex-grow: 1; /* Allow the table area to grow vertically */
+    min-height: 0; /* Crucial for flex items with overflow */
+    margin-bottom: 20px;
+}
+table {
+    width: 100%;
+    min-width: 1000px; /* Set a minimum width for the table to force scrolling if needed */
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap;
+    
+}
+th {
+    background-color: #343a40;
+    color: white;
+    font-weight: normal;
+    position: sticky; /* Make headers sticky horizontally */
+    top: 0; /* Stick to the top of .table-responsive */
+    z-index: 2; 
+}
+
+tbody tr:hover {
+    background-color: #141010;
+}
+.footer-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    gap: 10px;
+}
+.footer-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.footer-buttons .export-excel {
+    background-color: #28a745; /* Green for export */
+    color: white;
+}
+.footer-buttons .export-excel:hover {
+    background-color: #218838;
+}
+.footer-buttons .view-disbursed {
+    background-color: #0E1FB6; /* Grey for view disbursed */
+    color: white;
+}
+.footer-buttons .view-disbursed:hover {
+    background-color:#0b1aa1;
+}
+
+/* Estilos para el formulario de carga de crédito ------------------------------------------------------------------------------------------------- */
+
+.cargar-credito, .cargar-clientes {
+  background-color: #384252;
+  border: #141010 solid 1px;
+  width: 400px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 1rem;
+  padding: 1rem;
+  z-index: 50;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+/* Mejorar el scrollbar */
+.cargar-credito::-webkit-scrollbar,
+.cargar-clientes::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cargar-credito::-webkit-scrollbar-thumb,
+.cargar-clientes::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 3px;
+}
+
+.cargar-credito::-webkit-scrollbar-track,
+.cargar-clientes::-webkit-scrollbar-track {
+  background-color: #384252;
+}
+
+.cargar-credito-form, .cargar-clientes-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-size: 0.95rem; /* ← Cambiar de "smaller" a 0.95rem como el modal de historial */
+}
+.cargar-clientes-form h2, .cargar-credito-form h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Agregar estilos para labels (igual que el modal de historial) */
+.cargar-credito-form label,
+.cargar-clientes-form label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #e0e0e0;
+  font-size: 0.95rem; /* ← Mismo tamaño que el modal de historial */
+}
+
+.cargar-credito-form input,
+.cargar-credito-form select,
+.cargar-clientes-form input,
+.cargar-clientes-form select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  font-size: 0.95rem; /* ← Mantener el mismo tamaño que el modal de historial */
+  background-color: #2d3640;
+  color: #f1f1f1;
+  box-sizing: border-box;
+}
+
+.cargar-credito-form input:focus,
+.cargar-credito-form select:focus,
+.cargar-clientes-form input:focus,
+.cargar-clientes-form select:focus {
+  border-color: #00bcd4;
+  outline: none;
+}
+
+.cargar-credito-form button,
+.cargar-clientes-form button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 1rem; /* ← Mantener el mismo tamaño que el modal de historial */
+  transition: background-color 0.2s ease;
+}
+
+.cargar-credito-form button:hover,
+.cargar-clientes-form button:hover {
+  background-color: #0056b3;
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #23272f;
+  border-radius: 8px;
+}
+
+.pagination button {
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pagination button:hover {
+  background-color: #2563eb;
+}
+
+.pagination button:disabled {
+  background-color: #6b7280;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 16px;
+  color: #f5f6fa;
+  margin: 0 10px;
+}
+
+/* Fondo oscuro translúcido */
+.modal-editar-historial, .modal-editar-clientes, .modal-editar-comision {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* menos opaco */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  display: none;
+ 
+}
+
+
+/* Caja del formulario */
+.modal-editar-historial form, .modal-editar-clientes form, .modal-editar-comision form {
+  background-color: #384252;
+  color: #f1f1f1;
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 85vh;
+  overflow-y: auto; /* scroll interno si hay mucho contenido */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #384252;
+}
+
+/* Título */
+.modal-editar-historial h2, .modal-editar-clientes h2, .modal-editar-comision h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Agrupación de campos */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #e0e0e0;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  font-size: 0.95rem;
+  background-color: #2d3640;
+  color: #f1f1f1;
+  box-sizing: border-box;
+  border-radius: 7px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #00bcd4;
+  outline: none;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.form-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Botón guardar */
+.btn-guardar {
+  background-color: #007BFF;
+  color: #fff;
+}
+
+.btn-guardar:hover {
+  background-color: #007BFF;
+}
+
+/* Botón cancelar */
+.btn-cancelar {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-cancelar:hover {
+  background-color: #c82333;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar para navegadores modernos */
+.modal-editar-historial form::-webkit-scrollbar, .modal-editar-clientes form::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-editar-historial form::-webkit-scrollbar-thumb, .modal-editar-clientes form::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 3px;
+}
+
+
+.modal-eliminar-historial, .modal-eliminar-clientes, .modal-eliminar-comision {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #384252;
+  color: #f1f1f1;
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-eliminar-historial h1, .modal-eliminar-clientes h1, .modal-eliminar-comision h1 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.modal-eliminar-historial p, .modal-eliminar-clientes p, .modal-eliminar-comision p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #e0e0e0;
+}
+
+.modal-eliminar-historial .btn-eliminar-confirmacion, .modal-eliminar-clientes .btn-eliminar-confirmacion, .modal-eliminar-comision .btn-eliminar-confirmacion {
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-eliminar-historial .btn-eliminar-confirmacion:hover, .modal-eliminar-clientes .btn-eliminar-confirmacion:hover {
+  background-color: #c82333;
+}
+
+.modal-eliminar-historial .btn-cancelar, .modal-eliminar-clientes .btn-cancelar, .modal-eliminar-comision .btn-cancelar {
+  padding: 10px 20px;
+  background-color: #6c757d; /* Gray color */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-eliminar-historial .btn-cancelar:hover, .modal-eliminar-clientes .btn-cancelar:hover, .modal-eliminar-comision .btn-cancelar:hover {
+  background-color: #5a6268; /* Darker gray on hover */
+}

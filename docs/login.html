@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iniciar Sesión</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background-color: #282C34; /* Fondo gris azulado oscuro */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .simple-card {
+      background-color: #384252; /* Cuadro gris azulado más claro */
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      display: block;
+      width: 32px;
+      height: 32px;
+      margin-top: 0.79rem;
+    }
+
+    .icon-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .input-dark {
+      background-color: #2C3442;
+      color: #E2E8F0;
+    }
+
+    .input-dark::placeholder {
+      color: #94A3B8;
+    }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-sm simple-card">
+      <h1 class="text-2xl font-bold text-center mb-2 text-white">Iniciar Sesión</h1>
+      <form class="space-y-4 " id="login-form">
+        <!-- Campo Email -->
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-300">Nombre de usuario</label>
+          <input id="username" type="text" placeholder="Ingresa tu nombre de usuario" required
+            class="mt-1 block w-full border border-gray-500 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring focus:border-blue-500 input-dark" />
+        </div>
+
+        <!-- Campo Contraseña con ojo -->
+        <div class="relative">
+          <label for="password" class="block text-sm font-medium text-gray-300">Contraseña</label>
+          <input id="password" type="password" placeholder="Ingresa tu contraseña" required
+            class="mt-1 block w-full border border-gray-500 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring focus:border-blue-500 input-dark" />
+          <button type="button" class="icon-btn text-gray-400 hover:text-blue-400" onclick="togglePassword()">
+            <i id="eyeIcon" data-lucide="eye"></i>
+          </button>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700">
+          Iniciar sesión
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function togglePassword() {
+      const input = document.getElementById("password");
+      const icon = document.getElementById("eyeIcon");
+
+      const isVisible = input.type === "text";
+      input.type = isVisible ? "password" : "text";
+
+      icon.setAttribute("data-lucide", isVisible ? "eye" : "eye-off");
+      lucide.createIcons();
+    }
+  </script>
+  <script src="./js/login.js"></script>
+</body>
+</html>
+
+
+
+
+
+

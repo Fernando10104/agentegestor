@@ -1,0 +1,45 @@
+CREATE TABLE comisiones (
+    --------------------------------datos automaticos
+    id SERIAL PRIMARY KEY,
+    fecha DATE NOT NULL DEFAULT CURRENT_DATE,
+
+    nombre_cliente VARCHAR(100) NOT NULL,
+    cedula VARCHAR(20) NOT NULL,
+
+    monto NUMERIC(12, 2) NOT NULL,
+    porcentaje NUMERIC(5, 2) NOT NULL, ------PORCENTAJE DE LA ENTIDAD, SE OBTIENE YA DE LA BASE DE DATOS EN EL FORMULARIO DE INSERCION.
+    entidad VARCHAR(100),
+
+    --------------------------------------------SE GENERA CON UN CALCULO Y SE CARGA LUEGO.-------------------------------------------
+
+    comision_bruto NUMERIC(12, 2),  ----COMISION GENERAL
+    comision_asesor NUMERIC(12, 2), ----- COMISION  SE HACE (COMISION_BRUTO * PORCENTAJE_PAGADO) /100 = COMISION ASESOR
+
+    porcentaje_pagado NUMERIC(5, 2),
+    supervisor VARCHAR(100),
+    asesor VARCHAR(100),
+
+    ganancia NUMERIC(12, 2),-------------------------SE CALCULA COMISION_BRUTO - COMISION_ASESOR = GANANCIA.
+
+
+    --------------------------------DATOS NULOS mientras.
+    calificacion VARCHAR(20),
+    sucursal VARCHAR(100),
+    obs TEXT
+);
+
+
+---------------------------------------Datos a recuperar del cliente.---------------------------------------
+
+RECUPERAR NOMBRE CLIENTE DE LA TABLA CLIENTES EN BASE A SU NUMERO DE CEDULA ASI CARGAMOS ESTOS DATOS. 
+
+    nombre_cliente VARCHAR(100) NOT NULL,
+    cedula VARCHAR(20) NOT NULL,
+---------------------------------------Datos a recuperar del USUARIOS.---------------------------------------
+RECUPERAR DE USUARIOS EL NOMBRE DEL ASESOR/USUARIO   LUEGO TRAER EN BASE AL ID DEL Superior  TRAER EL NOMBRE DEL SUPERIOR 
+
+    porcentaje_pagado NUMERIC(5, 2),
+    supervisor VARCHAR(100),
+    asesor VARCHAR(100),
+
+
