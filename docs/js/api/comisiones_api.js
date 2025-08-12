@@ -61,18 +61,14 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
           <tr id="${item.id}" style="background-color: transparent;">
             <td>
               <button class="btn-eliminar" style="background-color: transparent; border: none; border-radius: 15px; padding: 5px 5px;" onmouseover="this.style.backgroundColor='darkgray'" onmouseout="this.style.backgroundColor='transparent'"  data-id="${item.id} " title="Eliminar">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-trash" viewBox="0 0 16 16">
-              <path d="M5.5 5.5V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5.5h-10zM6 0h4l1 1h4v2H1V1h4l1-1z"/>
-              </svg>
+              ${SVG_ELIMINAR}
               </button>
-              </td>
-              <td>
+              
               <button class="btn-editar" style="background-color: transparent; border: none; border-radius: 15px; padding: 5px 5px;" onmouseover="this.style.backgroundColor='darkgray'" onmouseout="this.style.backgroundColor='transparent'" data-id="${item.num_operacion}" title="Editar">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil" viewBox="0 0 16 16">
-              <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-              </svg>
+              ${SVG_EDITAR}
               </button>
               </td>
+            <td>${item.id ?? ''}</td>
             <td>${item.fecha ? item.fecha.split('T')[0].split('-').reverse().join('-') : ''}</td>
             <td>${item.nombre_cliente ?? ''}</td>
             <td>${item.cedula ?? ''}</td>
@@ -85,6 +81,7 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
             <td>${item.supervisor ?? ''}</td>
             <td>${item.asesor ?? ''}</td>
             <td>${item.ganancia ?? ''}</td>
+            <td>${item.estado ?? ''}</td>
             <td>${item.calificacion ?? ''}</td>
             <td>${item.sucursal ?? ''}</td>
             <td>${item.obs ?? ''}</td>
@@ -107,14 +104,20 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
 
 export function mostrarEliminarComisiones(id) {
   const modal = document.getElementById('modal-eliminar-comision');
+  modal.classList.add('modal-confirmacion')
+  
   if (modal) {
     modal.innerHTML = `
+    <div>
       <h1>¿Desea eliminar la comisión?</h1>
       <p>El id de la comisión a eliminar es: ${id}</p>
-      <button class="btn-eliminar-confirmacion" id="btn-eliminar-confirmacion" onclick="EliminarComision(${id})">Eliminar</button>
-      <button class="btn-cancelar" id="btn-cancelar-eliminar" onclick="cerrarEliminarComisiones()">Cancelar</button>
+      <div class="btns">
+        <button class="btn-confirmar" id="btn-eliminar-confirmacion" onclick="EliminarComision(${id})">Eliminar</button>
+        <button class="btn-cancelar" id="btn-cancelar-eliminar" onclick="cerrarEliminarComisiones()">Cancelar</button>
+      </div>
+    </div>
     `;
-    modal.style.display = 'block';
+    modal.style.display = 'flex';
   }
 }
 
@@ -123,11 +126,13 @@ export function mostrarEliminarComisiones(id) {
 export function mostrarEditarComisiones(id){
   console.log(`Mostrando edición de comisión con ID: ${id}`);
   const modal = document.getElementById('modal-editar-comision');
+  modal.classList.add('modal-crear');
   modal.style.display = 'flex';
   modal.innerHTML = `
-  
-    <form id="form-editar-comision">
-      <h2>Editar Comisión</h2>
+    <div>
+      <h2>Editar Comisión</h2>  
+    </div>
+    <form id="form-editar-comision" class="modal-form">
       <br>
       <div class="form-group">
         <label for="id">ID:</label>
@@ -185,9 +190,9 @@ export function mostrarEditarComisiones(id){
         <label for="observacion">Observación:</label>
         <textarea id="obs" name="observacion"></textarea>
       </div>
-      <div class="form-actions">
-        <button type="submit" class="btn-guardar">Guardar</button>
-        <button type="button" class="btn-cancelar" onclick="cerrarEditarComisiones()">Cancelar</button>
+      <div class="modal-footer">
+        <button type="submit" class="create-btn">Guardar</button>
+        <button type="button" class="cancel-btn" onclick="cerrarEditarComisiones()">Cancelar</button>
       </div>
     </form>
   

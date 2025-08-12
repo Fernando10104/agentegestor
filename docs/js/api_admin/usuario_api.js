@@ -1,4 +1,8 @@
 import { API_BASE_URL } from '../config.js';
+import { SVG_EDITAR, SVG_ELIMINAR, SVG_ASISTENCIAS } from '../../src/svg/svg.js';
+
+
+
 export function CargarUsuarios(valor = "", rol2 = null) {
     const url = new URL(`${API_BASE_URL}/usuarios`);
     const token = localStorage.getItem('token');
@@ -51,16 +55,25 @@ export function CargarUsuarios(valor = "", rol2 = null) {
         } else {
             tbody.innerHTML = usuarios.map(usuario => `
                 <tr id="${usuario[0] || ''}">
-                <td>${usuario[0] || ''}</td>
+                    <td>${usuario[0] || ''}</td>
                     <td>${usuario[1] || ''}</td>
                     <td>${usuario[7] || ''}</td>
                     <td>${usuario[4] || ''}</td>
                     <td>${usuario[5] || ''}</td>
-                    <td>${usuario[3] || ''}</td>
+                    <td>${usuario[9] || ''}</td>
+                    <td>${usuario[10] || ''}</td>
                     <td>${usuario[8] || ''}</td>
-                    <td>
-                        <button class="btn-editar" data-id="${usuario[0]}">Editar</button>
-                        <button class="btn-eliminar" data-id="${usuario[0]}">Eliminar</button>
+                    <td class="acciones">
+                        <button class="btn-editar" style="background-color: transparent;" data-id="${usuario[0]}">
+                            ${SVG_EDITAR}
+                        </button>
+                        <button class="btn-eliminar" data-id="${usuario[0]}">
+                            ${SVG_ELIMINAR}
+                        </button>
+                        <button class="btn-asistencias" data-id="${usuario[1]}">
+                        ${SVG_ASISTENCIAS}
+                        </button>
+                        </svg></button>
                     </td>
                 </tr>
             `).join('');
@@ -84,11 +97,11 @@ export function mostrarEditarUsuario(id) {
     
     const modal = document.getElementById('modal-editar-usuario');
     modal.style.display = 'block';
+    modal.classList.add('active');
     if (modal) {
             modal.innerHTML = `
                 <div class="modal-header">
                     <h2 id="titulo-editar">Editar Usuario</h2>
-                    <p id="descripcion-editar">Modifique la información del usuario</p>
                 </div>
                 <form class="modal-form" id="form-editar-usuario">
                     <div class="form-group">
@@ -136,7 +149,7 @@ export function mostrarEditarUsuario(id) {
 
                     <div class="modal-footer">
                         <button type="button" class="cancel-btn" onclick="cerrarModalEditarUsuario()">Cancelar</button>
-                        <button type="submit" class="edit-btn" onclick="guardarEditarUsuario(${id})">Guardar Cambios</button>
+                        <button type="submit" class="create-btn" onclick="guardarEditarUsuario(${id})">Guardar Cambios</button>
                     </div>
                 </form>
             `;
@@ -294,15 +307,16 @@ export function CrearUsuario(){
 export function EliminarUsuario(id) {
     const modal = document.createElement('div');
     modal.id = 'modal-eliminar-usuario';
-    modal.style.display = 'flex';
+    modal.classList.add('modal-confirmacion');
+    modal.classList.add('active');
 
     modal.innerHTML = `
-        <div>
+        <div >
             <h2>Eliminar Usuario</h2>
             <p>¿Está seguro que desea eliminar este usuario?</p>
-            <div>
-                <button id="confirmar-eliminar-usuario" style="margin-right:1rem;background:#d9534f;color:#fff;padding:0.5rem 1rem;border:none;border-radius:4px;">Eliminar</button>
-                <button id="cancelar-eliminar-usuario" style="padding:0.5rem 1rem;border:none;border-radius:4px;">Cancelar</button>
+            <div class="btns">
+                <button id="confirmar-eliminar-usuario" class="btn-confirmar">Eliminar</button>
+                <button id="cancelar-eliminar-usuario" class="btn-cancelar">Cancelar</button>
             </div>
         </div>
     `;
@@ -339,4 +353,117 @@ export function EliminarUsuario(id) {
 
         });
     };
+}
+
+export function MostrarModalAsistencia(usuario) {
+    const modal = document.getElementById('modal-asistencia');
+    modal.style.display = 'flex';
+
+    modal.innerHTML = `
+           <div >
+                
+                <div >
+                    <h2 id="titulo">ASISTENCIAS DE USUARIOS</h2>
+                    <br>
+                    <div class="controls">
+                            <div class="control-filtros">
+                                <label for="fecha-inicio">Fecha Inicio:</label>
+                                <input type="date" id="fecha-inicio" />
+                            </div>
+                            <div class="control-filtros">
+                                <label for="fecha-fin">Fecha Fin:</label>
+                                <input type="date" id="fecha-fin" />
+                            </div>
+                            <div class="control-filtros">
+
+                                <button type="button" id="filtrar-asistencias">Filtrar</button>
+
+                            </div>
+                    </div>
+
+                    
+                    <div id="tabla-asistencias" class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuario</th>
+                                    <th>Fecha_ingreso</th>
+                                    <th>fecha_salida</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <!-- Aquí se cargarán las asistencias dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                        <div>
+                            <button type="button" class="cancel-btn" onclick="const cerrar = () => { document.getElementById('modal-asistencia').style.display = 'none'; }; cerrar()">Cerrar</button>
+                        </div>
+                </div>
+
+           </div>
+           
+    `;
+    
+
+    const btnFiltrarAsistencias = document.getElementById('filtrar-asistencias');
+    btnFiltrarAsistencias.addEventListener('click', () => {
+        const fechaInicio = document.getElementById('fecha-inicio').value;
+        const fechaFin = document.getElementById('fecha-fin').value;
+        cargarAsistencias(usuario, fechaInicio, fechaFin);
+    });
+
+}
+
+export function cargarAsistencias(usuario, fechaInicio = null, fechaFin = null) {
+    const url = new URL(`${API_BASE_URL}/asistencias`);
+    const token = localStorage.getItem('token');
+
+    if (usuario) {
+        url.searchParams.append("usuario", usuario);
+    }
+    if (fechaInicio) {
+        url.searchParams.append("fecha_inicio", fechaInicio);
+    }
+    if (fechaFin) {
+        url.searchParams.append("fecha_fin", fechaFin);
+    }
+
+    return fetch(url, {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al cargar asistencias');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Datos de asistencias:", data);
+        const tbody = document.querySelector('#tabla-asistencias tbody');
+        
+        if (!tbody) {
+            console.error("No se encontró el elemento tbody en la tabla de asistencias");
+            return;
+        }
+
+        tbody.innerHTML = data.asistencias.map(asistencia => `
+            <tr>
+                <td>${asistencia.id || ''}</td>
+                <td>${asistencia.usuario || ''}</td>
+                <td>${asistencia.fecha_ingreso || ''}</td>
+                <td>${asistencia.fecha_salida || ''}</td>
+            </tr>
+        `).join('');
+        
+        return data.asistencias;
+    })
+    .catch(error => {
+        console.error('Error al cargar asistencias:', error);
+        throw error;
+    });
 }

@@ -1,14 +1,14 @@
-import { cargarComisiones,mostrarEditarComisiones,GuardarCambiosComision,EliminarComision,mostrarEliminarComisiones } from "../api/comisiones_api.js";
+import { cargarComisiones, mostrarEditarComisiones, GuardarCambiosComision, EliminarComision, mostrarEliminarComisiones } from "../api/comisiones_api.js";
 window.mostrarEditarComisiones = mostrarEditarComisiones;
 window.GuardarCambiosComision = GuardarCambiosComision;
 window.EliminarComision = EliminarComision;
 window.mostrarEliminarComisiones = mostrarEliminarComisiones;
 
 
-  
+
 export function mostrarComisiones() {
-    document.getElementById('contenido').innerHTML = `
-    <div id="comisiones-template">
+  document.getElementById('contenido').innerHTML = `
+    
               <div class="header">
                 <h1>Comisiones</h1>
               </div>
@@ -16,25 +16,27 @@ export function mostrarComisiones() {
               <!-- Controles para filtrar y buscar -->
 
               <div class="controls">
-                <label for="filtro-select">Filtrar por:</label>
-                <select id="filtro-select">
-                <option value="nombre_cliente">Nombre</option>
-                  <option value="asesor">Asesor</option>
-                  <option value="cedula">CI</option>
-                  <option value="entidad">Entidad</option>
-                </select>
-                <input type="text" id="filtro-input" placeholder="Buscar...">
-                <label for="fecha_inicio">Inicio:</label>
-                <input type="date" id="fecha_inicio" value="">
-                <label for="fecha_fin">Fin:</label>
-                <input type="date" id="fecha_fin" value="">
-                <button class="buscar-comisiones">Buscar</button>
-                <label for="limitador">Limitar a:</label>
-                <select id="limitador" name="limitador">
-                  <option value="10">10</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                </select>
+                <div class="control-filtros">
+                  <label for="filtro-select">Filtrar por:</label>
+                  <select id="filtro-select">
+                  <option value="nombre_cliente">Nombre</option>
+                    <option value="asesor">Asesor</option>
+                    <option value="cedula">CI</option>
+                    <option value="entidad">Entidad</option>
+                  </select>
+                  <input type="text" id="filtro-input" placeholder="Buscar...">
+                  <label for="fecha_inicio">Inicio:</label>
+                  <input type="date" id="fecha_inicio" value="">
+                  <label for="fecha_fin">Fin:</label>
+                  <input type="date" id="fecha_fin" value="">
+                  <button class="buscar-comisiones">Buscar</button>
+                  <label for="limitador">Limitar a:</label>
+                  <select id="limitador" name="limitador">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                  </select>
+                </div>
               </div>
 
               
@@ -46,8 +48,8 @@ export function mostrarComisiones() {
                 <table id="tabla-comisiones" >
                   <thead>
                     <tr>
-                      <th>BR</th>
-                      <th>ED</th>
+                      <th>Acciones</th>
+                      <th>ID</th>
                       <th>Fecha</th>
                       <th>Nombre cliente</th>
                       <th>CI</th>
@@ -60,6 +62,7 @@ export function mostrarComisiones() {
                       <th>Supervisor</th>
                       <th>Asesor</th>
                       <th>Ganancia</th>
+                      <th>Estado</th>
                       <th>Calificacion</th>
                       <th>Sucursal</th>
                       <th>Observacion</th>
@@ -71,9 +74,12 @@ export function mostrarComisiones() {
                 </table>
               </div>
               <!-- ---------------------------------------------------------------------------------------------------------------- -->
-              <div class="modal-editar-comision" id="modal-editar-comision">
+              <div id="modal-editar-comision" ">
+                
               </div>
-              <div class="modal-eliminar-comision" id="modal-eliminar-comision">
+
+              <div class="modal-confirmacion" id="modal-eliminar-comision" >
+               
               </div>
               <div class="pagination">
                 <button id="btn-anterior" disabled>Anterior</button>
@@ -84,7 +90,7 @@ export function mostrarComisiones() {
               <div class="footer-buttons">
                 <button onclick="exportarExcel()" class="export-excel">Exportar a excel</button>
               </div>
-            </div>
+            
   `;
 
   // Variables de paginación
@@ -103,23 +109,23 @@ export function mostrarComisiones() {
   const formEditarcomisiones = document.getElementById("modal-editar-comision");
 
 
-   const tbody = document.getElementById("tbody-comisiones");
+  const tbody = document.getElementById("tbody-comisiones");
 
-    tbody.addEventListener("click", function (event) {
-      const btnEditar = event.target.closest(".btn-editar");
-      const btnEliminar = event.target.closest(".btn-eliminar");
-  
-      const tr = event.target.closest("tr");
-      if (!tr || !tr.id) return;
-  
-      const operacionId = tr.id;
-  
-      if (btnEditar) {
-        mostrarEditarComisiones(operacionId);
-      } else if (btnEliminar) {
-        mostrarEliminarComisiones(operacionId);
-      }
-    });
+  tbody.addEventListener("click", function (event) {
+    const btnEditar = event.target.closest(".btn-editar");
+    const btnEliminar = event.target.closest(".btn-eliminar");
+
+    const tr = event.target.closest("tr");
+    if (!tr || !tr.id) return;
+
+    const operacionId = tr.id;
+
+    if (btnEditar) {
+      mostrarEditarComisiones(operacionId);
+    } else if (btnEliminar) {
+      mostrarEliminarComisiones(operacionId);
+    }
+  });
   //--------------------------------------------------------------------------------------------------
   function exportarExcel() {
     const tabla = document.getElementById("tabla-comisiones");
@@ -140,7 +146,7 @@ export function mostrarComisiones() {
     link.click();
   }
 
-  formEditarcomisiones.addEventListener("submit", function(e) {
+  formEditarcomisiones.addEventListener("submit", function (e) {
     e.preventDefault(); // ← Esto evita que se recargue la página
     GuardarCambiosComision(); // Llamar a tu función
   });

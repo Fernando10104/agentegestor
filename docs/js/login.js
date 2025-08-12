@@ -46,7 +46,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
     const formData = new URLSearchParams();
     formData.append("username", username);
     formData.append("password", password); 
-    const URL_api = "https://word.puntodigitalpy.online"; // Cambia esto por tu URL base
+    const URL_api = "http://localhost:8000"; // Cambia esto por tu URL base
 
     try {
         const response = await fetch(`${URL_api}/login`, {
@@ -65,7 +65,8 @@ document.getElementById("login-form").addEventListener("submit", async function 
             localStorage.setItem("token", token);
             localStorage.setItem("rol", data.rol); // si lo necesitás más adelante
 
-            window.location.href = "/agentegestor/index.html";
+            //window.location.href = "/agentegestor/index.html";
+            window.location.href = "/index.html"; // Redirigir al index después de iniciar sesión
         } else {
             const errorData = await response.json();
             alert("Error de inicio de sesión: " + (errorData.detail || "Credenciales inválidas"));

@@ -7,24 +7,22 @@ export function mostrarHistorial() {
     </div>
     <!-- ------------------------Controles de filtro y búsqueda------------------------------------------------------->
     <div class="controls">
-      <label for="filter_by">Filtrar por:</label>
-      <select id="filtros-historial-select" name="filter_by">
-        <option value="num_operacion">ID</option>
-        <option value="documento">DOCUMENTO</option>
-        <option value="contacto">CONTACTO</option>
-        <option value="marca">MARCA</option>
-        <option value="tipo">TIPO</option>
-        <option value="faja">FAJA</option>
-        <option value="categoria">CATEGORIA</option>
-        <option value="importe">IMPORTE</option>
-        <option value="responsable">ASESOR</option>
-        <option value="comision">COMISION</option>
-      </select>
-
-      <input type="text" id="filtros-historial-busqueda" placeholder="Buscar por ..." />
-
-
-       <div class="controls">
+      <div class="control-filtros">
+        <label for="filter_by">Filtrar por:</label>
+        <select id="filtros-historial-select" name="filter_by">
+          <option value="num_operacion">ID</option>
+          <option value="documento">DOCUMENTO</option>
+          <option value="contacto">CONTACTO</option>
+          <option value="marca">MARCA</option>
+          <option value="tipo">TIPO</option>
+          <option value="faja">FAJA</option>
+          <option value="categoria">CATEGORIA</option>
+          <option value="importe">IMPORTE</option>
+          <option value="responsable">ASESOR</option>
+          <option value="comision">COMISION</option>
+        </select>
+        <input type="text" id="filtros-historial-busqueda" placeholder="Buscar por ..." />
+      
           <label for="fecha_inicio">Inicio:</label>
           <input type="date" id="fecha_inicio" value="">
           <label for="fecha_fin">Fin:</label>
@@ -67,9 +65,11 @@ export function mostrarHistorial() {
         </tbody>
       </table>
       <!-- ------------------------Formulario para editar historial------------------------------------------------------->
-      <div class="modal-editar-historial" id="modal-editar-historial"> 
-        <form id="form-editar-historial">
+      <div class="modal-crear" id="modal-editar-historial" style="display: none;"> 
+        <div class="modal-header">
           <h2>Editar Historial</h2>
+        </div>
+        <form class="modal-form" id="form-editar-historial">
           <div class="form-group">
             <label for="id">ID:</label>
             <input type="text" id="id" name="id" disabled />
@@ -123,23 +123,42 @@ export function mostrarHistorial() {
             <label for="observaciones">Observaciones:</label>
             <textarea id="observaciones" name="observaciones"></textarea>
           </div>
-          <div class="form-actions">
-            <button type="submit" class="btn-guardar" onclick="guardarActualizacion()">Guardar</button>
-            <button type="button" class="btn-cancelar" onclick="cerrarModificarHistorial()">Cancelar</button>
+          <div class="modal-footer">
+            <button type="submit" class="create-btn" onclick="guardarActualizacion()">Guardar</button>
+            <button type="button" class="cancel-btn" onclick="cerrarModificarHistorial()">Cancelar</button>
           </div>
         </form>
       </div>
       <!-- ------------------------Fin del formulario de edición------------------------------------------------------->
-      <div class="modal-eliminar-historial" id="modal-eliminar-historial">
+      <div class="modal-confirmacion" id="modal-eliminar-historial">
        
       </div>
       <!-- ------------------------Botones de paginación y exportación------------------------------------------------------->
     </div>
     <div class="pagination">
-      <button id="cancelado" onclick="filtrarPorEstado('cancelado')">Cancelado</button>
-      <button id="ingresado" onclick="filtrarPorEstado('ingresado')">Ingresado</button>
-      <button id="aprobado" onclick="filtrarPorEstado('aprobado')">Aprobado</button>
-      <button id="desembolsado" onclick="filtrarPorEstado('desembolsado')">Desembolsado</button>
+      <button id="cancelado" 
+              style="background-color: red; color: white;" 
+              onclick="filtrarPorEstado('cancelado')">
+        Cancelado
+      </button>
+
+      <button id="ingresado" 
+              style="background-color: orange; color: white;" 
+              onclick="filtrarPorEstado('ingresado')">
+        Ingresado
+      </button>
+
+      <button id="aprobado" 
+              style="background-color: blue; color: white;" 
+              onclick="filtrarPorEstado('aprobado')">
+        Aprobado
+      </button>
+
+      <button id="desembolsado" 
+              style="background-color: green; color: white;" 
+              onclick="filtrarPorEstado('desembolsado')">
+        Desembolsado
+      </button>
     </div>
 
     <div class="pagination">
