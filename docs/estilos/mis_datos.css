@@ -178,9 +178,10 @@ nav button {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     flex-grow: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
     overflow-x: hidden;
     max-width: none;
+    gap: 20px;
 }
 /*w700 ll 36 s30*/
 #contenido h1 {
@@ -630,6 +631,7 @@ nav button {
     background-color: #29303D;
     align-items: flex-start;
     border-radius: 16px;
+    
 }
 
 .foto-perfil-container {
@@ -708,14 +710,143 @@ nav button {
     height: 16px;
   }
 
-  /* Vista previa */
-  #preview {
-    display: none;
-    position: absolute; /* posición relativa al contenedor */
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border: 3px solid white;
-    border-radius: 50%;
-    z-index: 10000; /* encima de otros elementos */
+
+  /*------------------------------------------*/
+  .contenedor-2{
+    border: 1px solid #29303D; 
+    width: 634px; 
+    height: 353px; 
+    padding: 15px;
+    background-color: #29303D;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+
   }
+  .info-personal-header{
+    display: flex; 
+    margin-bottom: 20px;
+  }
+  .info-personal {
+    display: flex; 
+    width: 100%; 
+    gap: 5px; 
+   }
+   .info-personal-izq {
+  padding: 10px; 
+  width: 100%; 
+  margin-bottom: 5px;
+   }
+   .info-personal-der{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+   }
+  label[for="info"]{
+    font-size: 14px;
+    color: #b3b3b3;
+   }
+  p[id="info"]{
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  p[id="rol"]{
+    width: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    background-color: #3c83f6;
+    border-radius: 12px;
+    padding: 6px 10px;
+    text-align: center;
+    margin-top: 5px;
+    
+  }
+  .bi-person {
+    width: 26px;
+    height: 26px;
+    vertical-align: text-bottom;
+    margin-bottom: 2px;
+}
+
+
+/* Modal de confirmación para guardar foto de perfil */
+.confirmacion-guardar-foto {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  z-index: 9999;
+  display: none; /* Se muestra con JS */
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.confirmacion-guardar-foto.active {
+  display: flex;
+}
+
+/* Contenido interno del modal */
+.confirmacion-guardar-foto .modal-contenido {
+  background: #1D2430;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  min-width: 280px;
+  max-width: 350px;
+}
+
+.confirmacion-guardar-foto img#preview-img {
+  max-width: 120px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(60, 131, 246, 0.15);
+  background: #29303D;
+  border: 2px solid #3c83f6;
+}
+
+.confirmacion-guardar-foto p {
+  color: #3c83f6;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.confirmacion-guardar-foto button {
+  font-size: 0.95rem;
+  font-weight: 500;
+  height: 38px;
+  padding: 0 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  margin: 4px 0;
+  transition: background-color 0.2s;
+}
+
+.confirmacion-guardar-foto #btn-confirmar-foto {
+  background-color: #3c83f6;
+  color: white;
+}
+
+.confirmacion-guardar-foto #btn-confirmar-foto:hover {
+  background-color: #2563eb;
+}
+
+.confirmacion-guardar-foto #btn-cancelar-foto {
+  background-color: transparent;
+  color: #b3b3b3;
+  border: 1px solid #414958;
+}
+
+.confirmacion-guardar-foto #btn-cancelar-foto:hover {
+  background-color: #383d44;
+  color: white;
+}

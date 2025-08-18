@@ -101,8 +101,7 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
               <button class="btn-eliminar" style="background-color: transparent; border: none; border-radius: 15px; padding: 5px 5px;" onmouseover="this.style.backgroundColor='darkgray'" onmouseout="this.style.backgroundColor='transparent'"  data-id="${item.num_operacion}" title="Eliminar">
               ${SVG_ELIMINAR}
               </button>
-              </td>
-              <td>
+              
               <button class="btn-editar" style="background-color: transparent; border: none; border-radius: 15px; padding: 5px 5px;" onmouseover="this.style.backgroundColor='darkgray'" onmouseout="this.style.backgroundColor='transparent'" data-id="${item.num_operacion}" title="Editar">
               ${SVG_EDITAR}
               </button>

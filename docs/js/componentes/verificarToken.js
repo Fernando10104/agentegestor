@@ -32,6 +32,8 @@ export async function verificarToken() {
             //guardar el id del superior
             localStorage.setItem("superior", data.usuario.superior);
 
+            localStorage.setItem("url_imagen", data.usuario.url_imagen);
+
         } else {
             console.warn("Token inválido o expirado.");
             localStorage.removeItem("token");

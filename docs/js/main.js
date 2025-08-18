@@ -47,13 +47,13 @@ document.getElementById('usuario-icono').addEventListener('click', () => {
 
 actualizarFechaHoraParaguay(); // Actualizamos la fecha y hora al cargar la página
 verificarToken(); // Verificamos el token al cargar la página
-mostrarInicio();
+
 
 
 
 // ✅ CARGAR USUARIOS AL INICIAR LA PÁGINA
-document.addEventListener('DOMContentLoaded', () => {
-    mostrarInicio(); // Mostrar la pantalla de inicio al cargar la página
+document.addEventListener('DOMContentLoaded', async () => {
+    await mostrarInicio(); // Mostrar la pantalla de inicio al cargar la página
 });
 
 const botones = document.querySelectorAll('.nav-btn');

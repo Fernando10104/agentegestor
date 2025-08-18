@@ -41,8 +41,8 @@ export function mostrarGestionUsuario() {
                             <th>Comisiones</th>
                             <th>Correo</th>
                             <th>Teléfono</th>
-                           
                             <th>Supervisor</th>
+                            <th>Grupo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>

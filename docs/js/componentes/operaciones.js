@@ -50,8 +50,8 @@ export function mostrarCreditos() {
       <table id="tabla-clientes" >
         <thead>
           <tr>
-            <th>BR</th>
-            <th>ED</th>
+            
+            <th>Acciones</th>
             <th>Id</th>
             <th>Nombre</th>
             <th>Documento</th>
@@ -87,7 +87,7 @@ export function mostrarCreditos() {
           <div class="modal-header">
             <h2>Cargar Crédito</h2>
           </div>
-          <form class="modal-form">
+          <form class="modal-form" id="cargar-credito-form">
             <div class="form-group">
               <label for="cedula">Cédula:</label>
               <input type="text" id="cedula" name="cedula">
@@ -356,7 +356,7 @@ export function mostrarCreditos() {
     cargarMarcas();
 
     CargarCredito();
-    CrearClientes();
+
 
 
   limitadorSelect.addEventListener("change", (e) => {

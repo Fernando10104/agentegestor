@@ -63,6 +63,7 @@ export function CargarUsuarios(valor = "", rol2 = null) {
                     <td>${usuario[9] || ''}</td>
                     <td>${usuario[10] || ''}</td>
                     <td>${usuario[8] || ''}</td>
+                    <td>${usuario[11] || ''}</td>
                     <td class="acciones">
                         <button class="btn-editar" style="background-color: transparent;" data-id="${usuario[0]}">
                             ${SVG_EDITAR}
@@ -93,70 +94,79 @@ export function CargarUsuarios(valor = "", rol2 = null) {
 
 
 
-export function mostrarEditarUsuario(id) {
-    
+export async function mostrarEditarUsuario(id) {
     const modal = document.getElementById('modal-editar-usuario');
-    modal.style.display = 'block';
+    const overlay = document.querySelector('.modal-overlay');
     modal.classList.add('active');
+    overlay.classList.add('active');
+
     if (modal) {
-            modal.innerHTML = `
-                <div class="modal-header">
-                    <h2 id="titulo-editar">Editar Usuario</h2>
+        modal.innerHTML = `
+            <div class="modal-header">
+                <h2 id="titulo-editar">Editar Usuario</h2>
+            </div>
+            <form class="modal-form" id="form-editar-usuario">
+                <div class="form-group">
+                    <label for="nombre-editar">Nombre Completo *</label>
+                    <input type="text" id="nombre-editar" value="" required />
                 </div>
-                <form class="modal-form" id="form-editar-usuario">
-                    <div class="form-group">
-                        <label for="nombre-editar">Nombre Completo *</label>
-                        <input type="text" id="nombre-editar" value="" required />
-                    </div>
 
-                    <div class="form-group">
-                        <label for="ci-editar">Cédula de Identidad *</label>
-                        <input type="text" id="ci-editar" value="" disabled />
-                    </div>
+                <div class="form-group">
+                    <label for="ci-editar">Cédula de Identidad *</label>
+                    <input type="text" id="ci-editar" value="" disabled />
+                </div>
 
-                    <div class="form-group">
-                        <label for="password-editar">Contraseña *</label>
-                        <input type="password" id="password-editar" value=""  />
-                    </div>
+                <div class="form-group">
+                    <label for="password-editar">Contraseña *</label>
+                    <input type="password" id="password-editar" value=""  />
+                </div>
 
-                    <div class="form-group">
-                        <label for="telefono-editar">Teléfono</label>
-                        <input type="text" id="telefono-editar" value="" />
-                    </div>
+                <div class="form-group">
+                    <label for="telefono-editar">Teléfono</label>
+                    <input type="text" id="telefono-editar" value="" />
+                </div>
 
-                    <div class="form-group">
-                        <label for="rol-editar">Rol *</label>
-                        <select id="rol-editar" >
-                            <option value="admin">Admin</option>
-                            <option value="supervisor">Supervisor</option>
-                            <option value="asesor">Asesor</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="rol-editar">Rol *</label>
+                    <select id="rol-editar" >
+                        <option value="admin">Admin</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="asesor">Asesor</option>
+                    </select>
+                </div>
 
-                    <div class="form-group">
-                        <label for="comision-editar">Comisión</label>
-                        <input type="number" id="comision-editar" value="" />
-                    </div>
+                <div class="form-group">
+                    <label for="comision-editar">Comisión</label>
+                    <input type="number" id="comision-editar" value="" />
+                </div>
 
-                    <div class="form-group">
-                        <label for="supervisor-editar">ID Supervisor</label>
-                        <input type="number" id="supervisor-editar" value="" />
-                    </div>
-                    <div class="form-group">
-                        <label for="correo-editar">Correo Electrónico *</label>
-                        <input type="email" id="correo-editar" value=""/>
-                    </div>
+                <div class="form-group">
+                    <label for="supervisor-editar">ID Supervisor</label>
+                    <input type="number" id="supervisor-editar" value="" />
+                </div>
+                <div class="form-group">
+                    <label for="correo-editar">Correo Electrónico *</label>
+                    <input type="email" id="correo-editar" value=""/>
+                </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="cancel-btn" onclick="cerrarModalEditarUsuario()">Cancelar</button>
-                        <button type="submit" class="create-btn" onclick="guardarEditarUsuario(${id})">Guardar Cambios</button>
-                    </div>
-                </form>
-            `;
-        BuscarUsuarioPorId(id)
+                <div class="form-group">
+                    <label for="grupos-editar">Grupos *</label>
+                    <select id="grupos-editar">
+                        <option value="">Cargando grupos...</option>
+                    </select>
+                </div>
 
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn" onclick="cerrarModalEditarUsuario()">Cancelar</button>
+                    <button type="submit" class="create-btn" onclick="guardarEditarUsuario(${id})">Guardar Cambios</button>
+                </div>
+            </form>
+        `;
+        
+        // Cargar grupos primero y luego los datos del usuario
+        await cargarGruposEnSelect();
+        BuscarUsuarioPorId(id);
     }
-    
 }
 
 export function BuscarUsuarioPorId(id) {
@@ -181,6 +191,7 @@ export function BuscarUsuarioPorId(id) {
         console.log("Datos del usuario:", data);
         const usuario = data || {};
         console.log("Usuario encontrado:", usuario.usuario);
+        
         document.getElementById('nombre-editar').value = usuario.nombre || '';
         document.getElementById('ci-editar').value = usuario.usuario || '';
         document.getElementById('telefono-editar').value = usuario.telefono || '';
@@ -189,8 +200,12 @@ export function BuscarUsuarioPorId(id) {
         document.getElementById('supervisor-editar').value = usuario.superior || '';
         document.getElementById('correo-editar').value = usuario.correo || '';
         document.getElementById('password-editar').value = ''; // No llenar la contraseña por seguridad
-
-
+        
+        // Seleccionar el grupo del usuario
+        const selectGrupos = document.getElementById('grupos-editar');
+        if (selectGrupos && usuario.id_grupo) {
+            selectGrupos.value = usuario.id_grupo;
+        }
     })
     .catch(error => {
         console.error('Error al buscar usuario por ID:', error);
@@ -200,10 +215,9 @@ export function BuscarUsuarioPorId(id) {
 
 
 export function guardarEditarUsuario(id_usuario) {
-    
     event.preventDefault();
 
-    const id = id_usuario; // Obtener ID del usuario desde el modal
+    const id = id_usuario;
     const nombre = document.getElementById('nombre-editar').value;
     const ci = document.getElementById('ci-editar').value;
     const telefono = document.getElementById('telefono-editar').value;
@@ -212,6 +226,8 @@ export function guardarEditarUsuario(id_usuario) {
     const supervisor = document.getElementById('supervisor-editar').value;
     const correo = document.getElementById('correo-editar').value;
     const password = document.getElementById('password-editar').value;
+    const grupo = document.getElementById('grupos-editar').value; // Agregar grupo
+    
     const url = `${API_BASE_URL}/usuarios/${id}`;
     const token = localStorage.getItem('token');
 
@@ -224,6 +240,7 @@ export function guardarEditarUsuario(id_usuario) {
         superior: supervisor,
         telefono: telefono,
         correo: correo,
+        id_grupo: grupo // Agregar grupo a los datos
     };
 
     fetch(url, {
@@ -467,3 +484,62 @@ export function cargarAsistencias(usuario, fechaInicio = null, fechaFin = null) 
         throw error;
     });
 }
+
+export async function obtenerGrupos(){
+    const url = `${API_BASE_URL}/grupos`;
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                Authorization: "Bearer " + token,
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Error al cargar grupos');
+        }
+        const data = await response.json();
+        console.log("Datos de grupos:", data);
+        return data.grupos;
+    } catch (error) {
+        console.error('Error al cargar grupos:', error);
+        throw error;
+    }
+}
+
+export async function cargarGruposEnSelect() {
+    try {
+        const grupos = await obtenerGrupos();
+        const selectGrupos = document.getElementById('grupos-editar');
+        
+        if (!selectGrupos) {
+            console.error('No se encontró el select de grupos');
+            return;
+        }
+
+        // Limpiar opciones existentes
+        selectGrupos.innerHTML = '';
+        
+        // Agregar opción por defecto
+        selectGrupos.innerHTML = '<option value="">Seleccionar grupo</option>';
+        
+        // Agregar opciones de grupos
+        grupos.forEach(grupo => {
+            const option = document.createElement('option');
+            option.value = grupo.id_grupo || grupo.id; // Ajustar según la estructura de tu API
+            option.textContent = grupo.nombre_grupo;
+            selectGrupos.appendChild(option);
+        });
+        
+    } catch (error) {
+        console.error('Error al cargar grupos en select:', error);
+        const selectGrupos = document.getElementById('grupos-editar');
+        if (selectGrupos) {
+            selectGrupos.innerHTML = '<option value="">Error al cargar grupos</option>';
+        }
+    }
+}
+
+
+
+

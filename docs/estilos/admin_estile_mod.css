@@ -1,3 +1,54 @@
+/* Variables de colores y temas */
+:root {
+  /* Colores principales */
+  --color-principal: #3c83f6;
+  --color-principal-hover: #2563eb;
+  --color-principal-claro: #2b6cd3;
+  
+  /* Fondos */
+  --fondo-principal: #1D2430;
+  --fondo-secundario: #151A23;
+  --fondo-terciario: #2B3341;
+  --fondo-cuaternario: #2F3646;
+  --fondo-modal: #29303D;
+  --fondo-card: #2B3341;
+  --fondo-hover: #383d44;
+  --fondo-hover-2: #3a3f4d;
+  --fondo-hover-3: #414958;
+  
+  /* Bordes */
+  --borde-principal: #414958;
+  --borde-input: #414958;
+  
+  /* Textos */
+  --texto-principal: #f5f6fa;
+  --texto-secundario: white;
+  --texto-muted: #b3b3b3;
+  --texto-muted-2: rgb(179, 179, 179);
+  --texto-muted-3: rgb(168, 166, 166);
+  
+  /* Estados y acciones */
+  --color-exito: #00ff88;
+  --color-error: #e03e3e;
+  --color-error-hover: #b73232;
+  --color-transparente: transparent;
+  
+  /* Sombras */
+  --sombra-card: 0 4px 10px rgba(0,0,0,0.3);
+  --sombra-modal: 0 10px 15px rgba(0,0,0,0.3);
+  --sombra-tabla: 0 1px 2px rgba(60, 131, 246, 0.3), 0 1px 2px rgba(0,0,0,0.05);
+  --sombra-focus: 0 0 0 2px rgba(60, 131, 246, 0.2);
+  
+  /* Overlays */
+  --overlay-modal: rgba(0, 0, 0, 0.5);
+  --overlay-modal-2: rgba(0, 0, 0, 0.6);
+  
+  /* Colores específicos para gráficos */
+  --bg-color: #1e1e2f;
+  --card-color: var(--fondo-terciario);
+  --text-color: var(--texto-secundario);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,8 +57,8 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #1D2430;
-    color: #f5f6fa;
+    background-color: var(--fondo-principal);
+    color: var(--texto-principal);
     min-height: 100vh;
     display: flex;
     font-family: sans-serif;
@@ -27,8 +78,8 @@ body {
     display: flex;
     flex-direction: column;
     width: 200px;
-    background: #151A23;
-    color: white;
+    background: var(--fondo-secundario);
+    color: var(--texto-secundario);
     height: 100vh;
     padding: 1px;
     flex-shrink: 0; 
@@ -61,8 +112,8 @@ nav button {
     display: flex;
     align-items: center;
     padding: 0.75rem 1rem;
-    background: #3c83f6;
-    color: white;
+    background: var(--color-principal);
+    color: var(--texto-secundario);
     border: none;
     cursor: pointer;
     font-size: 16px;
@@ -78,8 +129,8 @@ nav button {
   display: flex;
     align-items: center;
     padding: 0.75rem 1rem;
-    background: transparent;
-    color: white;
+    background: var(--color-transparente);
+    color: var(--texto-secundario);
     border: none;
     cursor: pointer;
     font-size: 16px;
@@ -93,12 +144,12 @@ nav button {
 
 }
 .nav-btn:hover {
-        background: #383d44;
-    }
+    background: var(--fondo-hover);
+}
 
 .nav-btn.active {
-        background: #3c83f6;
-    }
+    background: var(--color-principal);
+}
 
 .container-principal {
     display: flex;
@@ -109,8 +160,8 @@ nav button {
 /*w400 l28 s18*/
 .sidebar-contenedor {
     display: flex;
-    background: #2F3646;
-    color: white;
+    background: var(--fondo-cuaternario);
+    color: var(--texto-secundario);
     padding: 20px;  
     justify-content: space-between;
 }
@@ -121,7 +172,7 @@ nav button {
 }
 
 #usuario-nombre {
-    color: #3c83f6;
+    color: var(--color-principal);
 }
 
 
@@ -132,8 +183,8 @@ nav button {
     justify-content: center;
     width: 40px;
     height: 40px;
-    background-color: #384252; /* Azul */
-    color: white;
+    background-color: var(--color-principal);
+    color: var(--texto-secundario);
     border-radius: 50%;
     font-size: 20px;
     margin-left: auto; /* Para alinear a la derecha */
@@ -144,10 +195,10 @@ nav button {
     flex-direction: column;
     position: absolute;
     background-color: #384252; /* Fondo oscuro */
-    color: white;
+    color: var(--texto-secundario);
     border-radius: 8px;
     padding: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: var(--sombra-card);
     top: 60px; /* Ajusta según sea necesario */
     right: 20px; /* Ajusta según sea necesario */
     width: 150px; /* Ancho fijo */
@@ -157,7 +208,7 @@ nav button {
 }
 .opciones_usuario button {
     background-color: #2D313B; /* Azul */
-    color: white;
+    color: var(--texto-secundario);
     border: none;
     padding: 10px 10px;
     margin: 4px 0; /* Espacio entre botones */
@@ -172,10 +223,10 @@ nav button {
 #contenido {
     padding: 20px;
     flex-grow: 1;
-    background-color: #1D2430;
+    background-color: var(--fondo-principal);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: var(--sombra-card);
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -212,10 +263,10 @@ nav button {
     flex-wrap: wrap;
     flex-shrink: 0;
     flex-direction: column;
-    background-color: #2B3341;
+    background-color: var(--fondo-terciario);
     padding: 20px;
     border-radius: 8px;
-    border: 1px solid #414958;
+    border: 1px solid var(--borde-principal);
 }
 .controls-filtros {
     padding: 1.5rem; /* p-6 */
@@ -226,8 +277,8 @@ nav button {
     height: 2.5rem; /* h-10 */
     width: auto; /* w-full */
     border-radius: 0.375rem; /* rounded-md */
-    border: 1px solid #414958; /* border border-input */
-    background-color: #1D2430; /* bg-background */
+    border: 1px solid var(--borde-input); /* border border-input */
+    background-color: var(--fondo-principal); /* bg-background */
     padding-left: 0.75rem; /* px-3 */
     padding-right: 0.75rem;
     padding-top: 0.5rem; /* py-2 */
@@ -236,13 +287,13 @@ nav button {
     line-height: 1.5rem;
      /* ring-offset-background */
     padding-left: 2.5rem; /* pl-10 */
-    color: white; /* placeholder:text-muted-foreground */
+    color: var(--texto-secundario); /* placeholder:text-muted-foreground */
 }
 
 .control-filtros input:focus {
-    border-color: #3c83f6;
+    border-color: var(--color-principal);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(60, 131, 246, 0.2); /* Opcional: añade un resplandor */
+    box-shadow: var(--sombra-focus); /* Opcional: añade un resplandor */
 }
 
 
@@ -251,22 +302,22 @@ nav button {
   width: auto; /* w-full */
   align-items: center; /* items-center */
   border-radius: 0.375rem; /* rounded-md */
-  border: 1px solid #414958; /* border border-input */
-  background-color: #1D2430; /* bg-background */
+  border: 1px solid var(--borde-input); /* border border-input */
+  background-color: var(--fondo-principal); /* bg-background */
   padding-left: 0.75rem; /* px-3 */
   padding-right: 0.75rem;
   padding-top: 0.5rem; /* py-2 */
   padding-bottom: 0.5rem;
   font-size: 0.875rem; /* text-sm */
-  outline-offset: #1D2430; /* ring-offset-background */
-  color: var(--muted-foreground); /* placeholder:text-muted-foreground */
+  outline-offset: var(--fondo-principal); /* ring-offset-background */
+  color: var(--texto-muted); /* placeholder:text-muted-foreground */
   cursor: pointer;
 }
     
 .control-filtros select:focus {
-    border-color: #3c83f6;
+    border-color: var(--color-principal);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(60, 131, 246, 0.2); /* Opcional: añade un resplandor */
+    box-shadow: var(--sombra-focus); /* Opcional: añade un resplandor */
 }
 
 .control-filtros button{
@@ -280,8 +331,8 @@ nav button {
     font-weight: 500; /* font-medium */
     height: 2.5rem; /* h-10 = 40px */
     padding: 0.5rem 1rem; /* py-2 px-4 */
-    background-color: #3c83f6;
-    color: white;
+    background-color: var(--color-principal);
+    color: var(--texto-secundario);
     transition: background-color 0.2s ease;
 
 }
@@ -289,10 +340,10 @@ nav button {
 /*donde empieza la tabla general*/
 .table-responsive {
     border-radius: 0.5rem; /* rounded-lg */
-    border: 1px solid #414958; /* border-border */
-    color: white; /* text-card-foreground */
-    box-shadow: 0 1px 2px rgba(60, 131, 246, 0.3), 0 1px 2px rgba(0,0,0,0.05); /* sombra combinada */
-    background: #1D2430; /* bg-gradient-card */
+    border: 1px solid var(--borde-principal); /* border-border */
+    color: var(--texto-secundario); /* text-card-foreground */
+    box-shadow: var(--sombra-tabla);
+    background: var(--fondo-principal); /* bg-gradient-card */
     padding: 24px;
     overflow-x: auto;
 }
@@ -310,7 +361,7 @@ nav button {
 }
 
 .table-responsive table tr:not(:last-child) td {
-    border-bottom: 1px solid #414958; /* border-b, excepto en última fila */
+    border-bottom: 1px solid var(--borde-principal); /* border-b, excepto en última fila */
 }
 
 .table-responsive table td {
@@ -324,7 +375,7 @@ nav button {
 .acciones .btn-editar,
 .acciones .btn-eliminar,
 .acciones .btn-asistencias {
-  background-color: transparent;
+  background-color: var(--color-transparente);
   border: none;
   padding: 0;
   margin: 0;
@@ -356,7 +407,7 @@ nav button {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* oscurece el fondo */
+  background-color: var(--overlay-modal);
   z-index: 40; /* debajo del modal pero encima del contenido */
   display: none;
 }
@@ -374,10 +425,10 @@ nav button {
   width: 100%; /* w-full */
   transform: translate(-50%, -50%); /* translate-x-[-50%] + translate-y-[-50%] */
   gap: 1rem; /* gap-4 */
-  border: 1px solid #414958; /* border */
-  background-color: #1D2430; /* bg-background */
+  border: 1px solid var(--borde-principal); /* border */
+  background-color: var(--fondo-principal); /* bg-background */
   padding: 1.5rem; /* p-6 */
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); /* shadow-lg */
+  box-shadow: var(--sombra-modal);
   transition-duration: 200ms; /* duration-200 */
   max-width: 28rem; /* max-w-md */
   padding-top: 1rem; /* py-4 */
@@ -430,10 +481,10 @@ nav button {
 .mensaje{
     display: none;
     padding: 12px 16px;
-    border: 1px solid #414958;
+    border: 1px solid var(--borde-principal);
     border-radius: 8px;
-    background-color: #29303D;
-    color: rgb(168, 166, 166);
+    background-color: var(--fondo-modal);
+    color: var(--texto-muted-3);
     
 }
 
@@ -454,19 +505,19 @@ nav button {
 .modal-crear label {
   line-height: 20px;
   font-weight: 600;
-  color: rgb(179, 179, 179);
+  color: var(--texto-muted-2);
 }
 
 /* Estilo base para input y select */
 .modal-crear input,
 .modal-crear select {
-  border: 1px solid #414958;
-  background-color: #29303D;
+  border: 1px solid var(--borde-principal);
+  background-color: var(--fondo-modal);
   height: 40px;
   width: 398px;
   padding: 9px 12px;
   border-radius: 8px;
-  color: white;
+  color: var(--texto-secundario);
 }
 
 /* Personalización del select */
@@ -487,8 +538,8 @@ nav button {
 .modal-crear select option {
   padding: 10px 12px; /* espacio interno para gap visual */
   font-size: 0.95rem; /* un poquito más grande que el texto del input */
-  background-color: #29303D;
-  color: white;
+  background-color: var(--fondo-modal);
+  color: var(--texto-secundario);
 }
 
 /* Footer del modal */
@@ -498,7 +549,7 @@ nav button {
   gap: 0.75rem; /* espacio entre botones */
   margin-top: 1rem;
   padding-top: 0.75rem;
-  border-top: 1px solid #414958;
+  border-top: 1px solid var(--borde-principal);
 }
 
 /* Botón base */
@@ -515,25 +566,25 @@ nav button {
 
 /* Botón cancelar */
 .modal-footer .cancel-btn {
-  background-color: transparent;
-  color: rgb(179, 179, 179);
-  border: 1px solid #414958;
+  background-color: var(--color-transparente);
+  color: var(--texto-muted-2);
+  border: 1px solid var(--borde-principal);
 }
 
 .modal-footer .cancel-btn:hover {
-  background-color: #3a3f4d;
-  color: white;
+  background-color: var(--fondo-hover-2);
+  color: var(--texto-secundario);
 }
 
 /* Botón crear */
 .modal-footer .create-btn {
-  background-color: #3c83f6;
-  color: white;
+  background-color: var(--color-principal);
+  color: var(--texto-secundario);
   width: 290px;
 }
 
 .modal-footer .create-btn:hover {
-  background-color: #2b6cd3;
+  background-color: var(--color-principal-claro);
 }
 
 /* Animación ligera al click */
@@ -549,30 +600,35 @@ nav button {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6); /* overlay oscuro */
+  background-color: var(--overlay-modal-2);
   display: none; /* oculto por defecto */
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  padding: 1rem;
+  padding: 1.5rem;
   overflow-y: auto; /* scroll si contenido muy alto */
+  
+  
 }
 
 #modal-asistencia > div {
-  background-color: #1D2430;
-  border: 1px solid #414958;
+  background-color: var(--fondo-principal);
+  border: 1px solid var(--borde-principal);
   border-radius: 8px;
   max-width: 900px;
   width: 100%;
   padding: 1rem 1.5rem;
-  box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+  box-shadow: var(--sombra-modal);
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-height: 80vh;
+  overflow-y: auto;
+
 }
 
 #modal-asistencia h2#titulo {
-  color: white;
+  color: var(--texto-secundario);
   font-size: 1.5rem;
   font-weight: 700;
   text-align: center;
@@ -580,9 +636,9 @@ nav button {
 
 /* Botón cerrar coherente con estilo */
 .cancel-btn {
-  background-color: transparent;
-  border: 1px solid #414958;
-  color: rgb(179, 179, 179);
+  background-color: var(--color-transparente);
+  border: 1px solid var(--borde-principal);
+  color: var(--texto-muted-2);
   padding: 8px 20px;
   border-radius: 8px;
   font-weight: 600;
@@ -592,8 +648,8 @@ nav button {
 }
 
 .cancel-btn:hover {
-  background-color: #3a3f4d;
-  color: white;
+  background-color: var(--fondo-hover-2);
+  color: var(--texto-secundario);
 }
 /*---------------------------------------------------------------------------------------------------------*/
 
@@ -605,7 +661,7 @@ nav button {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.6);
+  background-color: var(--overlay-modal-2);
   display: none;
   justify-content: center;
   align-items: center;
@@ -618,15 +674,15 @@ nav button {
 
 /* Contenido del modal */
 .modal-confirmacion > div {
-  background-color: #1D2430;
-  border: 1px solid #414958;
+  background-color: var(--fondo-principal);
+  border: 1px solid var(--borde-principal);
   border-radius: 8px;
   max-width: 400px;
   width: 100%;
   padding: 1.5rem 2rem;
-  box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+  box-shadow: var(--sombra-modal);
   text-align: center;
-  color: white;
+  color: var(--texto-secundario);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -656,22 +712,176 @@ nav button {
 
 /* Cancelar */
 .modal-confirmacion .btn-cancelar {
-  background-color: transparent;
-  border: 1px solid #414958;
-  color: rgb(179, 179, 179);
+  background-color: var(--color-transparente);
+  border: 1px solid var(--borde-principal);
+  color: var(--texto-muted-2);
 }
 
 .modal-confirmacion .btn-cancelar:hover {
-  background-color: #3a3f4d;
-  color: white;
+  background-color: var(--fondo-hover-2);
+  color: var(--texto-secundario);
 }
 
 /* Confirmar */
 .modal-confirmacion .btn-confirmar {
-  background-color: #e03e3e;
-  color: white;
+  background-color: var(--color-error);
+  color: var(--texto-secundario);
 }
 
 .modal-confirmacion .btn-confirmar:hover {
-  background-color: #b73232;
+  background-color: var(--color-error-hover);
+}
+
+
+/*------------------------metas table -------------------------*/
+
+
+.table-responsive-hijo {
+    width: auto;
+}
+
+.menu-metas {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+/*---------------------------menu graficos inicio*/
+
+  :root {
+    --bg-color: #1e1e2f;
+    --card-color: #2B3341;
+    --text-color: white;
+  }
+  header {
+    margin-bottom: 20px;
+  }
+  .grid-top {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .grid-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--card-color);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: var(--sombra-card);
+  }
+  .kpi {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+  }
+  select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+  }
+  canvas {
+    max-height: 300px;
+  }
+
+/* Contenedor principal de usuarios conectados */
+.usuarios-conectados {
+  background: var(--fondo-card);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: var(--sombra-card);
+  width: 400px;
+}
+
+.usuarios-conectados-titulo {
+  color: var(--color-principal);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.usuarios-conectados-titulo::before {
+  content: "👥";
+  font-size: 1.2rem;
+}
+
+/* Lista de usuarios */
+.lista-usuarios {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.lista-usuarios li {
+  background: var(--fondo-principal);
+  color: var(--texto-secundario);
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  border-left: 3px solid var(--color-principal);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.lista-usuarios li:hover {
+  background: var(--fondo-hover-3);
+  transform: translateX(3px);
+}
+
+.lista-usuarios li::before {
+  content: "●";
+  color: var(--color-exito);
+  font-size: 0.8rem;
+  animation: pulse 2s infinite;
+}
+
+/* Cuando no hay usuarios conectados */
+.lista-usuarios.vacia::after {
+  content: "No hay usuarios conectados";
+  color: var(--texto-muted);
+  font-style: italic;
+  padding: 10px;
+  display: block;
+  text-align: center;
+}
+
+/* Animación para el indicador de conexión */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Scrollbar personalizado para la lista */
+.lista-usuarios::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-usuarios::-webkit-scrollbar-track {
+  background: var(--fondo-principal);
+  border-radius: 3px;
+}
+
+.lista-usuarios::-webkit-scrollbar-thumb {
+  background: var(--color-principal);
+  border-radius: 3px;
+}
+
+.lista-usuarios::-webkit-scrollbar-thumb:hover {
+  background: var(--color-principal-hover);
 }

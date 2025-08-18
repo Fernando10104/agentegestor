@@ -43,8 +43,8 @@ export function mostrarHistorial() {
       <table id="tabla">
         <thead>
           <tr>
-            <th>BR</th>
-            <th>ED</th>
+           
+            <th>Acciones</th>
             <th>ID</th>
             <th>FECHA</th>
             <th>DOCUMENTO</th>
