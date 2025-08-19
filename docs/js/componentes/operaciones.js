@@ -152,40 +152,40 @@ export function mostrarCreditos() {
         </div>
 
         <div class="modal-crear" id="cargar-cliente" style="display: none;">
-    <div class="modal-header">
-        <h2>Cargar Cliente</h2>
-    </div>
-    <form class="modal-form">
-        <div class="form-group">
-            <label for="documento">Cédula:</label>
-            <input type="text" id="documento" name="cedula">
+          <div class="modal-header">
+              <h2>Cargar Cliente</h2>
+          </div>
+          <form class="modal-form" id="cargar-clientes-form">
+              <div class="form-group">
+                  <label for="documento">Cédula:</label>
+                  <input type="text" id="documento" name="cedula">
+              </div>
+              <div class="form-group">
+                  <label for="Nombre">Nombre:</label>
+                  <input type="text" id="Nombre" name="Nombre">
+              </div>
+              <div class="form-group">
+                  <label for="Celular">Celular:</label>
+                  <input type="text" id="Celular" name="Celular">
+              </div>
+              <div class="form-group">
+                  <label for="Direccion">Dirección:</label>
+                  <input type="text" id="Direccion" name="Direccion">
+              </div>
+              <div class="form-group">
+                  <label for="correo">Correo:</label>
+                  <input type="email" id="correo" name="correo">
+              </div>
+              <div class="form-group">
+                  <label for="faja_inforcomf">Faja:</label>
+                  <input type="text" id="faja_inforcomf" name="faja">
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" class="create-btn">Insertar Cliente</button>
+                  <button type="button" class="cancel-btn" style="background-color: red;" onclick="ocultarCargarCliente()">Cerrar</button>
+              </div>
+          </form>
         </div>
-        <div class="form-group">
-            <label for="Nombre">Nombre:</label>
-            <input type="text" id="Nombre" name="Nombre">
-        </div>
-        <div class="form-group">
-            <label for="Celular">Celular:</label>
-            <input type="text" id="Celular" name="Celular">
-        </div>
-        <div class="form-group">
-            <label for="Direccion">Dirección:</label>
-            <input type="text" id="Direccion" name="Direccion">
-        </div>
-        <div class="form-group">
-            <label for="correo">Correo:</label>
-            <input type="email" id="correo" name="correo">
-        </div>
-        <div class="form-group">
-            <label for="faja_inforcomf">Faja:</label>
-            <input type="text" id="faja_inforcomf" name="faja">
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="create-btn">Insertar Cliente</button>
-            <button type="button" class="cancel-btn" style="background-color: red;" onclick="ocultarCargarCliente()">Cerrar</button>
-        </div>
-    </form>
-</div>
 
         <!-- ------------------------Formulario para editar historial------------------------------------------------------->
         <div class="modal-crear" id="modal-editar-clientes" style="display: none;">
@@ -384,6 +384,10 @@ export function mostrarCreditos() {
     link.click();
   }
   window.exportarExcel = exportarExcel;
+
+  cargarMarcas();
+  CargarCredito();
+  CrearClientes();
 
 
 

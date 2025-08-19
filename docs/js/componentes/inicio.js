@@ -1,5 +1,5 @@
 import { API_BASE_URL } from '../config.js';
-import {svg_grupo,svg_contactos,svg_logrado,svg_meta } from './../../src/svg/svg.js';
+import {svg_grupo,svg_contactos,svg_logrado,svg_meta,svg_circulo } from './../../src/svg/svg.js';
 
 
 export async function mostrarInicio() {
@@ -40,6 +40,17 @@ export async function mostrarInicio() {
         </div>
         </div>
         
+      </div>
+      <!--mensaje motivacional -->
+      <div style="margin: 0px; padding:20px; background-color: #4489F7; display:flex; border-radius: 8px; gap: 1.5rem; align-items: center;">
+        <div style="background-color: #679EF8; border-radius: 50%;  display: flex; align-items: center; justify-content: center; width: 4rem; height: 4rem;">
+          ${svg_circulo}
+        </div>
+        <div class="motivational-text">
+          <h3>¡Cada meta alcanzada es un paso hacia el éxito!</h3>
+          
+        </div>
+
       </div>
 
       <!-- Métricas principales -->

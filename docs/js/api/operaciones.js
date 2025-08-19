@@ -180,7 +180,7 @@ export function CargarCredito(){
 
 
 export function CrearClientes(){
-  document.querySelector('.cargar-clientes-form').addEventListener('submit', async function (e) {
+  document.getElementById('cargar-clientes-form').addEventListener('submit', async function (e) {
     e.preventDefault(); // Evita que se recargue la página
 
     // Capturamos los datos del formulario
@@ -204,7 +204,7 @@ export function CrearClientes(){
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token // se obtiene el token del localStorage
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify(data)
       });
@@ -215,10 +215,12 @@ export function CrearClientes(){
       alert('Cliente insertado correctamente');
       console.log(result);
 
-      // Opcional: limpiar formulario o cerrar modal
-      document.querySelector('.cargar-clientes-form').reset();
+      // Limpiar formulario y cerrar modal
+      document.getElementById('cargar-clientes-form').reset();
       ocultarCargarCliente();
       
+      // Recargar la tabla de clientes
+      cargarClientes("nombre", "", 1, 10);
 
     } catch (error) {
       console.error(error);
