@@ -39,7 +39,7 @@ export function mostrarGestionMarcas() {
                 </tbody>
             </table>    
         </div>
-        <div class="modal-overlay"></div>
+        
         <div class="modal-crear" id="modal-crear-marca" role="dialog" aria-labelledby="titulo" aria-describedby="descripcion" >
             <div class="modal-header">
                 <h2 id="titulo">Crear Nueva Marca</h2>

@@ -183,8 +183,8 @@ export function mostrarComisiones() {
     currentPage = page;
     const campo = filtroSelect.value;
     const valor = filtroInput.value.trim();
-    const fechaInicioTexto = fechaInicioInput.value;
-    const fechaFinTexto = fechaFinInput.value;
+    const fechaInicioTexto = document.getElementById('fecha_inicio').value;
+    const fechaFinTexto = document.getElementById('fecha_fin').value;
 
     cargarComisiones(campo, valor, currentPage, limit, fechaInicioTexto, fechaFinTexto)
       .then(pagination => {

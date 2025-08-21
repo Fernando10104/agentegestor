@@ -119,12 +119,14 @@ async function cargarMisDatos() {
 function actualizarDatosEnHTML(datos) {
     // Actualizar por IDs únicos
     const nombreElement = document.getElementById('nombre-completo');
+    const nombreElement2 = document.getElementById('nombre-completo2');
     const cedulaElement = document.getElementById('cedula');
     const correoElement = document.getElementById('correo');
     const telefonoElement = document.getElementById('telefono');
     const rolElement = document.getElementById('rol');
 
     if (nombreElement) nombreElement.textContent = datos.nombre || 'Sin nombre';
+    if (nombreElement2) nombreElement2.textContent = datos.nombre || 'Sin nombre';
     if (cedulaElement) cedulaElement.textContent = datos.usuario || 'Sin cédula';
     if (correoElement) correoElement.textContent = datos.correo || 'Sin correo';
     if (telefonoElement) telefonoElement.textContent = datos.telefono || 'Sin teléfono';

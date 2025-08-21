@@ -177,6 +177,7 @@ export function CrearGrupo(event){
     .then(data => {
         showDialog('success', 'Grupo creado correctamente');
         cargarMetas();
+        cargarGruposEnSelect();
         // Cerrar el modal
         document.getElementById('modal-crear-grupo').classList.remove('active');
         // Opcional: cerrar modal, mostrar mensaje, etc.
@@ -414,7 +415,9 @@ export function EliminarGrupo(id) {
         .then(data => {
             document.body.removeChild(modal);
             showDialog('success', 'Comisión actualizada correctamente');
-            cargarMetas();
+
+
+            mostrarGestionMetas();
         })
         .catch(error => {
             document.body.removeChild(modal);
