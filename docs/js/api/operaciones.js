@@ -1,3 +1,4 @@
+import { showDialog } from '../componentes/modales.js';
 import { API_BASE_URL } from '../config.js';
 export function cargarClientes(campo = "nombre", valor = "", page = 1, limit = 10) {
   const url = new URL(`${API_BASE_URL}/clientes`);
@@ -159,19 +160,30 @@ export function CargarCredito(){
         body: JSON.stringify(data)
       });
 
-      if (!response.ok) throw new Error('Error al insertar crédito');
+      if (!response.ok) {
+        const errorData = await response.json(); // Intentar obtener el mensaje de error del servidor
+        if (errorData.detail) {
+          const dialog = document.getElementById("errorDialog");
+          dialog.querySelector("p").textContent = errorData.detail;
+          dialog.showModal(); // abre el diálogo
+        } else {
+          throw new Error('Error al insertar cliente');
+        }
+        return; // Salir si ya manejamos el error específico
+      }
+
 
       const result = await response.json();
-      alert('Crédito insertado correctamente');
+      showDialog("success", "Crédito insertado correctamente");
       console.log(result);
 
       // Opcional: limpiar formulario o cerrar modal
-      document.querySelector('.cargar-credito-form').reset();
+      document.querySelector('#cargar-credito-form').reset();
       ocultarCargarCredito();
 
     } catch (error) {
       console.error(error);
-      alert('Hubo un error al enviar los datos');
+      
     }
   });
 
@@ -179,7 +191,7 @@ export function CargarCredito(){
 }
 
 
-export function CrearClientes(){
+export function CrearClientes() {
   document.getElementById('cargar-clientes-form').addEventListener('submit', async function (e) {
     e.preventDefault(); // Evita que se recargue la página
 
@@ -204,15 +216,25 @@ export function CrearClientes(){
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify(data)
       });
 
-      if (!response.ok) throw new Error('Error al insertar cliente');
+      if (!response.ok) {
+        const errorData = await response.json(); // Intentar obtener el mensaje de error del servidor
+        if (errorData.detail && errorData.detail.includes("El cliente ya existe con este documento")) {
+          const dialog = document.getElementById("errorDialog");
+          dialog.querySelector("p").textContent = errorData.detail;
+          dialog.showModal(); // abre el diálogo
+        } else {
+          throw new Error('Error al insertar cliente');
+        }
+        return; // Salir si ya manejamos el error específico
+      }
 
       const result = await response.json();
-      alert('Cliente insertado correctamente');
+      showDialog("success", "cliente insertado correctamente");
       console.log(result);
 
       // Limpiar formulario y cerrar modal
@@ -224,7 +246,7 @@ export function CrearClientes(){
 
     } catch (error) {
       console.error(error);
-      alert('Hubo un error al enviar los datos');
+      
     }
   });
 }
@@ -267,12 +289,12 @@ export function mostrarEditarCliente(id) {
           document.getElementById("estado-1").value = cliente.estado_cred || "";
         } else {
           console.error("No se encontraron datos del cliente.");
-          alert("Error: No se pudieron cargar los datos del cliente");
+          showDialog("error", "No se encontraron datos del cliente");
         }
       })
       .catch(err => {
         console.error("Error al cargar cliente:", err);
-        alert("Error al cargar los datos del cliente");
+        showDialog("error", "Error al cargar cliente");
         modal.style.display = 'none'; // Ocultar modal en caso de error
       });
   } else {
@@ -316,7 +338,7 @@ export function guardarActualizacionCliente() {
     })
     .then(data => {
       console.log("Actualización exitosa:", data);
-      alert("Cliente actualizado correctamente");
+      showDialog("success", "Cliente actualizado correctamente");
       mostrarCreditos();
       
       // Cerrar el modal
@@ -328,7 +350,7 @@ export function guardarActualizacionCliente() {
     })
     .catch(error => {
       console.error("Error al actualizar:", error);
-      alert("Error al actualizar el cliente: " + error.message);
+      showDialog("error", "Error al actualizar cliente: " + error.message);
     });
 }
 
@@ -370,7 +392,7 @@ export function EliminarCliente(id) {
     })
     .then(data => {
       console.log("Eliminación exitosa:", data);
-      alert("Cliente eliminado correctamente");
+      showDialog("success", "Cliente eliminado correctamente");
       mostrarCreditos(); // Recargar la lista de créditos para reflejar el cambio
       
       // Cerrar el modal
@@ -380,7 +402,7 @@ export function EliminarCliente(id) {
     })
     .catch(error => {
       console.error("Error al eliminar:", error);
-      alert("Error al eliminar el cliente: " + error.message);
+      showDialog("error", "Error al eliminar el cliente: " + error.message);
     });
 }
 

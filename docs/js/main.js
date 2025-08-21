@@ -17,7 +17,8 @@ import
     cerrarModificarCliente,
     cerrarEliminarCliente,
     cerrarEditarComisiones,
-    cerrarEliminarComisiones
+    cerrarEliminarComisiones,
+    showDialog
 } from "./componentes/modales.js";
 
 window.SVG_ELIMINAR = SVG_ELIMINAR;
@@ -36,6 +37,7 @@ window.mostrarHistorial = mostrarHistorial;
 window.mostrarCreditos = mostrarCreditos;
 window.mostrarComisiones = mostrarComisiones;
 window.cerrarSesion = cerrarSesion;
+window.showDialog = showDialog;
 
 window.API_BASE_URL = API_BASE_URL;
 // Mostramos la vista inicial por defecto

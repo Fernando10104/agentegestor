@@ -1,15 +1,22 @@
-import {mostrarEliminarCliente,EliminarCliente, cargarClientes,cargarMarcas,CargarCredito,CrearClientes,mostrarEditarCliente,guardarActualizacionCliente } from "../api/operaciones.js";
-import { 
-  mostrarCargarCredito, 
-  ocultarCargarCredito, 
-  mostrarCargarCliente, 
-  ocultarCargarCliente } from "./modales.js";
+import { mostrarEliminarCliente, EliminarCliente, cargarClientes, cargarMarcas, CargarCredito, CrearClientes, mostrarEditarCliente, guardarActualizacionCliente } from "../api/operaciones.js";
+import {
+  mostrarCargarCredito,
+  ocultarCargarCredito,
+  mostrarCargarCliente,
+  ocultarCargarCliente
+} from "./modales.js";
 window.EliminarCliente = EliminarCliente;
 window.mostrarCargarCredito = mostrarCargarCredito;
 window.ocultarCargarCredito = ocultarCargarCredito;
 window.mostrarCargarCliente = mostrarCargarCliente;
 window.ocultarCargarCliente = ocultarCargarCliente;
 window.guardarActualizacionCliente = guardarActualizacionCliente;
+window.mostrarEditarCliente = mostrarEditarCliente;
+window.mostrarEliminarCliente = mostrarEliminarCliente;
+window.cargarClientes = cargarClientes;
+window.cargarMarcas = cargarMarcas;
+window.CargarCredito = CargarCredito;
+window.CrearClientes = CrearClientes;
 
 export function mostrarCreditos() {
   document.getElementById('contenido').innerHTML = `
@@ -243,11 +250,19 @@ export function mostrarCreditos() {
         <!-- ------------------------Fin del formulario de edición------------------------------------------------------->
         <div class="modal-confirmacion" id="modal-eliminar-cliente">
         </div>
-       
-        
-        <div class="footer-buttons">
+
+
+        <div class="footer-buttons" >
           <button onclick="exportarExcel()" class="export-excel">Exportar a excel</button>
         </div>
+
+        <dialog id="errorDialog" closedby="any">
+          <h3>❌ ERROR</h3>
+          <p>Cliente ya existe</p>
+          <form method="dialog">
+            <button id="closeDialog">Cerrar</button>
+          </form>
+        </dialog>
   `;
 
   let currentPage = 1;
@@ -261,7 +276,7 @@ export function mostrarCreditos() {
   const pageNumberSpan = document.getElementById("page-number");
 
   const tbody = document.getElementById("tbody-clientes");
-  
+
   tbody.addEventListener("click", function (event) {
     const btnEditar = event.target.closest(".btn-editar");
     const btnEliminar = event.target.closest(".btn-eliminar");
@@ -284,28 +299,29 @@ export function mostrarCreditos() {
     pageNumberSpan.textContent = `Página ${currentPage} de ${totalPages}`;
   }
 
-  function aplicarFiltro(campoManual = null, valorManual = null) {
-  currentPage = 1;
+  async function aplicarFiltro(campoManual = null, valorManual = null) {
+    console.log("Aplicando filtro...");
+    currentPage = 1;
+    
+    const campo = campoManual || selectCampo.value;
+    const valor = valorManual || inputBusqueda.value.trim();
+    const valorTexto = String(valor);
 
-  const campo = campoManual || selectCampo.value;
-  const valor = valorManual || inputBusqueda.value.trim();
-  const valorTexto = String(valor);
-
-  cargarClientes(campo, valorTexto, currentPage, limit)
-    .then(pagination => {
-      totalPages = pagination.totalPages;
-      updatePaginationButtons();
-    });
+    await cargarClientes(campo, valorTexto, currentPage, limit)
+      .then(pagination => {
+        totalPages = pagination.totalPages;
+        updatePaginationButtons();
+      });
   }
 
-   const formEditarClientes = document.getElementById("form-editar-clientes");
+  const formEditarClientes = document.getElementById("form-editar-clientes");
 
-    // Event listener para el formulario de edición
-    formEditarClientes.addEventListener("submit", function(e) {
-      e.preventDefault(); // ← Esto evita que se recargue la página
-      guardarActualizacionCliente(); // Llamar a tu función
-    });
-  
+  // Event listener para el formulario de edición
+  formEditarClientes.addEventListener("submit", function (e) {
+    e.preventDefault(); // ← Esto evita que se recargue la página
+    guardarActualizacionCliente(); // Llamar a tu función
+  });
+
 
   function goToPage(page) {
     if (page < 1 || page > totalPages) return;
@@ -321,16 +337,40 @@ export function mostrarCreditos() {
       });
   }
 
-  inputBusqueda.addEventListener("keydown", (e) => {
+  inputBusqueda.addEventListener("keydown", async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      aplicarFiltro();
+
+      const btn2 = document.getElementById("btn-buscar-clientes");
+      btn2.textContent = "Buscando...";
+      btn2.disabled = true;
+      try {
+        await aplicarFiltro(); // esperar que termine la búsqueda
+      } finally {
+        // Restaurar botón
+        btn2.textContent = "Buscar";
+        btn2.disabled = false;
+      }
+
     }
   });
-  document.getElementById("btn-buscar-clientes").addEventListener("click", (e) => {
+  document.getElementById("btn-buscar-clientes").addEventListener("click", async (e) => {
     e.preventDefault();
-    aplicarFiltro();
+    const btn = e.target;
+    const textoOriginal = btn.textContent;
+    // Mostrar estado "Buscando..."
+    btn.textContent = "Buscando...";
+    btn.disabled = true;
+
+    try {
+      await aplicarFiltro(); // esperar que termine la búsqueda
+    } finally {
+      // Restaurar botón
+      btn.textContent = textoOriginal;
+      btn.disabled = false;
+    }
   });
+
   selectCampo.addEventListener("change", () => aplicarFiltro());
 
   btnAnterior.addEventListener("click", () => {
@@ -341,10 +381,10 @@ export function mostrarCreditos() {
     goToPage(currentPage + 1);
   });
   function filtrarPorEstado(estado) {
-  aplicarFiltro("estado_cred", estado);  // corregí si el campo es "estado_cred"
+    aplicarFiltro("estado_cred", estado);  // corregí si el campo es "estado_cred"
   }
 
-  window.filtrarPorEstado = filtrarPorEstado; 
+  window.filtrarPorEstado = filtrarPorEstado;
 
   // Cargar inicialmente sin filtro
   cargarClientes("nombre", "", currentPage, limit)
@@ -352,10 +392,10 @@ export function mostrarCreditos() {
       totalPages = pagination.totalPages;
       updatePaginationButtons();
     });
-    // Cargar las marcas al cargar la página
-    cargarMarcas();
-
-    CargarCredito();
+  // Cargar las marcas al cargar la página
+  cargarMarcas();
+  CargarCredito();
+  CrearClientes();
 
 
 
@@ -385,9 +425,7 @@ export function mostrarCreditos() {
   }
   window.exportarExcel = exportarExcel;
 
-  cargarMarcas();
-  CargarCredito();
-  CrearClientes();
+
 
 
 

@@ -1,96 +1,100 @@
-export function mostrarModalCrearUsuario() {
-    console.log("Mostrando modal para crear usuario");
-    const modal = document.getElementById('modalcrear'); // ✅ Usar ID consistente
+/**
+ * Helper: Abrir modal por ID
+ * @param {string} id - id del elemento modal en el DOM
+ */
+function openModalById(id) {
+    const modal = document.getElementById(id);
     const overlay = document.querySelector('.modal-overlay');
-    if (modal) {
-        modal.classList.add('active');
-        if (overlay) overlay.classList.add('active');
-    } else {
-        console.error("Modal con ID 'modalcrear' no encontrado");
+    if (!modal) {
+        console.error(`openModalById: modal con id '${id}' no encontrado`);
+        return null;
     }
+    modal.classList.add('active');
+    if (overlay) overlay.classList.add('active');
+    return modal;
 }
 
-export function cerrarModalCrearUsuario() {
-    console.log("Cerrando modal para crear usuario");
-    const modal = document.getElementById('modalcrear'); // ✅ Usar el mismo ID
+/**
+ * Helper: Cerrar modal por ID
+ * @param {string} id - id del elemento modal en el DOM
+ * @param {{clearContent?: boolean, resetForm?: boolean}} options
+ */
+function closeModalById(id, options = {}) {
+    const modal = document.getElementById(id);
     const overlay = document.querySelector('.modal-overlay');
-    if (modal) {
-        modal.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
+    if (!modal) {
+        console.error(`closeModalById: modal con id '${id}' no encontrado`);
+        return;
+    }
+    modal.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
 
-        // ✅ Buscar el formulario dentro del modal
+    if (options.resetForm) {
         const form = modal.querySelector('form');
-        if (form) {
-            form.reset();
-        }
-    } else {
-        console.error("Modal con ID 'form-crear-usuario' no encontrado");
+        if (form) form.reset();
     }
-}
 
-export function cerrarModalEditarUsuario() {
-    console.log("Cerrando modal para editar usuario");
-    const modal = document.getElementById('modal-editar-usuario');
-    const overlay = document.querySelector('.modal-overlay');
-    if (modal) {
-        modal.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
-        // Limpiar el contenido del modal
+    if (options.clearContent) {
         modal.innerHTML = '';
-    } else {
-        console.error("Modal con ID 'modal-editar-usuario' no encontrado");
     }
 }
 
+// ----------------------
+// Modales para usuarios
+// ----------------------
+/**
+ * Mostrar modal para crear un usuario.
+ * Exportado como `mostrarModalCrearUsuario` para mantener compatibilidad.
+ */
+export function mostrarModalCrearUsuario() {
+    // ID usado en el HTML: 'modalcrear'
+    openModalById('modalcrear');
+}
+
+/**
+ * Cerrar modal de crear usuario y resetear el formulario interno si existe.
+ */
+export function cerrarModalCrearUsuario() {
+    closeModalById('modalcrear', { resetForm: true });
+}
+
+/**
+ * Cerrar modal de editar usuario. Limpiamos contenido para evitar estados residuales.
+ */
+export function cerrarModalEditarUsuario() {
+    closeModalById('modal-editar-usuario', { clearContent: true });
+}
+
+// -------------------------
+// Modales para categorías
+// -------------------------
+/**
+ * Mostrar modal para crear categoría.
+ */
 export function mostrarModalCrearCategoria() {
-    console.log("Mostrando modal para crear categoría");
-    const modal = document.getElementById('modal-crear-categoria'); // ✅ Usar ID consistente
-    const overlay = document.querySelector('.modal-overlay');
-    if (modal) {
-        modal.classList.add('active');
-        if (overlay) overlay.classList.add('active');
-    } else {
-        console.error("Modal con ID 'modal-crear-categoria' no encontrado");
-    }
+    openModalById('modal-crear-categoria');
 }
+
+/**
+ * Cerrar modal crear categoría y resetear formulario.
+ */
 export function cerrarModalCrearCategoria() {
-    console.log("Cerrando modal para crear categoría");
-    const modal = document.getElementById('modal-crear-categoria');
-    if (modal) {
-        modal.classList.remove('active');
-        const form = modal.querySelector('form');
-        if (form) {
-            form.reset();
-        }
-    } else {
-        console.error("Modal con ID 'modal-crear-categoria' no encontrado");
-    }
+    closeModalById('modal-crear-categoria', { resetForm: true });
 }
 
+// ----------------------
+// Modales para marcas
+// ----------------------
+/**
+ * Mostrar modal para crear marca.
+ */
 export function mostrarModalCrearMarca() {
-    console.log("Mostrando modal para crear marca");
-    const modal = document.getElementById('modal-crear-marca');
-    const overlay = document.querySelector('.modal-overlay');
-    if (modal) {
-        modal.classList.add('active');
-        if (overlay) overlay.classList.add('active');
-    } else {
-        console.error("Modal con ID 'modal-crear-marca' no encontrado");
-    }
+    openModalById('modal-crear-marca');
 }
 
+/**
+ * Cerrar modal crear marca y resetear formulario.
+ */
 export function cerrarModalCrearMarca() {
-    console.log("Cerrando modal para crear marca");
-    const modal = document.getElementById('modal-crear-marca');
-    const overlay = document.querySelector('.modal-overlay');
-    if (modal) {
-        modal.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
-        const form = modal.querySelector('form');
-        if (form) {
-            form.reset();
-        }
-    } else {
-        console.error("Modal con ID 'modal-crear-marca' no encontrado");
-    }
+    closeModalById('modal-crear-marca', { resetForm: true });
 }

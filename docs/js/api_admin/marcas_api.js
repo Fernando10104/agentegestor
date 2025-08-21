@@ -82,12 +82,14 @@ export function CrearNuevaMarca(){
     })
     .then(data => {
         console.log('Marca creada:', data);
+        showDialog('success', 'Marca creada correctamente');
         cerrarModalCrearMarca(); // Cerrar el modal después de crear la marca
         cargarMarcas(); // Recargar la lista de marcas
         // Aquí puedes agregar lógica para actualizar la lista de marcas
     })
     .catch(error => {
         console.error('Error:', error);
+        showDialog('error', 'Error al crear marca: ' + error.message);
     });
 }
 
@@ -120,6 +122,7 @@ export function EditarMarca(id_marca){
     })
     .then(data => {
         console.log('Marca editada:', data);
+        showDialog('success', 'Marca actualizada correctamente');
         const modal = document.getElementById('modal-editar-marca');
         if (modal) {
             modal.style.display = 'none';
@@ -128,6 +131,7 @@ export function EditarMarca(id_marca){
     })
     .catch(error => {
         console.error('Error:', error);
+        showDialog('error', 'Error al editar marca: ' + error.message);
     });
 }
 
@@ -151,9 +155,10 @@ export function EliminarMarca(id_marca) {
     })
     .then(data => {
         console.log('Marca eliminada:', data);
-        
+        showDialog('success', 'Marca eliminada correctamente');
     })
     .catch(error => {
         console.error('Error:', error);
+        showDialog('error', 'Error al eliminar marca: ' + error.message);
     });
 }

@@ -124,7 +124,7 @@ export function mostrarHistorial() {
             <textarea id="observaciones" name="observaciones"></textarea>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="create-btn" onclick="guardarActualizacion()">Guardar</button>
+            <button type="submit" class="create-btn">Guardar</button>
             <button type="button" class="cancel-btn" onclick="cerrarModificarHistorial()">Cancelar</button>
           </div>
         </form>

@@ -33,7 +33,7 @@ export function mostrarConfiguracion() {
 
 export function cerrarModificarHistorial() {
   const modal = document.getElementById('modal-editar-historial');
-  if (modal){ 
+  if (modal) {
     modal.style.display = 'none';
   }
 
@@ -73,4 +73,43 @@ export function cerrarEliminarComisiones() {
   if (modal) {
     modal.style.display = 'none';
   }
+}
+
+// Función genérica para abrir el diálogo
+export function showDialog(type, message) {
+  // Crear el dialog
+  const dialog = document.createElement("dialog");
+  dialog.style.border = "none";
+  dialog.style.borderRadius = "10px";
+  dialog.style.padding = "20px";
+  dialog.style.maxWidth = "400px";
+  dialog.style.width = "90%";
+  dialog.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
+
+  // Definir título según tipo
+  let titleText = "ℹ️ INFO";
+  if (type === "error") titleText = "❌ ERROR";
+  if (type === "exito" || type === "success") titleText = "✅ ÉXITO";
+
+  // Insertar contenido del diálogo
+    dialog.innerHTML = `
+  <h3>${titleText}</h3>
+  <br>
+  <p>${message}</p>
+  <form method="dialog">
+  <br>
+  <button id="closeDialog">Cerrar</button>
+  </form>
+  `;
+
+  // Insertar en el body
+  document.body.appendChild(dialog);
+
+  // Abrir modal
+  dialog.showModal();
+
+  // Cuando se cierra, eliminarlo del DOM
+  dialog.addEventListener("close", () => {
+    dialog.remove();
+  });
 }

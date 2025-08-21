@@ -17,7 +17,7 @@ export function mostrarGestionMetas(){
                     <h1>Gestión de Metas</h1>
                 </div>
                 <div class="table-responsive table-responsive-hijo">
-                    <table>
+                    <table id="tabla-metas">
                         <thead>
                             <tr>
                                 <th>Acciones</th>
@@ -26,6 +26,8 @@ export function mostrarGestionMetas(){
                                 <th>Nombre</th>
                                 <th>Meta Personal</th>
                                 <th>Meta lograda</th>
+                                <th>% Cumplimiento</th>
+                                <th>Ganancia</th>
                             </tr>
                         </thead>
                         <tbody id="metas-lista">
@@ -37,6 +39,10 @@ export function mostrarGestionMetas(){
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div class="footer-buttons" style="margin-top: 20px;">
+                    <button onclick="exportarExcel()" class="export-excel">Exportar a excel</button>
                 </div>
 
 
@@ -260,6 +266,24 @@ export function mostrarGestionMetas(){
     window.cargarGruposEnSelect = cargarGruposEnSelect;
     cargarGruposEnSelect();
 
+  function exportarExcel() {
+    const tabla = document.getElementById("tabla-metas");
+    let csv = "";
 
+    for (let fila of tabla.rows) {
+      // Recorremos las celdas de cada fila correctamente
+      let celdas = [...fila.cells].map(td => `${td.innerText}`).join(";");
+      csv += celdas + "\n";
+    }
+
+    // Agregamos el BOM para que Excel o LibreOffice lo lean con acentos
+    const BOM = "\uFEFF";
+    const blob = new Blob([BOM + csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "tabla_exportada_metas.csv";
+    link.click();
+  }
+  window.exportarExcel = exportarExcel;
     
 }

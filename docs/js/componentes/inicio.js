@@ -2,16 +2,44 @@ import { API_BASE_URL } from '../config.js';
 import {svg_grupo,svg_contactos,svg_logrado,svg_meta,svg_circulo } from './../../src/svg/svg.js';
 
 
-export async function mostrarInicio() {
+// Función para obtener mensaje motivacional
+async function obtenerMensajeMotivacional() {
   try {
-    const idUsuario = localStorage.getItem('id_usuario');
     const token = localStorage.getItem('token');
-    const response = await fetch(`${API_BASE_URL}/usuarios/${idUsuario}/inicio`, {
+    const response = await fetch(`${API_BASE_URL}/mensaje`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
-    const data = await response.json();
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data.mensaje || '¡Cada meta alcanzada es un paso hacia el éxito!';
+    } else {
+      return '¡Cada meta alcanzada es un paso hacia el éxito!';
+    }
+  } catch (error) {
+    console.error('Error al cargar mensaje motivacional:', error);
+    return '¡Cada meta alcanzada es un paso hacia el éxito!';
+  }
+}
+
+export async function mostrarInicio() {
+  try {
+    const idUsuario = localStorage.getItem('id_usuario');
+    const token = localStorage.getItem('token');
+    
+    // Obtener datos del usuario y mensaje motivacional en paralelo
+    const [responseUsuario, mensajeMotivacional] = await Promise.all([
+      fetch(`${API_BASE_URL}/usuarios/${idUsuario}/inicio`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }),
+      obtenerMensajeMotivacional()
+    ]);
+    
+    const data = await responseUsuario.json();
 
     const formatearMoneda = (valor) => {
       if (!valor) return '₲ 0';
@@ -25,7 +53,7 @@ export async function mostrarInicio() {
       <div class="user-info">
       <!-- Header del usuario -->
       <div class="user-header">
-        <div class="user-avatar" style="background: #f0f0f0; width: 120px; height: 120px; border-radius: 12%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+        <div class="user-avatar" style="background: #f0f0f0; width: 150px; height: 150px; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
         ${
           urlImagen
           ? `<img src="${urlImagen}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">`
@@ -47,7 +75,7 @@ export async function mostrarInicio() {
           ${svg_circulo}
         </div>
         <div class="motivational-text">
-          <h3>¡Cada meta alcanzada es un paso hacia el éxito!</h3>
+          <h3>${mensajeMotivacional}</h3>
           
         </div>
 
@@ -90,6 +118,3 @@ export async function mostrarInicio() {
     `;
   }
 }
-
-
-

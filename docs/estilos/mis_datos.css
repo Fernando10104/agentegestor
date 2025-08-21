@@ -746,11 +746,11 @@ nav button {
     font-size: 14px;
     color: #b3b3b3;
    }
-  p[id="info"]{
+  p[class="info"]{
     font-size: 18px;
     margin-top: 10px;
   }
-  p[id="rol"]{
+  p[class="rol"]{
     width: 100px;
     font-size: 12px;
     font-weight: 600;

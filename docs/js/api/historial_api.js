@@ -252,12 +252,13 @@ export function guardarActualizacion() {
       return response.json();
     })
     .then(data => {
-      console.log("Actualización exitosa:", data);
+      showDialog("success", "Crédito actualizado correctamente");
 
       mostrarHistorial()
     })
     .catch(error => {
       console.error("Error al actualizar:", error);
+      showDialog("error", "Error al actualizar crédito: " + error.message);
     });
 }
 
@@ -280,10 +281,11 @@ export function EliminarHistorial(id) {
       return response.json();
     })
     .then(data => {
-      console.log("Eliminación exitosa:", data);
+      showDialog("success", "Crédito eliminado correctamente");
       mostrarHistorial(); // Actualizar la vista del historial
     })
     .catch(error => {
       console.error("Error al eliminar:", error);
+      showDialog("error", "Error al eliminar crédito: " + error.message);
     });
 }

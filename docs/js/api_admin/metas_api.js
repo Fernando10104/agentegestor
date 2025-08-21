@@ -26,6 +26,11 @@ export function cargarMetas(busqueda = '') {
         const metasLista = document.getElementById('metas-lista');
         metasLista.innerHTML = ''; // Limpiar la lista antes de cargar nuevas metas
         const metas = data.metas || []; // Asegurarse de que metas sea un array
+        metas.sort((a, b) => {
+            const gananciaA = a.ganancia || 0;
+            const gananciaB = b.ganancia || 0;
+            return gananciaB - gananciaA; // Orden descendente
+        });
         
         metas.forEach(meta => {
             const row = document.createElement('tr');
@@ -47,6 +52,16 @@ export function cargarMetas(busqueda = '') {
                 <td class="meta-nombre">${meta.nombre || 'Sin nombre'}</td>
                 <td class="meta-personal">${metaPersonalFormateada}</td>
                 <td class="meta-total-comision">${totalComisionFormateada}</td>
+                <td class="meta-cumplimiento">
+                    ${
+                        (meta.meta_personal && meta.total_comision_asesor)
+                            ? `${Math.round((meta.total_comision_asesor / meta.meta_personal) * 100)}%`
+                            : 'N/A'
+                    }
+                </td>
+                <td class="ganancia">
+                    ${meta.ganancia ? meta.ganancia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : 'Sin ganancia'}
+                </td>
             `;
             metasLista.appendChild(row);
         });
@@ -96,12 +111,14 @@ export function guardarMetas(){
         return response.json();
     })
     .then(data => {
+        showDialog('success', 'Meta guardada correctamente');
         cargarMetas(); // Recargar la lista de metas
         // Opcional: cerrar modal, mostrar mensaje, etc.
     })
     .catch(error => {
         console.error('Error:', error);
         // Opcional: mostrar mensaje de error al usuario
+        showDialog('error', 'Error al guardar meta: ' + error.message);
     });
 
 }
@@ -158,6 +175,7 @@ export function CrearGrupo(event){
         return response.json();
     })
     .then(data => {
+        showDialog('success', 'Grupo creado correctamente');
         cargarMetas();
         // Cerrar el modal
         document.getElementById('modal-crear-grupo').classList.remove('active');
@@ -165,6 +183,7 @@ export function CrearGrupo(event){
     })
     .catch(error => {
         console.error('Error:', error);
+        showDialog('error', 'Error al crear grupo: ' + error.message);
         // Opcional: mostrar mensaje de error al usuario
     });
 
@@ -320,12 +339,14 @@ export function guardarEditarGrupo(event){
     })
     .then(data => {
         console.log('Grupo actualizado:', data);
+        showDialog('success', 'Grupo actualizado correctamente');
         // Cerrar el modal
         const modalEditarGrupo = document.getElementById('modal-editar-grupo');
         modalEditarGrupo.classList.remove('active');
     })
     .catch(error => {
         console.error('Error al guardar los cambios:', error);
+        showDialog('error', 'Error al guardar los cambios: ' + error.message);
     });
 }
 
@@ -392,11 +413,12 @@ export function EliminarGrupo(id) {
         })
         .then(data => {
             document.body.removeChild(modal);
+            showDialog('success', 'Comisión actualizada correctamente');
             cargarMetas();
         })
         .catch(error => {
             document.body.removeChild(modal);
-            alert('Error al eliminar grupo. Por favor, intente nuevamente.');
+            showDialog('error', 'Error al eliminar grupo: ' + error.message);
             console.error('Error al eliminar grupo:', error);
             console.error('Status code:', error?.response?.status || error.status || 'Desconocido');
         });

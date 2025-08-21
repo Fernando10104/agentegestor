@@ -259,11 +259,13 @@ export function guardarEditarUsuario(id_usuario) {
     })
     .then(data => {
         console.log('Usuario actualizado:', data);
+        showDialog('success', 'Usuario actualizado correctamente');
         cerrarModalEditarUsuario();
         CargarUsuarios(); // Recargar la lista de usuarios
     })
     .catch(error => {
         console.error('Error al actualizar usuario:', error);
+        showDialog('error', 'Error al actualizar usuario: ' + error.message);
         alert('Error al actualizar usuario. Por favor, intente nuevamente.');
     });
 }
@@ -310,12 +312,13 @@ export function CrearUsuario(){
         })
         .then(data => {
             console.log('Usuario creado:', data);
+            showDialog('success', 'Usuario creado correctamente');
             cerrarModalCrearUsuario();
             CargarUsuarios(); // Recargar la lista de usuarios
         })
         .catch(error => {
             console.error('Error al crear usuario:', error);
-            alert('Error al crear usuario. Por favor, intente nuevamente.');
+            showDialog('error', 'Error al crear usuario: ' + error.message);
         });
     });
 }
@@ -359,12 +362,13 @@ export function EliminarUsuario(id) {
             return response.json();
         })
         .then(data => {
+            showDialog('success', 'Usuario eliminado correctamente');
             document.body.removeChild(modal);
             CargarUsuarios();
         })
         .catch(error => {
             document.body.removeChild(modal);
-            alert('Error al eliminar usuario. Por favor, intente nuevamente.');
+            showDialog('error', 'Error al eliminar usuario: ' + error.message);
             console.error('Error al eliminar usuario:', error);
             console.error('Status code:', error?.response?.status || error.status || 'Desconocido');
 

@@ -87,4 +87,51 @@ document.getElementById('btn-confirmar-foto').addEventListener('click', () => {
   });
 });
 
+async function cargarMisDatos() {
+    const token = localStorage.getItem('token');
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/mis-datos`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al cargar los datos del usuario');
+        }
+
+        const data = await response.json();
+        console.log('Datos del usuario:', data);
+        
+        // Actualizar los elementos HTML con los datos recibidos
+        actualizarDatosEnHTML(data.usuario);
+        
+    } catch (error) {
+        console.error('Error al cargar mis datos:', error);
+        
+        // Opcional: mostrar mensaje de error al usuario
+    }
+}
+
+function actualizarDatosEnHTML(datos) {
+    // Actualizar por IDs únicos
+    const nombreElement = document.getElementById('nombre-completo');
+    const cedulaElement = document.getElementById('cedula');
+    const correoElement = document.getElementById('correo');
+    const telefonoElement = document.getElementById('telefono');
+    const rolElement = document.getElementById('rol');
+
+    if (nombreElement) nombreElement.textContent = datos.nombre || 'Sin nombre';
+    if (cedulaElement) cedulaElement.textContent = datos.usuario || 'Sin cédula';
+    if (correoElement) correoElement.textContent = datos.correo || 'Sin correo';
+    if (telefonoElement) telefonoElement.textContent = datos.telefono || 'Sin teléfono';
+    if (rolElement) rolElement.textContent = datos.rol || 'Sin rol';
+}
+
+// Llamar la función cuando se carga la página
+document.addEventListener('DOMContentLoaded', cargarMisDatos);
+
 

@@ -58,7 +58,7 @@ export function mostrarComisiones() {
                       <th>Entidad</th>
                       <th>Comision bruto</th>
                       <th>Pagado</th>
-                      <th>Comision restante</th>
+                      <th>Comision Asesor</th>
                       <th>Supervisor</th>
                       <th>Asesor</th>
                       <th>Ganancia</th>

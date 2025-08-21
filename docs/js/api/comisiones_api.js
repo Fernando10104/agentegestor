@@ -290,11 +290,12 @@ export function GuardarCambiosComision() {
     return res.json();
   }).then(data => {
     document.getElementById('modal-editar-comision').style.display = 'none';
+    showDialog('success', 'Comisión actualizada correctamente');
     mostrarComisiones(); // Recargar las comisiones después de guardar
   })    
   .catch(err => {
     console.error(err);
-    throw err;
+    showDialog('error', 'Error al actualizar la comisión: ' + err.message);
   });
 }
 
@@ -316,10 +317,11 @@ export function EliminarComision(id) {
     })
     .then(data => {
       console.log("Comisión eliminada:", data);
+      showDialog('success', 'Comisión eliminada correctamente');
       mostrarComisiones(); // Recargar las comisiones después de eliminar
     })
     .catch(err => {
       console.error(err);
-      throw err;
+      showDialog('error', 'Error al eliminar la comisión: ' + err.message);
     });
 }

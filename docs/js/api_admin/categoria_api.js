@@ -72,11 +72,13 @@ export function guardarNuevaCategoria(event) {
     })
     .then(data => {
         console.log('Categoría creada:', data);
+        showDialog('success', 'Categoría creada correctamente');
         cerrarModalCrearCategoria(); // Cerrar el modal después de crear
         cargarCategorias(); // Recargar la lista de categorías
     })
     .catch(error => {
         console.error('Error al crear categoría:', error);
+        showDialog('error', 'Error al crear categoría: ' + error.message);
     });
 }
 
@@ -99,10 +101,12 @@ export function EliminarCategoria(id) {
     })
     .then(data => {
         console.log('Categoría eliminada:', data);
+        showDialog('success', 'Categoría eliminada correctamente');
         cargarCategorias(); // Recargar la lista de categorías
     })
     .catch(error => {
         console.error('Error al eliminar categoría:', error);
+        showDialog('error', 'Error al eliminar categoría: ' + error.message);
     });
 }
 
@@ -134,10 +138,12 @@ export function guardarEditarCategoria(id) {
     })
     .then(data => {
         console.log('Categoría editada:', data);
+        showDialog('success', 'Categoría actualizada correctamente');
         cerrarModalEditarCategoria(); // Cerrar el modal después de editar
         cargarCategorias(); // Recargar la lista de categorías
     })
     .catch(error => {
         console.error('Error al editar categoría:', error);
+        showDialog('error', 'Error al editar categoría: ' + error.message);
     });
 }

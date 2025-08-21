@@ -2,53 +2,113 @@ import { API_BASE_URL } from './config.js';
 import { verificarToken } from "./componentes/verificarToken.js";
 import { cerrarSesion } from "./componentes/cerrarSesion.js";
 import { actualizarFechaHoraParaguay } from "./componentes/Fechahora.js";
-import { mostrarConfiguracion } from "./componentes/modales.js";
+import { mostrarConfiguracion,showDialog } from "./componentes/modales.js";
 import { mostrarGestionUsuario } from "./com_admin/usuario.js";
-import { mostrarModalCrearUsuario, cerrarModalCrearUsuario,cerrarModalEditarUsuario,mostrarModalCrearMarca,cerrarModalCrearMarca } from "./com_admin/modales_admin.js";
-import { mostrarGestionCategorias} from "./com_admin/categorias.js";
-import { mostrarGestionMarcas} from "./com_admin/marcas.js";
+import { mostrarModalCrearUsuario, cerrarModalCrearUsuario, cerrarModalEditarUsuario, mostrarModalCrearMarca, cerrarModalCrearMarca } from "./com_admin/modales_admin.js";
+import { mostrarGestionCategorias } from "./com_admin/categorias.js";
+import { mostrarGestionMarcas } from "./com_admin/marcas.js";
+import { mostrarGestionMetas } from "./com_admin/metas.js";
+import {mostrarGestionImport} from "./com_admin/importacion.js";
+import{svg_importar} from "./../src/svg/svg.js";
 
-import {mostrarGestionMetas} from  "./com_admin/metas.js";
 
-// Funciones globales
+/**
+ * admin.js
+ * Código de inicialización del panel de administración.
+ * - configura listeners globales
+ * - proporciona helpers para mostrar dashboards y datos
+ * - exporta algunas funciones al objeto global `window` para acceso desde HTML
+ */
+
+// Exponer funciones principales al scope global (usado desde atributos HTML/onClick en templates)
 window.mostrarGestionUsuario = mostrarGestionUsuario;
 window.mostrarGestionCategorias = mostrarGestionCategorias;
 window.mostrarGestionMarcas = mostrarGestionMarcas;
 window.mostrarGestionMetas = mostrarGestionMetas;
-
+window.mostrarGestionImport = mostrarGestionImport;
 
 window.cerrarSesion = cerrarSesion;
+window.svg_importar = svg_importar;
 window.API_BASE_URL = API_BASE_URL;
+// Modales (exportados desde com_admin/modales_admin.js)
 window.cerrarModalCrearUsuario = cerrarModalCrearUsuario;
 window.mostrarModalCrearUsuario = mostrarModalCrearUsuario;
 window.cerrarModalEditarUsuario = cerrarModalEditarUsuario;
 window.mostrarModalCrearMarca = mostrarModalCrearMarca;
 window.cerrarModalCrearMarca = cerrarModalCrearMarca;
 
+window.showDialog = showDialog;
+
 // Event listeners
 document.getElementById('usuario-icono').addEventListener('click', () => {
-    mostrarConfiguracion();
+  mostrarConfiguracion();
 });
 
 // ✅ AGREGAR FUNCIÓN PARA EL BOTÓN "mostrarInicio"
-window.mostrarInicio = function() {
-    const contenedor = document.getElementById('contenido');
-    if (contenedor) {
-        contenedor.innerHTML = '';
-    }
-    document.getElementById('contenido').innerHTML = `
+window.mostrarInicio = function () {
+  const contenedor = document.getElementById('contenido');
+  if (contenedor) {
+    contenedor.innerHTML = '';
+  }
+  document.getElementById('contenido').innerHTML = `
     <div class="header">
         <h1>Bienvenido al panel de administración</h1>
         <h4>Aquí puedes gestionar usuarios, categorías y marcas.</h4>
-        <br>
-        <div class="usuarios-conectados">
+        
+        <div style="display: flex; justify-content: space-between; gap: 1.5rem; margin-top:2.0rem;" >
+          <div class="resumen" style="background-color: #E6FCEE; color:#14532D;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h4>Total Ingresos:</h4>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up h-4 w-4 text-green-600 dark:text-green-400" data-lov-id="src/pages/Finanzas.tsx:78:14" data-lov-name="TrendingUp" data-component-path="src/pages/Finanzas.tsx" data-component-line="78" data-component-file="Finanzas.tsx" data-component-name="TrendingUp" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20text-green-600%20dark%3Atext-green-400%22%7D"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+              </div>
+              <div>
+                <h3 id="total-ingresos">Gs. 0</h3>
+                
+              </div>
+          </div>
+          <div class="resumen" style="background-color: #FEEBEB; color:#7F1D1D;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <h4>Total egresos:</h4>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-down h-4 w-4 text-red-600 dark:text-red-400" data-lov-id="src/pages/Finanzas.tsx:92:14" data-lov-name="TrendingDown" data-component-path="src/pages/Finanzas.tsx" data-component-line="92" data-component-file="Finanzas.tsx" data-component-name="TrendingDown" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20text-red-600%20dark%3Atext-red-400%22%7D"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline><polyline points="16 17 22 17 22 11"></polyline></svg>
+                  
+              </div>
+              <div st>
+                  <h3 id="total-gastos">Gs. 0</h3>
+              </div>
+          </div>
+          <div class="resumen" style="background-color: #DFECFE; color:#1E3A8A;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <h4>Balance:</h4>
+                  <span>₲</span>
+              </div>
+              <div>
+                  <h3 id="total-balance">Gs. 0</h3>
+              </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap: 12px;">
+          <div class="card" style="margin:20px 0; height: auto;">
             <p class="usuarios-conectados-titulo">Usuarios conectados:</p>
             <ul id="lista-usuarios-conectados" class="lista-usuarios"></ul>
+          </div>
+
+          <div class="card" style="margin:20px 0; width: 300px;">
+            <h4>Mensaje Motivacional</h4>
+            <form id="mensaje-motivacional-form" >
+              <div class="form-group">
+                <textarea placeholder="Escribe tu mensaje aquí"></textarea>
+              </div>
+              <button type="submit">Enviar</button>
+            </form>
+          </div>
         </div>
     </div>
     `;
-    obtenerUsuariosConectados();
-    mostrarDashboardIngresos()
+  obtenerUsuariosConectados();
+  mostrarDashboardIngresos()
+  mostrarDatosbalance()
+  setupMensajeMotivacianalForm();
 };
 
 // Inicialización
@@ -57,19 +117,19 @@ verificarToken();
 
 // ✅ CARGAR USUARIOS AL INICIAR LA PÁGINA
 document.addEventListener('DOMContentLoaded', () => {
-    mostrarInicio(); // Mostrar la pantalla de inicio al cargar la página
+  mostrarInicio(); // Mostrar la pantalla de inicio al cargar la página
 });
 
 const botones = document.querySelectorAll('.nav-btn');
 
-    botones.forEach(boton => {
-        boton.addEventListener('click', () => {
-            // Quitar clase activa de todos
-            botones.forEach(b => b.classList.remove('active'));
-            // Activar el que fue clickeado
-            boton.classList.add('active');
-        });
-    });
+botones.forEach(boton => {
+  boton.addEventListener('click', () => {
+    // Quitar clase activa de todos
+    botones.forEach(b => b.classList.remove('active'));
+    // Activar el que fue clickeado
+    boton.classList.add('active');
+  });
+});
 
 async function obtenerUsuariosConectados() {
   const token = localStorage.getItem("token");
@@ -82,12 +142,12 @@ async function obtenerUsuariosConectados() {
   }
   const usuarios = await res.json();
   console.log("Usuarios conectados:", usuarios);
-  
+
   const lista = document.getElementById("lista-usuarios-conectados");
   if (!lista) return;
-  
+
   lista.innerHTML = "";
-  
+
   if (usuarios.length === 0) {
     lista.classList.add('vacia');
   } else {
@@ -126,14 +186,14 @@ setInterval(enviarHeartbeat, 60000);
 // Opcional: enviar heartbeat inmediatamente al cargar la app
 enviarHeartbeat();
 
-export function mostrarDashboardIngresos(){
+export function mostrarDashboardIngresos() {
   const contenedor = document.getElementById('contenido');
-  
+
   // ✅ Verificar si ya existe el dashboard para no duplicarlo
   if (document.getElementById('dashboard-container')) {
     return; // Si ya existe, no hacer nada
   }
-  
+
   // ✅ Crear el HTML del dashboard sin reemplazar el contenido existente
   const dashboardHTML = `
       <div id="dashboard-container">
@@ -268,7 +328,7 @@ async function cambiarGrupos() {
     usuariosGrupo.forEach(usuario => {
       empleados.push(usuario.nombre);
       logrados.push(usuario.total_comision_asesor || 0);
-      
+
       // Buscar la meta personal del usuario en dataMetas
       const metaUsuario = dataMetas.find(meta => meta.usuario === usuario.usuario);
       metas.push(metaUsuario ? (metaUsuario.meta_personal || 0) : 0);
@@ -317,7 +377,7 @@ async function cambiarGrupos() {
           },
           tooltip: {
             callbacks: {
-              label: function(context) {
+              label: function (context) {
                 const label = context.dataset.label || '';
                 const value = context.parsed.x || 0;
                 return `${label}: ${formatearGs(value)}`;
@@ -329,7 +389,7 @@ async function cambiarGrupos() {
           x: {
             beginAtZero: true,
             ticks: {
-              callback: function(value) {
+              callback: function (value) {
                 return formatearGs(value);
               }
             },
@@ -358,7 +418,7 @@ async function cambiarGrupos() {
         color: "#0D86D9"
       },
       {
-        label: "Meta Restante", 
+        label: "Meta Restante",
         value: metaRestante,
         color: "#D53D61"
       }
@@ -391,7 +451,7 @@ async function cambiarGrupos() {
             },
             tooltip: {
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   const label = context.label || '';
                   const value = context.parsed || 0;
                   const total = ingresosTotales + metaRestante;
@@ -486,3 +546,89 @@ export function buscarMetas() {
 window.mostrarDashboardIngresos = mostrarDashboardIngresos;
 window.cargarGruposEnSelect = cargarGruposEnSelect;
 window.cambiarGrupos = cambiarGrupos;
+
+
+export function mostrarDatosbalance() {
+  const token = localStorage.getItem("token");
+  fetch(`${API_BASE_URL}/balance`, {
+    headers: { "Authorization": "Bearer " + token }
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('total-ingresos').textContent = `Gs. ${data.comision_bruto.toLocaleString()}`;
+      document.getElementById('total-gastos').textContent = `Gs. ${data.comision_asesor.toLocaleString()}`;
+      document.getElementById('total-balance').textContent = `Gs. ${data.ganancia.toLocaleString()}`;
+    })
+    .catch(err => console.error("Error al obtener datos de balance:", err));
+
+}
+
+function setupMensajeMotivacianalForm() {
+  // Usar setTimeout para asegurar que el DOM esté completamente cargado
+  setTimeout(() => {
+    const form = document.getElementById('mensaje-motivacional-form');
+    
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevenir recarga de página
+        
+        // ✅ CAMBIO: Buscar textarea en lugar de input[type="text"]
+        const textarea = form.querySelector('textarea');
+        const button = form.querySelector('button[type="submit"]');
+        const mensaje = textarea.value.trim();
+        
+        // Validar que el mensaje no esté vacío
+        if (!mensaje) {
+          alert('Por favor escribe un mensaje antes de enviar');
+          textarea.focus();
+          return;
+        }
+        
+        // Mostrar estado de carga
+        const textoOriginal = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Enviando...';
+        
+        try {
+          const token = localStorage.getItem('token');
+          
+          const url = new URL(`${API_BASE_URL}/mensaje`);
+          url.searchParams.append('mensaje', mensaje);
+          
+          const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          if (response.ok) {
+            const resultado = await response.json();
+            console.log('Mensaje enviado correctamente:', resultado);
+            
+            // ✅ CAMBIO: Limpiar el textarea
+            textarea.value = '';
+            
+            // Mostrar mensaje de éxito
+            alert('Mensaje motivacional enviado correctamente! 🎉');
+            
+          } else {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+          }
+          
+        } catch (error) {
+          console.error('Error al enviar mensaje:', error);
+          alert('Hubo un error al enviar el mensaje. Por favor intenta nuevamente.');
+        } finally {
+          // Restaurar estado del botón
+          button.disabled = false;
+          button.textContent = textoOriginal;
+        }
+      });
+      
+      console.log('✅ Event listener del mensaje motivacional configurado');
+    } else {
+      console.warn('⚠️ No se encontró el formulario mensaje-motivacional-form');
+    }
+  }, 100);
+}
