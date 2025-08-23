@@ -1,14 +1,15 @@
+// inicio dela pagina de asesores y supervisores.
 import { API_BASE_URL } from './config.js';
 import {SVG_EDITAR,SVG_ELIMINAR} from "../src/svg/svg.js";
-
-import { mostrarInicio } from "./componentes/inicio.js";
-import { mostrarHistorial } from "./componentes/historial.js";
-import { mostrarCreditos } from "./componentes/operaciones.js";
-import { mostrarComisiones } from "./componentes/comisiones.js";
+//../js_empleados/
+import { mostrarInicio } from "../js_empleados/inicio/inicio.js";
+import { mostrarHistorial } from "../js_empleados/historial/historial.js";
+import { mostrarCreditos } from "../js_empleados/operaciones/operaciones.js";
+import { mostrarComisiones } from "../js_empleados/comisiones/comisiones.js";
 import { verificarToken } from "./componentes/verificarToken.js";
 import {cerrarSesion} from "./componentes/cerrarSesion.js";
-//import { mostrarConfiguracion } from "./componentes/configuracion.js"; 
 import {actualizarFechaHoraParaguay} from "./componentes/Fechahora.js";
+import {mostrarDashboardIngresos} from "../js_empleados/administracion/administracion.js"
 import 
 {
  mostrarConfiguracion,
@@ -44,23 +45,6 @@ window.API_BASE_URL = API_BASE_URL;
 document.getElementById('usuario-icono').addEventListener('click', () => {
     mostrarConfiguracion();
 });
-document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-    window.location.href = "/login.html";
-    } else {
-    try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        if (payload.rol !== "admin") {
-        window.location.href = "/inicio.html";
-        }
-    } catch (e) {
-        console.error("Token inválido", e);
-        window.location.href = "/login.html";
-    }
-    }
-});
-
 
 
 actualizarFechaHoraParaguay(); // Actualizamos la fecha y hora al cargar la página
@@ -72,6 +56,7 @@ verificarToken(); // Verificamos el token al cargar la página
 // ✅ CARGAR USUARIOS AL INICIAR LA PÁGINA
 document.addEventListener('DOMContentLoaded', async () => {
     await mostrarInicio(); // Mostrar la pantalla de inicio al cargar la página
+    verificarRolYMostrarAdmin(); // Verificar rol y mostrar botón admin si corresponde
 });
 
 const botones = document.querySelectorAll('.nav-btn');
@@ -174,4 +159,35 @@ function verificarEntradaAlIniciarSesion() {
 if (localStorage.getItem("token")) {
     verificarEntradaAlIniciarSesion();
 }
+
+// Función para mostrar/ocultar el botón admin según el rol
+function verificarRolYMostrarAdmin() {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+        // Decodificar el token JWT para obtener el rol
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const rol = payload.rol;
+        
+        const btnAdmin = document.getElementById('btn-admin');
+        if (rol === 'supervisor') {
+            btnAdmin.style.display = 'flex';
+        } else {
+            btnAdmin.style.display = 'none';
+        }
+    } catch (error) {
+        console.error("Error al verificar rol:", error);
+    }
+}
+
+// Función para mostrar el panel de administración (crear según necesidades)
+function mostrarAdmin() {
+    // Aquí puedes cargar el módulo de administración
+    console.log("Cargando panel de administración...");
+    // Ejemplo: import("../admin/admin.js").then(module => module.mostrarAdmin());
+    mostrarDashboardIngresos()
+}
+window.mostrarDashboardIngresos = mostrarDashboardIngresos;
+window.mostrarAdmin = mostrarAdmin;
 

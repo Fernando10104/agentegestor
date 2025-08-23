@@ -18,7 +18,7 @@ export async function verificarToken() {
 
         if (response.ok) {
             const data = await response.json();
-            console.log("Token válido. Usuario:", data.usuario);
+            console.log("Token válido.");
 
             // Mostrar nombre en la interfaz
             document.getElementById("usuario-nombre").innerText = data.usuario.nombre;

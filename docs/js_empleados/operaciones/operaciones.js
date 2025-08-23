@@ -1,10 +1,10 @@
-import { mostrarEliminarCliente, EliminarCliente, cargarClientes, cargarMarcas, CargarCredito, CrearClientes, mostrarEditarCliente, guardarActualizacionCliente } from "../api/operaciones.js";
+import { mostrarEliminarCliente, EliminarCliente, cargarClientes, cargarMarcas, CargarCredito, CrearClientes, mostrarEditarCliente, guardarActualizacionCliente } from "../operaciones/operaciones_api.js";
 import {
   mostrarCargarCredito,
   ocultarCargarCredito,
   mostrarCargarCliente,
   ocultarCargarCliente
-} from "./modales.js";
+} from "../../js/componentes/modales.js";
 window.EliminarCliente = EliminarCliente;
 window.mostrarCargarCredito = mostrarCargarCredito;
 window.ocultarCargarCredito = ocultarCargarCredito;

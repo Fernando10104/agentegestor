@@ -69,9 +69,16 @@ document.getElementById("login-form").addEventListener("submit", async function 
             // Guardar JWT y opcionalmente el rol
             localStorage.setItem("token", token);
             localStorage.setItem("rol", data.rol); // si lo necesitás más adelante
+            const rol = data.rol;
+            if(rol === "admin"){
+                window.location.href = "/agentegestor/index.html";
+                //window.location.href = "/index.html"; // Redirigir al index después de iniciar sesión
+            } else {
+                //window.location.href = "/inicio.html";
+                window.location.href = "/agentegestor/inicio.html";
+            }
+
             
-            window.location.href = "/agentegestor/index.html";
-            //window.location.href = "/index.html"; // Redirigir al index después de iniciar sesión
         } else {
             const errorData = await response.json();
             alert("Error de inicio de sesión: " + (errorData.detail || "Credenciales inválidas"));

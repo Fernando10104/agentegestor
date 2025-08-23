@@ -43,6 +43,22 @@ window.showDialog = showDialog;
 document.getElementById('usuario-icono').addEventListener('click', () => {
   mostrarConfiguracion();
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+    window.location.href = "/login.html";
+    } else {
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        if (payload.rol !== "admin") {
+        window.location.href = "/inicio.html";
+        }
+    } catch (e) {
+        console.error("Token inválido", e);
+        window.location.href = "/login.html";
+    }
+    }
+});
 
 // ✅ AGREGAR FUNCIÓN PARA EL BOTÓN "mostrarInicio"
 window.mostrarInicio = function () {
