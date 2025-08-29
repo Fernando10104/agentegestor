@@ -71,11 +71,11 @@ document.getElementById("login-form").addEventListener("submit", async function 
             localStorage.setItem("rol", data.rol); // si lo necesitás más adelante
             const rol = data.rol;
             if(rol === "admin"){
-                window.location.href = "/agentegestor/index.html";
-                //window.location.href = "/index.html"; // Redirigir al index después de iniciar sesión
+                //window.location.href = "/agentegestor/index.html";
+                window.location.href = "/index.html"; // Redirigir al index después de iniciar sesión
             } else {
-                //window.location.href = "/inicio.html";
-                window.location.href = "/agentegestor/inicio.html";
+                window.location.href = "/inicio.html";
+                //window.location.href = "/agentegestor/inicio.html";
             }
 
             

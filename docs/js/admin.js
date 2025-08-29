@@ -46,16 +46,16 @@ document.getElementById('usuario-icono').addEventListener('click', () => {
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
     if (!token) {
-    window.location.href = "/agentegestor/login.html";
+    window.location.href = "/login.html";
     } else {
     try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         if (payload.rol !== "admin") {
-        window.location.href = "/agentegestor/inicio.html";
+        window.location.href = "/inicio.html";
         }
     } catch (e) {
         console.error("Token inválido", e);
-        window.location.href = "/agentegestor/login.html";
+        window.location.href = "/login.html";
     }
     }
 });
