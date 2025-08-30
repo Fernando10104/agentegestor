@@ -57,11 +57,11 @@ export function mostrarComisiones() {
                       <th>%</th>
                       <th>Entidad</th>
                       <th>Comision bruto</th>
-                      <th>Pagado</th>
-                      <th>Comision Asesor</th>
+                      <th>Comision asesor</th>
+                      <th>Comision supervisor</th>
+                      <th>Comision gerente</th>    
                       <th>Supervisor</th>
                       <th>Asesor</th>
-                      <th>Ganancia</th>
                       <th>Estado</th>
                       <th>Calificacion</th>
                       <th>Sucursal</th>
@@ -73,6 +73,7 @@ export function mostrarComisiones() {
                   </tbody>
                 </table>
               </div>
+
               <!-- ---------------------------------------------------------------------------------------------------------------- -->
               <div id="modal-editar-comision" ">
                 
@@ -81,6 +82,12 @@ export function mostrarComisiones() {
               <div class="modal-confirmacion" id="modal-eliminar-comision" >
                
               </div>
+
+              <!-- Subtítulo con total de comisiones del gerente -->
+              <div class="total-ganancias" style="text-align: center; margin: 20px 0; padding: 10px; background-color: #f0f8ff; border: 1px solid #ddd; border-radius: 5px;">
+                <h3 id="total-gerente" style="margin: 0; color: #2c3e50;">Total de comisiones del Gerente: $0.00</h3>
+              </div>
+
               <div class="pagination">
                 <button id="btn-anterior" disabled>Anterior</button>
                 <span id="page-number">Página 1</span>

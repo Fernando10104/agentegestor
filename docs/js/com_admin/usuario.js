@@ -100,7 +100,7 @@ export function mostrarGestionUsuario() {
                     </div>
 
                     <div class="form-group">
-                    <label for="comision">Comisión</label>
+                    <label for="comision">Comisión (%)</label>
                     <input type="number" id="comision"  />
                     </div>
 

@@ -49,9 +49,17 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
       const comisiones = data.comisiones ?? [];
       const total = data.total_pages ?? 0;
       const totalPages = total;
+      
 
       // Guardar todas las filas para filtro local
       todasLasFilas = comisiones;
+      // Sumar el monto de todos los desembolsados
+      const totalDesembolsado = comisiones
+        .filter(item => item.estado === 'DESEMBOLSADO')
+        .reduce((sum, item) => sum + (parseFloat(item.monto_gerente) || 0), 0);
+      // Puedes usar totalDesembolsado donde lo necesites
+      console.log('Total desembolsado:', totalDesembolsado);
+      document.getElementById("total-gerente").innerText = `Total de comisiones del Gerente: $ ${totalDesembolsado}`;
 
       const tbody = document.querySelector('.table-responsive tbody');
       if (!comisiones.length) {
@@ -76,16 +84,21 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
             <td>${item.porcentaje ?? ''}%</td>
             <td>${item.entidad ?? ''}</td>
             <td>${item.comision_bruto ?? ''}</td>
-            <td>${item.porcentaje_pagado + '%' ?? ''}</td>
-            <td>${item.comision_asesor ?? ''}</td>
+            <td>${item.monto_asesor ?? ''}</td>
+            <td>${item.monto_supervisor ?? ''}</td>
+            <td>${item.monto_gerente ?? ''}</td>
             <td>${item.supervisor ?? ''}</td>
             <td>${item.asesor ?? ''}</td>
-            <td>${item.ganancia ?? ''}</td>
             <td>${item.estado ?? ''}</td>
             <td>${item.calificacion ?? ''}</td>
             <td>${item.sucursal ?? ''}</td>
             <td>${item.obs ?? ''}</td>
           </tr>
+          
+          
+
+          
+
         `).join('');
       }
 
@@ -163,12 +176,16 @@ export function mostrarEditarComisiones(id){
         <input type="number" id="comision_bruto" name="comision_bruto" />
       </div>
       <div class="form-group">
-        <label for="pagado">Pagado:</label>
-        <input type="number" id="pagado" name="pagado" />
+        <label for="monto_asesor">Monto Asesor:</label>
+        <input type="number" id="monto_asesor" name="monto_asesor" />
       </div>
       <div class="form-group">
-        <label for="comision_restante">Comisión Restante:</label>
-        <input type="number" id="comision_restante" name="comision_restante" />
+        <label for="monto_supervisor">Monto Supervisor:</label>
+        <input type="number" id="monto_supervisor" name="monto_supervisor" />
+      </div>
+      <div class="form-group">
+        <label for="monto_gerente">Monto Gerente:</label>
+        <input type="number" id="monto_gerente" name="monto_gerente" />
       </div>
       <div class="form-group">
         <label for="supervisor">Supervisor:</label>
@@ -177,10 +194,6 @@ export function mostrarEditarComisiones(id){
       <div class="form-group">
         <label for="asesor">Asesor:</label>
         <input type="text" id="asesor" name="asesor" />
-      </div>
-      <div class="form-group">
-        <label for="ganancia">Ganancia:</label>
-        <input type="number" id="ganancia" name="ganancia" />
       </div>
       <div class="form-group">
         <label for="calificacion">Calificación:</label>
@@ -226,11 +239,11 @@ export function mostrarEditarComisiones(id){
         document.getElementById('porcentaje').value = comision.porcentaje ?? '';
         document.getElementById('entidad').value = comision.entidad ?? '';
         document.getElementById('comision_bruto').value = comision.comision_bruto ?? '';
-        document.getElementById('pagado').value = comision.porcentaje_pagado ?? '';
-        document.getElementById('comision_restante').value = comision.comision_asesor ?? '';
+        document.getElementById('monto_asesor').value = comision.monto_asesor ?? '';
+        document.getElementById('monto_supervisor').value = comision.monto_supervisor ?? '';
+        document.getElementById('monto_gerente').value = comision.monto_gerente ?? '';
         document.getElementById('supervisor').value = comision.supervisor ?? '';
         document.getElementById('asesor').value = comision.asesor ?? '';
-        document.getElementById('ganancia').value = comision.ganancia ?? '';
         document.getElementById('calificacion').value = comision.calificacion ?? '';
         document.getElementById('obs').value = comision.obs ?? '';
       }
@@ -249,15 +262,39 @@ export function GuardarCambiosComision() {
   const porcentaje = document.getElementById('porcentaje').value;
   const entidad = document.getElementById('entidad').value;
   const comision_bruto = document.getElementById('comision_bruto').value;
-  const pagado = document.getElementById('pagado').value;
-  const comision_restante = document.getElementById('comision_restante').value;
+  const monto_asesor = document.getElementById('monto_asesor').value;
+  const monto_supervisor = document.getElementById('monto_supervisor').value;
+  const monto_gerente = document.getElementById('monto_gerente').value;
   const supervisor = document.getElementById('supervisor').value;
   const asesor = document.getElementById('asesor').value;
-  const ganancia = document.getElementById('ganancia').value;
   const calificacion = document.getElementById('calificacion').value;
   const obs = document.getElementById('obs').value;
 
-  const url = `${API_BASE_URL}/comisiones/${id}`;
+  const idInt = parseInt(id, 10) || 0;
+  const montoInt = parseInt(monto, 10) || 0;
+  const porcentajeInt = parseInt(porcentaje, 10) || 0;
+  const comisionBrutoInt = parseInt(comision_bruto, 10) || 0;
+  const montoAsesorInt = parseInt(monto_asesor, 10) || 0;
+  const montoSupervisorInt = parseInt(monto_supervisor, 10) || 0;
+  const montoGerenteInt = parseInt(monto_gerente, 10) || 0;
+  console.log("Datos a guardar:", {
+    idInt,
+    nombre_cliente,
+    cedula,
+    montoInt,
+    porcentajeInt,
+    entidad,
+    comisionBrutoInt,
+    montoAsesorInt,
+    montoSupervisorInt,
+    montoGerenteInt,
+    supervisor,
+    asesor,
+    calificacion,
+    obs
+  });
+
+  const url = `${API_BASE_URL}/comisiones/${idInt}`;
   const token = localStorage.getItem("token");
 
   return fetch(url, {
@@ -267,18 +304,18 @@ export function GuardarCambiosComision() {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      id,
+      id: idInt,
       nombre_cliente,
       cedula,
-      monto,
-      porcentaje,
+      monto: montoInt,
+      porcentaje: porcentajeInt,
       entidad,
-      comision_bruto,
-      porcentaje_pagado : pagado,
-      comision_asesor: comision_restante,
+      comision_bruto: comisionBrutoInt,
+      monto_asesor: montoAsesorInt,
+      monto_supervisor: montoSupervisorInt,
+      monto_gerente: montoGerenteInt,
       supervisor,
       asesor,
-      ganancia,
       calificacion,
       obs
     }),

@@ -59,7 +59,7 @@ export function CargarUsuarios(valor = "", rol2 = null) {
                     <td>${usuario[1] || ''}</td>
                     <td>${usuario[7] || ''}</td>
                     <td>${usuario[4] || ''}</td>
-                    <td>${usuario[5] || ''}</td>
+                    <td>${usuario[5] + '%' || ''}</td>
                     <td>${usuario[9] || ''}</td>
                     <td>${usuario[10] || ''}</td>
                     <td>${usuario[8] || ''}</td>
@@ -136,7 +136,7 @@ export async function mostrarEditarUsuario(id) {
                 </div>
 
                 <div class="form-group">
-                    <label for="comision-editar">Comisión</label>
+                    <label for="comision-editar">Comisión (%)</label>
                     <input type="number" id="comision-editar" value="" />
                 </div>
 
