@@ -116,7 +116,7 @@ function marcarEntrada() {
     // Verificar si ya se marcó entrada hoy
     if (entradaHoy === fechaHoy) {
         console.log("Entrada ya marcada hoy");
-        alert("Ya has marcado tu entrada hoy");
+        showDialog("success", "Ya has marcado tu entrada hoy");
         return;
     }
 
@@ -163,9 +163,40 @@ function verificarEntradaAlIniciarSesion() {
     }
 
     // Preguntar si quiere marcar entrada
-    if (confirm("No tienes entrada marcada hoy. ¿Quieres marcarla ahora?")) {
+    // Modal personalizado con confirmación/cancelación
+    const dialog = document.createElement("dialog");
+    dialog.style.border = "none";
+    dialog.style.borderRadius = "10px";
+    dialog.style.padding = "20px";
+    dialog.style.maxWidth = "400px";
+    dialog.style.width = "90%";
+    dialog.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
+
+    dialog.innerHTML = `
+        <h3>ℹ️ INFO</h3>
+        <br>
+        <p>No tienes entrada marcada hoy. ¿Quieres marcarla ahora?</p>
+        <br>
+        <div style="display:flex; gap:10px; justify-content:space-around;">
+            <button id="confirmEntrada" style="margin-top:15px;padding:8px 15px;border:none;border-radius:8px;background:#22C55E;color:white;cursor:pointer;font-weight:bold;">Marcar entrada</button>
+            <button id="cancelEntrada" style="margin-top:15px;padding:8px 15px;border:none;border-radius:8px;background:crimson;color:white;cursor:pointer;font-weight:bold;">Cancelar</button>
+        </div>
+    `;
+
+    document.body.appendChild(dialog);
+    dialog.showModal();
+
+    dialog.querySelector("#confirmEntrada").onclick = () => {
         marcarEntrada();
-    }
+        dialog.close();
+    };
+    dialog.querySelector("#cancelEntrada").onclick = () => {
+        dialog.close();
+    };
+
+    dialog.addEventListener("close", () => {
+        dialog.remove();
+    });
 }
 
 // Llamar esta función justo después de iniciar sesión correctamente

@@ -472,14 +472,29 @@ export function cargarAsistencias(usuario, fechaInicio = null, fechaFin = null) 
             return;
         }
 
-        tbody.innerHTML = data.asistencias.map(asistencia => `
+        tbody.innerHTML = data.asistencias.map(asistencia => {
+            // Función para formatear la fecha como "YYYY-MM-DD / HH:mm:ss"
+            function formatFecha(fechaStr) {
+            if (!fechaStr) return '';
+            const fecha = new Date(fechaStr);
+            if (isNaN(fecha.getTime())) return fechaStr; // Si no es válida, retorna original
+            const yyyy = fecha.getFullYear();
+            const mm = String(fecha.getMonth() + 1).padStart(2, '0');
+            const dd = String(fecha.getDate()).padStart(2, '0');
+            const hh = String(fecha.getHours()).padStart(2, '0');
+            const min = String(fecha.getMinutes()).padStart(2, '0');
+            const ss = String(fecha.getSeconds()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd} / ${hh}:${min}:${ss}`;
+            }
+            return `
             <tr>
                 <td>${asistencia.id || ''}</td>
                 <td>${asistencia.usuario || ''}</td>
-                <td>${asistencia.fecha_ingreso || ''}</td>
-                <td>${asistencia.fecha_salida || ''}</td>
+                <td>${formatFecha(asistencia.fecha_ingreso)}</td>
+                <td>${formatFecha(asistencia.fecha_salida)}</td>
             </tr>
-        `).join('');
+            `;
+        }).join('');
         
         return data.asistencias;
     })

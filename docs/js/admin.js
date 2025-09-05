@@ -10,6 +10,7 @@ import { mostrarGestionMarcas } from "./com_admin/marcas.js";
 import { mostrarGestionMetas } from "./com_admin/metas.js";
 import {mostrarGestionImport} from "./com_admin/importacion.js";
 import{svg_importar} from "./../src/svg/svg.js";
+import {mostrarMenuBackup} from './com_admin/backup.js';
 
 
 /**
@@ -26,6 +27,7 @@ window.mostrarGestionCategorias = mostrarGestionCategorias;
 window.mostrarGestionMarcas = mostrarGestionMarcas;
 window.mostrarGestionMetas = mostrarGestionMetas;
 window.mostrarGestionImport = mostrarGestionImport;
+window.mostrarMenuBackup = mostrarMenuBackup;
 
 window.cerrarSesion = cerrarSesion;
 window.svg_importar = svg_importar;

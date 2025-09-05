@@ -101,7 +101,7 @@ function marcarEntrada() {
     // Verificar si ya se marcó entrada hoy
     if (entradaHoy === fechaHoy) {
         console.log("Entrada ya marcada hoy");
-        alert("Ya has marcado tu entrada hoy");
+        showDialog("success", "Ya has marcado tu entrada hoy");
         return;
     }
 
@@ -138,19 +138,29 @@ function marcarEntrada() {
 window.marcarEntrada = marcarEntrada;
 
 function verificarEntradaAlIniciarSesion() {
-    const fechaHoy = new Date().toDateString(); // Fecha actual formateada
+    const fechaHoy = new Date().toDateString();
     const entradaHoy = localStorage.getItem('entradaMarcada');
 
-    // Si ya marcó entrada hoy, no hace nada
     if (entradaHoy === fechaHoy) {
         console.log("Entrada ya marcada hoy, no se solicita.");
         return;
     }
 
-    // Preguntar si quiere marcar entrada
-    if (confirm("No tienes entrada marcada hoy. ¿Quieres marcarla ahora?")) {
-        marcarEntrada();
-    }
+    // Usar el modal de modales.js en vez de confirm
+    showDialog({
+        titulo: "Marcar entrada",
+        mensaje: "No tienes entrada marcada hoy. ¿Quieres marcarla ahora?",
+        botones: [
+            {
+                texto: "Sí, marcar entrada",
+                accion: () => marcarEntrada()
+            },
+            {
+                texto: "Cancelar",
+                accion: () => {}
+            }
+        ]
+    });
 }
 
 // Llamar esta función justo después de iniciar sesión correctamente
