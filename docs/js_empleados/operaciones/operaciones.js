@@ -21,7 +21,7 @@ window.CrearClientes = CrearClientes;
 export function mostrarCreditos() {
   document.getElementById('contenido').innerHTML = `
     <div class="header">
-      <h1>Registros credito</h1>
+      <h1>Registros Clientes</h1>
     </div>
     <div class="controls">
       <div class="control-filtros">
@@ -32,7 +32,6 @@ export function mostrarCreditos() {
           <option value="contacto">Contacto</option>
           <option value="direccion">Dirección</option>
           <option value="correo">Correo</option>
-          <option value="estado_cred">Estados Créditos</option>
           <option value="e_registro">Asesor</option>
         </select>
       
@@ -66,7 +65,6 @@ export function mostrarCreditos() {
             <th>Direccion</th>
             <th>Correo</th>
             <th>Faja Inforcomf</th>
-            <th>Estado Credito</th>
             <th>Asesor</th>
             <th>Fecha Registro</th>
           </tr>

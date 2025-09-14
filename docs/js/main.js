@@ -206,3 +206,13 @@ if (localStorage.getItem("token")) {
     verificarEntradaAlIniciarSesion();
 }
 
+
+document.getElementById('toggle-sidebar').addEventListener('click', function() {
+    const svgIcon = document.querySelector('#toggle-sidebar svg');
+    if (svgIcon) {
+        svgIcon.style.transform = svgIcon.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+        svgIcon.style.transition = 'transform 0.3s';
+    }
+    const sidebar = document.querySelector('.sidebar-menu');
+    sidebar.classList.toggle('sidebar-collapsed');
+});

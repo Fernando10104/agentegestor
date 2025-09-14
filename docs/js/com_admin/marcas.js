@@ -60,11 +60,11 @@ export function mostrarGestionMarcas() {
                 </div>
                 <div class="form-group">
                     <label for="comision-nuevo">Comisión Nuevo %:</label>
-                    <input type="number" id="comision-nuevo" name="comision-nuevo" required>
+                    <input type="number" step="any" id="comision-nuevo" name="comision-nuevo" required>
                 </div>
                 <div class="form-group">
                     <label for="comision-renovacion">Comisión Renovación %:</label>
-                    <input type="number" id="comision-renovacion" name="comision-renovacion" required>
+                    <input type="number" step="any" id="comision-renovacion" name="comision-renovacion" required>
                 </div>
                 <div class="form-group">
                     <label for="metodo-pago">Método de Pago:</label>
@@ -100,11 +100,11 @@ export function mostrarGestionMarcas() {
                     </div>
                     <div class="form-group">
                         <label for="editar-comision-nuevo">Comisión Nuevo %:</label>
-                        <input type="number" id="editar-comision-nuevo" name="editar-comision-nuevo" required>
+                        <input type="number" step="any" id="editar-comision-nuevo" name="editar-comision-nuevo" required>
                     </div>
                     <div class="form-group">
                         <label for="editar-comision-renovacion">Comisión Renovación %:</label>
-                        <input type="number" id="editar-comision-renovacion" name="editar-comision-renovacion" required>
+                        <input type="number" step="any" id="editar-comision-renovacion" name="editar-comision-renovacion" required>
                     </div>
                     <div class="form-group">
                         <label for="editar-metodo-pago">Método de Pago:</label>

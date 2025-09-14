@@ -138,28 +138,49 @@ function marcarEntrada() {
 window.marcarEntrada = marcarEntrada;
 
 function verificarEntradaAlIniciarSesion() {
-    const fechaHoy = new Date().toDateString();
+    const fechaHoy = new Date().toDateString(); // Fecha actual formateada
     const entradaHoy = localStorage.getItem('entradaMarcada');
 
+    // Si ya marcó entrada hoy, no hace nada
     if (entradaHoy === fechaHoy) {
         console.log("Entrada ya marcada hoy, no se solicita.");
         return;
     }
 
-    // Usar el modal de modales.js en vez de confirm
-    showDialog({
-        titulo: "Marcar entrada",
-        mensaje: "No tienes entrada marcada hoy. ¿Quieres marcarla ahora?",
-        botones: [
-            {
-                texto: "Sí, marcar entrada",
-                accion: () => marcarEntrada()
-            },
-            {
-                texto: "Cancelar",
-                accion: () => {}
-            }
-        ]
+    // Preguntar si quiere marcar entrada
+    // Modal personalizado con confirmación/cancelación
+    const dialog = document.createElement("dialog");
+    dialog.style.border = "none";
+    dialog.style.borderRadius = "10px";
+    dialog.style.padding = "20px";
+    dialog.style.maxWidth = "400px";
+    dialog.style.width = "90%";
+    dialog.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
+
+    dialog.innerHTML = `
+        <h3>ℹ️ INFO</h3>
+        <br>
+        <p>No tienes entrada marcada hoy. ¿Quieres marcarla ahora?</p>
+        <br>
+        <div style="display:flex; gap:10px; justify-content:space-around;">
+            <button id="confirmEntrada" style="margin-top:15px;padding:8px 15px;border:none;border-radius:8px;background:#22C55E;color:white;cursor:pointer;font-weight:bold;">Marcar entrada</button>
+            <button id="cancelEntrada" style="margin-top:15px;padding:8px 15px;border:none;border-radius:8px;background:crimson;color:white;cursor:pointer;font-weight:bold;">Cancelar</button>
+        </div>
+    `;
+
+    document.body.appendChild(dialog);
+    dialog.showModal();
+
+    dialog.querySelector("#confirmEntrada").onclick = () => {
+        marcarEntrada();
+        dialog.close();
+    };
+    dialog.querySelector("#cancelEntrada").onclick = () => {
+        dialog.close();
+    };
+
+    dialog.addEventListener("close", () => {
+        dialog.remove();
     });
 }
 
@@ -201,3 +222,12 @@ function mostrarAdmin() {
 window.mostrarDashboardIngresos = mostrarDashboardIngresos;
 window.mostrarAdmin = mostrarAdmin;
 
+document.getElementById('toggle-sidebar').addEventListener('click', function() {
+    const svgIcon = document.querySelector('#toggle-sidebar svg');
+    if (svgIcon) {
+        svgIcon.style.transform = svgIcon.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+        svgIcon.style.transition = 'transform 0.3s';
+    }
+    const sidebar = document.querySelector('.sidebar-menu');
+    sidebar.classList.toggle('sidebar-collapsed');
+});

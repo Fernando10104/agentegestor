@@ -21,7 +21,7 @@ window.CrearClientes = CrearClientes;
 export function mostrarCreditos() {
   document.getElementById('contenido').innerHTML = `
     <div class="header">
-      <h1>Registros credito</h1>
+      <h1>Registros Clientes</h1>
     </div>
     <div class="controls">
       <div class="control-filtros">
@@ -32,7 +32,6 @@ export function mostrarCreditos() {
           <option value="contacto">Contacto</option>
           <option value="direccion">Dirección</option>
           <option value="correo">Correo</option>
-          <option value="estado_cred">Estados Créditos</option>
           <option value="e_registro">Asesor</option>
         </select>
       
@@ -66,7 +65,6 @@ export function mostrarCreditos() {
             <th>Direccion</th>
             <th>Correo</th>
             <th>Faja Inforcomf</th>
-            <th>Estado Credito</th>
             <th>Asesor</th>
             <th>Fecha Registro</th>
           </tr>
@@ -77,12 +75,6 @@ export function mostrarCreditos() {
       </table>
     </div>
     
-    <div class="pagination">
-      <button id="cancelado" onclick="filtrarPorEstado('cancelado')">Cancelado</button>
-      <button id="ingresado" onclick="filtrarPorEstado('ingresado')">Ingresado</button>
-      <button id="aprobado" onclick="filtrarPorEstado('aprobado')">Aprobado</button>
-      <button id="desembolsado" onclick="filtrarPorEstado('desembolsado')">Desembolsado</button>
-    </div>
 
     <div class="pagination">
       <button id="btn-anterior" disabled>Anterior</button>
@@ -232,15 +224,7 @@ export function mostrarCreditos() {
             <label for="asesor">Asesor:</label>
             <input type="text" id="asesor" name="asesor" disabled/>
         </div>
-        <div class="form-group">
-            <label for="estado-1">Estado:</label>
-            <select id="estado-1" name="estado">
-                <option value="CANCELADO">Cancelado</option>
-                <option value="INGRESADO">Ingresado</option>
-                <option value="APROBADO">Aprobado</option>
-                <option value="DESEMBOLSADO">Desembolsado</option>
-            </select>
-        </div>
+        
         <div class="modal-footer">
             <button type="submit" class="create-btn">Guardar</button>
             <button type="button" class="cancel-btn" onclick="cerrarModificarCliente()">Cancelar</button>
@@ -380,11 +364,6 @@ export function mostrarCreditos() {
   btnSiguiente.addEventListener("click", () => {
     goToPage(currentPage + 1);
   });
-  function filtrarPorEstado(estado) {
-    aplicarFiltro("estado_cred", estado);  // corregí si el campo es "estado_cred"
-  }
-
-  window.filtrarPorEstado = filtrarPorEstado;
 
   // Cargar inicialmente sin filtro
   cargarClientes("nombre", "", currentPage, limit)
