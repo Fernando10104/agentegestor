@@ -123,7 +123,7 @@ function actualizarTipoComision() {
   if (marcaObj) {
     tipoComisionSelect.innerHTML = `
       <option value="Nuevo">Nuevo - ${marcaObj.comision_nuevo}%</option>
-      <option value="Nuevo">Renovación - ${marcaObj.comision_renovacion}%</option>
+      <option value="Renovacion">Renovación - ${marcaObj.comision_renovacion}%</option>
     `;
   } else {
     tipoComisionSelect.innerHTML = '<option>Seleccione una marca válida</option>';

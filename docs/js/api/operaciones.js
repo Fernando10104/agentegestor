@@ -148,6 +148,7 @@ export function CargarCredito(){
       nombre_usuario: localStorage.getItem('nombre_usuario'),
       superior: parseInt(localStorage.getItem('superior'))
     };
+    console.log(data);
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(`${API_BASE_URL}/crear-credito`, {
