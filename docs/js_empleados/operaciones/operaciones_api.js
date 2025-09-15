@@ -122,8 +122,8 @@ function actualizarTipoComision() {
 
   if (marcaObj) {
     tipoComisionSelect.innerHTML = `
-      <option value="${marcaObj.comision_nuevo}">Nuevo - ${marcaObj.comision_nuevo}%</option>
-      <option value="${marcaObj.comision_renovacion}">Renovación - ${marcaObj.comision_renovacion}%</option>
+      <option value="Nuevo">Nuevo - ${marcaObj.comision_nuevo}%</option>
+      <option value="Nuevo">Renovación - ${marcaObj.comision_renovacion}%</option>
     `;
   } else {
     tipoComisionSelect.innerHTML = '<option>Seleccione una marca válida</option>';
@@ -141,7 +141,7 @@ export function CargarCredito(){
       faja: document.getElementById('faja').value.replace(/\D/g, ''),
       categoria: document.getElementById('categoria').value,
       marca: document.getElementById('marca').value,
-      tipo_comision: parseInt(document.getElementById('tipo_comision').value.replace(/\D/g, '')),
+      tipo_comision: document.getElementById('tipo_comision').value,
       tipo_credito: document.getElementById('tipo_credito').value,
       importe: parseFloat(document.getElementById('importe').value.replace(/\D/g, '')),
       obs: document.getElementById('obs').value,

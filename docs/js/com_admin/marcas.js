@@ -16,6 +16,9 @@ export function mostrarGestionMarcas() {
                 <input type="text" placeholder="Buscar por marca..." id="filtro-input">
                 <button id="btn-filtrar" onclick="filtrarMarcas()">Filtrar</button>
                 <button id="crear-marca" onclick="mostrarModalCrearMarca()">+ nueva marca</button>
+                <select id="usuario-select">
+                    <option value="">Seleccionar usuario...</option>
+                </select>
             </div>
         </div>
         <br>
@@ -32,6 +35,7 @@ export function mostrarGestionMarcas() {
                         <th>COMISION NUEVO</th>
                         <th>COMISION RENOVACION</th>
                         <th>METODO DE PAGO</th>
+                        <th>id_usuario</th>
                     </tr>
                 </thead>
                 <tbody id="marcas-lista">
@@ -86,6 +90,7 @@ export function mostrarGestionMarcas() {
                     <p id="descripcion-editar">Modifique la información de la marca</p>
                 </div>
                 <form class="modal-form" id="form-editar-marca">
+                    
                     <div class="form-group">
                         <label for="editar-nombre-marca">Nombre de la Marca:</label>
                         <input type="text" id="editar-nombre-marca" name="editar-nombre-marca" required>
@@ -122,12 +127,55 @@ export function mostrarGestionMarcas() {
             </div>
         
     `;
+    async function cargarUsuariosEnSelect() {
+        const select = document.getElementById("usuario-select");
+        select.innerHTML = `<option value="">Seleccionar usuario...</option>`;
+        const url = new URL(`${API_BASE_URL}/usuarios`);
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const { usuarios } = await response.json();
+            console.log("Usuarios cargados:", usuarios);
+            usuarios.forEach(usuario => {
+                const option = document.createElement("option");
+                option.value = usuario[0]; // id_usuario
+                option.textContent = usuario[7]; // nombre
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error al cargar usuarios:", error);
+        }
+    }
+    cargarUsuariosEnSelect();
+
+    function detectarUsuarioYCargarMarcas() {
+        console.log("Detectando usuario seleccionado y cargando marcas...");
+        const select = document.getElementById("usuario-select");
+        const busqueda = document.getElementById("filtro-input").value;
+        const id_usuario = select.value;
+        console.log("Usuario seleccionado:", id_usuario);
+        cargarMarcas(busqueda, id_usuario);
+    }
+
+    // Escuchar cambios en el select de usuario
+    document.getElementById("usuario-select").addEventListener("change", detectarUsuarioYCargarMarcas);
+
+    // También puedes llamar al cargar marcas cuando se filtra
+    document.getElementById("btn-filtrar").addEventListener("click", detectarUsuarioYCargarMarcas);
+
+
     function filtrarMarcas(){
         const busqueda = document.getElementById("filtro-input").value;
         cargarMarcas(busqueda);
     }
     window.filtrarMarcas = filtrarMarcas;
-    cargarMarcas();
+    
 
     document.getElementById("form-crear-marca").addEventListener("submit", function(e) {
         e.preventDefault();
@@ -205,7 +253,7 @@ export function mostrarGestionMarcas() {
         document.getElementById('btn-confirmar-eliminar').onclick = function() {
             EliminarMarca(id);
             modal.style.display = 'none';
-            cargarMarcas();
+            detectarUsuarioYCargarMarcas()
         };
         document.getElementById('btn-cancelar-eliminar').onclick = function() {
             modal.style.display = 'none';
@@ -214,4 +262,6 @@ export function mostrarGestionMarcas() {
 
     window.mostrarModalEliminarMarca = mostrarModalEliminarMarca;
     window.cerrarModalEliminarMarca = cerrarModalEliminarMarca;
+
+
 }

@@ -2,14 +2,19 @@
 import { SVG_EDITAR, SVG_ELIMINAR, SVG_ASISTENCIAS } from '../../src/svg/svg.js';
 
 
-export function cargarMarcas(busqueda = '') {
+
+
+
+export function cargarMarcas(busqueda = '', id_usuario = '') {
     const url = new URL(`${API_BASE_URL}/marcas_all`);
     const token = localStorage.getItem('token');
 
     if (busqueda) {
         url.searchParams.append("busqueda", busqueda);
     }
-
+    url.searchParams.append("id_usuario", id_usuario);
+    console.log("datos de url",url.toString());
+    
     fetch(url, {
         method: 'GET',
         headers: {
@@ -43,6 +48,7 @@ export function cargarMarcas(busqueda = '') {
                 <td class="marca-comision-nuevo">${marca.comision_nuevo}</td>
                 <td class="marca-comision-renovacion">${marca.comision_renovacion}</td>
                 <td class="marca-metodo-pago">${marca.metodo_pago}</td>
+                <td class="marca-id-usuario">${marca.id_usuario}</td>
             `;
             marcasLista.appendChild(row);
         });
@@ -103,7 +109,8 @@ export function EditarMarca(id_marca){
         monto_max: document.getElementById("editar-monto-maximo").value,
         comision_nuevo: document.getElementById("editar-comision-nuevo").value,
         comision_renovacion: document.getElementById("editar-comision-renovacion").value,
-        metodo_pago: document.getElementById("editar-metodo-pago").value
+        metodo_pago: document.getElementById("editar-metodo-pago").value,
+        
     };
 
     fetch(url, {
@@ -127,7 +134,13 @@ export function EditarMarca(id_marca){
         if (modal) {
             modal.style.display = 'none';
         }
-        cargarMarcas(); // Recargar la lista de marcas después de editar
+        console.log("Detectando usuario seleccionado y cargando marcas...");
+        const select = document.getElementById("usuario-select");
+        const busqueda = document.getElementById("filtro-input").value;
+        const id_usuario = select.value;
+        console.log("Usuario seleccionado:", id_usuario);
+        cargarMarcas(busqueda, id_usuario);
+        // Recargar la lista de marcas después de editar
     })
     .catch(error => {
         console.error('Error:', error);
