@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../../js/config.js';
+import { API_BASE_URL } from '../../../js/config.js';
 
 // Variable global para guardar todas las filas
 let todasLasFilas = [];

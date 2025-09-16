@@ -1,6 +1,6 @@
-import { API_BASE_URL } from '../../js/config.js';
-import { verificarToken } from "../../js/componentes/verificarToken.js";
-import { svg_importar } from "../../src/svg/svg.js";
+import { API_BASE_URL } from '../../../js/config.js';
+import { verificarToken } from "../../../js/componentes/verificarToken.js";
+import { svg_importar } from "../../../src/svg/svg.js";
 
 /**
  * admin.js

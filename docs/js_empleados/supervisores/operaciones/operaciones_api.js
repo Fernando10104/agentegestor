@@ -1,5 +1,5 @@
-import { showDialog } from '../componentes/modales.js';
-import { API_BASE_URL } from '../config.js';
+import { API_BASE_URL } from '../../../js/config.js';
+import { showDialog } from '../../../js/componentes/modales.js';
 export function cargarClientes(campo = "nombre", valor = "", page = 1, limit = 10) {
   const url = new URL(`${API_BASE_URL}/clientes`);
 
@@ -51,6 +51,7 @@ export function cargarClientes(campo = "nombre", valor = "", page = 1, limit = 1
             <td>${cliente.direccion ?? ''}</td>
             <td>${cliente.correo ?? ''}</td>
             <td>${cliente.faja_inforcomf ?? ''}</td>
+            <td>${cliente.estado_cred ?? ''}</td>
             <td>${cliente.e_registro ?? ''}</td>
             <td>${(cliente.fecha_registro ?? '').split('T')[0]}</td>
           </tr>
@@ -285,6 +286,7 @@ export function mostrarEditarCliente(id) {
           document.getElementById("correo/1").value = cliente.correo || "";
           document.getElementById("faja-1").value = cliente.faja_inforcomf || "";
           document.getElementById("asesor").value = cliente.e_registro || "";
+          document.getElementById("estado-1").value = cliente.estado_cred || "";
         } else {
           console.error("No se encontraron datos del cliente.");
           showDialog("error", "No se encontraron datos del cliente");
@@ -308,7 +310,7 @@ export function guardarActualizacionCliente() {
   const direccion = document.getElementById("direccion").value;
   const correo = document.getElementById("correo/1").value;
   const faja = document.getElementById("faja-1").value;
-  
+  const estado = document.getElementById("estado-1").value;
 
   const token = localStorage.getItem("token");
 
@@ -324,7 +326,8 @@ export function guardarActualizacionCliente() {
       contacto,
       direccion,
       correo,
-      faja_inforcomf: faja
+      faja_inforcomf: faja,
+      estado_cred: estado
     }),
   })
     .then(response => {

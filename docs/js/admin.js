@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         if (payload.rol !== "admin") {
-        window.location.href = "/inicio.html";
+        window.location.href = "/asesores.html";
         }
     } catch (e) {
         console.error("Token inválido", e);

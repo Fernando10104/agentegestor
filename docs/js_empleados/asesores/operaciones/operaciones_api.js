@@ -1,5 +1,5 @@
-import { API_BASE_URL } from '../../js/config.js';
-import { showDialog } from '../../js/componentes/modales.js';
+import { API_BASE_URL } from '../../../js/config.js';
+import { showDialog } from '../../../js/componentes/modales.js';
 export function cargarClientes(campo = "nombre", valor = "", page = 1, limit = 10) {
   const url = new URL(`${API_BASE_URL}/clientes`);
 

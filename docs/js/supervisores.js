@@ -2,14 +2,14 @@
 import { API_BASE_URL } from './config.js';
 import {SVG_EDITAR,SVG_ELIMINAR} from "../src/svg/svg.js";
 //../js_empleados/
-import { mostrarInicio } from "../js_empleados/inicio/inicio.js";
-import { mostrarHistorial } from "../js_empleados/historial/historial.js";
-import { mostrarCreditos } from "../js_empleados/operaciones/operaciones.js";
-import { mostrarComisiones } from "../js_empleados/comisiones/comisiones.js";
+import { mostrarInicio } from "../js_empleados/Supervisores/inicio/inicio.js";
+import { mostrarHistorial } from "../js_empleados/Supervisores/historial/historial.js";
+import { mostrarCreditos } from "../js_empleados/supervisores/operaciones/operaciones.js";
+import { mostrarComisiones } from "../js_empleados/supervisores/comisiones/comisiones.js";
 import { verificarToken } from "./componentes/verificarToken.js";
 import {cerrarSesion} from "./componentes/cerrarSesion.js";
 import {actualizarFechaHoraParaguay} from "./componentes/Fechahora.js";
-import {mostrarDashboardIngresos} from "../js_empleados/administracion/administracion.js"
+import {mostrarDashboardIngresos} from "../js_empleados/supervisores/administracion/administracion.js"
 import 
 {
  mostrarConfiguracion,
@@ -53,11 +53,6 @@ verificarToken(); // Verificamos el token al cargar la página
 
 
 
-// ✅ CARGAR USUARIOS AL INICIAR LA PÁGINA
-document.addEventListener('DOMContentLoaded', async () => {
-    await mostrarInicio(); // Mostrar la pantalla de inicio al cargar la página
-    verificarRolYMostrarAdmin(); // Verificar rol y mostrar botón admin si corresponde
-});
 
 const botones = document.querySelectorAll('.nav-btn');
 
@@ -192,25 +187,7 @@ if (localStorage.getItem("token")) {
 }
 
 // Función para mostrar/ocultar el botón admin según el rol
-function verificarRolYMostrarAdmin() {
-    const token = localStorage.getItem("token");
-    if (!token) return;
 
-    try {
-        // Decodificar el token JWT para obtener el rol
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const rol = payload.rol;
-        
-        const btnAdmin = document.getElementById('btn-admin');
-        if (rol === 'supervisor') {
-            btnAdmin.style.display = 'flex';
-        } else {
-            btnAdmin.style.display = 'none';
-        }
-    } catch (error) {
-        console.error("Error al verificar rol:", error);
-    }
-}
 
 // Función para mostrar el panel de administración (crear según necesidades)
 function mostrarAdmin() {
@@ -231,3 +208,4 @@ document.getElementById('toggle-sidebar').addEventListener('click', function() {
     const sidebar = document.querySelector('.sidebar-menu');
     sidebar.classList.toggle('sidebar-collapsed');
 });
+

@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../../js/config.js';
+import { API_BASE_URL } from '../../../js/config.js';
 // Variable global para guardar todas las filas
 let todasLasFilas = [];
 
@@ -55,18 +55,14 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
 
       // Sumar el monto de todos los desembolsados
       
-      if (rol === "supervisor") {
-        const totalDesembolsado = comisiones
-          .filter(item => item.estado === 'DESEMBOLSADO')
-          .reduce((sum, item) => sum + (parseFloat(item.monto_supervisor) || 0), 0);
-        document.getElementById("total-gerente").innerText = `Total de comisiones del Supervisor: $ ${totalDesembolsado}`;
-      } else if (rol === "asesor") {
-        const totalDesembolsado = comisiones
-          .filter(item => item.estado === 'DESEMBOLSADO')
-          .reduce((sum, item) => sum + (parseFloat(item.monto_asesor) || 0), 0);
-        document.getElementById("total-gerente").innerText = `Total de comisiones del Asesor: $ ${totalDesembolsado}`;
-      }
       
+      
+      
+      const totalDesembolsado = comisiones
+        .filter(item => item.estado === 'DESEMBOLSADO')
+        .reduce((sum, item) => sum + (parseFloat(item.monto_asesor) || 0), 0);
+      document.getElementById("total-gerente").innerText = `Total de comisiones del Asesor: $ ${totalDesembolsado}`;
+    
       
       
 
@@ -77,7 +73,7 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
         tbody.innerHTML = comisiones.map(item => `
           <tr id="${item.id}" style="background-color: transparent;">
             <td>
-              NUll
+              X X
               </td>
             <td>${item.id ?? ''}</td>
             <td>${item.fecha ? item.fecha.split('T')[0].split('-').reverse().join('-') : ''}</td>
@@ -86,10 +82,7 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
             <td>${item.monto ?? ''}</td>
             <td>${item.porcentaje ?? ''}%</td>
             <td>${item.entidad ?? ''}</td>
-            <td>${item.comision_bruto ?? ''}</td>
             <td>${item.monto_asesor ?? ''}</td>
-            <td>${item.monto_supervisor ?? ''}</td>
-            <td>${item.monto_gerente ?? ''}</td>
             <td>${item.supervisor ?? ''}</td>
             <td>${item.asesor ?? ''}</td>
             <td>${item.estado ?? ''}</td>

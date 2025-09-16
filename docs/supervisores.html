@@ -38,6 +38,13 @@
                 <button class="nav-btn" onclick="mostrarComisiones()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
                 </svg>COMISIONES</button>
+                
+                <button class="nav-btn" onclick="mostrarDashboardIngresos()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart" viewBox="0 0 16 16">
+                        <path d="M0 0h1v15h15v1H0V0zm2 13h2V6H2v7zm4 0h2V2H6v11zm4 0h2V9h-2v4z"/>
+                    </svg>
+                    ADMINISTRACIÓN
+                </button>
             </div>     
             
 
@@ -67,7 +74,7 @@
                 </svg></span>
                 <div class="opciones_usuario" id="opciones_usuario">
                     <button onclick="window.location.href='mis_datos.html'">Mis Datos</button>
-                    <button onclick="window.location.href='admin.html'">Administración</button>
+                    
                     
                 </div>
             </div>
@@ -84,7 +91,7 @@
     </div> 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-  <script type="module" src="./js/inicio.js"></script>
+  <script type="module" src="./js/supervisores.js"></script>
  
 </body>
 </html>

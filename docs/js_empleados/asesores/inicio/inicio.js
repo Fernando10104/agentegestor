@@ -1,5 +1,5 @@
-import { API_BASE_URL } from '../../js/config.js';
-import {svg_grupo,svg_contactos,svg_logrado,svg_meta,svg_circulo } from './../../src/svg/svg.js';
+import { API_BASE_URL } from '../../../js/config.js';
+import {svg_grupo,svg_contactos,svg_logrado,svg_meta,svg_circulo } from '../../../src/svg/svg.js';
 
 
 // Función para obtener mensaje motivacional

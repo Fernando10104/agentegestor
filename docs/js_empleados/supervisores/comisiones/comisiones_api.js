@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../config.js';
+import { API_BASE_URL } from '../../../js/config.js';
 // Variable global para guardar todas las filas
 let todasLasFilas = [];
 
@@ -49,17 +49,21 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
       const comisiones = data.comisiones ?? [];
       const total = data.total_pages ?? 0;
       const totalPages = total;
-      
 
       // Guardar todas las filas para filtro local
       todasLasFilas = comisiones;
+
       // Sumar el monto de todos los desembolsados
+      
+      
       const totalDesembolsado = comisiones
         .filter(item => item.estado === 'DESEMBOLSADO')
-        .reduce((sum, item) => sum + (parseFloat(item.monto_gerente) || 0), 0);
-      // Puedes usar totalDesembolsado donde lo necesites
-      console.log('Total desembolsado:', totalDesembolsado);
-      document.getElementById("total-gerente").innerText = `Total de comisiones del Gerente: $ ${totalDesembolsado}`;
+        .reduce((sum, item) => sum + (parseFloat(item.monto_supervisor) || 0), 0);
+      document.getElementById("total-gerente").innerText = `Total de comisiones del Supervisor: $ ${totalDesembolsado}`;
+    
+      
+      
+      
 
       const tbody = document.querySelector('.table-responsive tbody');
       if (!comisiones.length) {
@@ -68,13 +72,7 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
         tbody.innerHTML = comisiones.map(item => `
           <tr id="${item.id}" style="background-color: transparent;">
             <td>
-              <button class="btn-eliminar" style="background-color: transparent; border: none; border-radius: 15px; padding: 5px 5px;" onmouseover="this.style.backgroundColor='darkgray'" onmouseout="this.style.backgroundColor='transparent'"  data-id="${item.id} " title="Eliminar">
-              ${SVG_ELIMINAR}
-              </button>
-              
-              <button class="btn-editar" style="background-color: transparent; border: none; border-radius: 15px; padding: 5px 5px;" onmouseover="this.style.backgroundColor='darkgray'" onmouseout="this.style.backgroundColor='transparent'" data-id="${item.num_operacion}" title="Editar">
-              ${SVG_EDITAR}
-              </button>
+              X X
               </td>
             <td>${item.id ?? ''}</td>
             <td>${item.fecha ? item.fecha.split('T')[0].split('-').reverse().join('-') : ''}</td>
@@ -85,7 +83,6 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
             <td>${item.entidad ?? ''}</td>
             <td>${item.monto_asesor ?? ''}</td>
             <td>${item.monto_supervisor ?? ''}</td>
-            <td>${item.monto_gerente ?? ''}</td>
             <td>${item.supervisor ?? ''}</td>
             <td>${item.asesor ?? ''}</td>
             <td>${item.estado ?? ''}</td>
@@ -93,11 +90,6 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
             <td>${item.sucursal ?? ''}</td>
             <td>${item.obs ?? ''}</td>
           </tr>
-          
-          
-
-          
-
         `).join('');
       }
 
@@ -210,10 +202,6 @@ export function mostrarEditarComisiones(id){
   
   `;
 
-  
-
-  
-
   // Cargar datos al formulario a través de la API
   const token = localStorage.getItem("token");
   fetch(`${API_BASE_URL}/comisiones/${id}`, {
@@ -269,31 +257,7 @@ export function GuardarCambiosComision() {
   const calificacion = document.getElementById('calificacion').value;
   const obs = document.getElementById('obs').value;
 
-  const idInt = parseInt(id, 10) || 0;
-  const montoInt = parseInt(monto, 10) || 0;
-  const porcentajeInt = parseInt(porcentaje, 10) || 0;
-  const comisionBrutoInt = parseInt(comision_bruto, 10) || 0;
-  const montoAsesorInt = parseInt(monto_asesor, 10) || 0;
-  const montoSupervisorInt = parseInt(monto_supervisor, 10) || 0;
-  const montoGerenteInt = parseInt(monto_gerente, 10) || 0;
-  console.log("Datos a guardar:", {
-    idInt,
-    nombre_cliente,
-    cedula,
-    montoInt,
-    porcentajeInt,
-    entidad,
-    comisionBrutoInt,
-    montoAsesorInt,
-    montoSupervisorInt,
-    montoGerenteInt,
-    supervisor,
-    asesor,
-    calificacion,
-    obs
-  });
-
-  const url = `${API_BASE_URL}/comisiones/${idInt}`;
+  const url = `${API_BASE_URL}/comisiones/${id}`;
   const token = localStorage.getItem("token");
 
   return fetch(url, {
@@ -303,16 +267,16 @@ export function GuardarCambiosComision() {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      id: idInt,
+      id,
       nombre_cliente,
       cedula,
-      monto: montoInt,
-      porcentaje: porcentajeInt,
+      monto,
+      porcentaje,
       entidad,
-      comision_bruto: comisionBrutoInt,
-      monto_asesor: montoAsesorInt,
-      monto_supervisor: montoSupervisorInt,
-      monto_gerente: montoGerenteInt,
+      comision_bruto,
+      monto_asesor,
+      monto_supervisor,
+      monto_gerente,
       supervisor,
       asesor,
       calificacion,

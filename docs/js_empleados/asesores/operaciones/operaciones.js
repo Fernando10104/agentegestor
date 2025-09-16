@@ -4,7 +4,7 @@ import {
   ocultarCargarCredito,
   mostrarCargarCliente,
   ocultarCargarCliente
-} from "../../js/componentes/modales.js";
+} from "../../../js/componentes/modales.js";
 window.EliminarCliente = EliminarCliente;
 window.mostrarCargarCredito = mostrarCargarCredito;
 window.ocultarCargarCredito = ocultarCargarCredito;

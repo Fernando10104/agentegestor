@@ -73,11 +73,14 @@ document.getElementById("login-form").addEventListener("submit", async function 
             if(rol === "admin"){
                 //window.location.href = "/agentegestor/index.html";
                 window.location.href = "/index.html"; // Redirigir al index después de iniciar sesión
-            } else {
-                window.location.href = "/inicio.html";
-                //window.location.href = "/agentegestor/inicio.html";
+            }else if(rol === "supervisor" || rol === "Supervisor"){
+                window.location.href = "/supervisores.html";
+                //window.location.href = "/agentegestor/supervisores.html";
+            }else if(rol === "asesor" || rol === "Asesor"){
+                window.location.href = "/asesores.html";
+                //window.location.href = "/agentegestor/asesores.html";
             }
-
+            
             
         } else {
             const errorData = await response.json();
