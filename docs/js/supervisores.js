@@ -2,8 +2,8 @@
 import { API_BASE_URL } from './config.js';
 import {SVG_EDITAR,SVG_ELIMINAR} from "../src/svg/svg.js";
 //../js_empleados/
-import { mostrarInicio } from "../js_empleados/Supervisores/inicio/inicio.js";
-import { mostrarHistorial } from "../js_empleados/Supervisores/historial/historial.js";
+import { mostrarInicio } from "../js_empleados/supervisores/inicio/inicio.js";
+import { mostrarHistorial } from "../js_empleados/supervisores/historial/historial.js";
 import { mostrarCreditos } from "../js_empleados/supervisores/operaciones/operaciones.js";
 import { mostrarComisiones } from "../js_empleados/supervisores/comisiones/comisiones.js";
 import { verificarToken } from "./componentes/verificarToken.js";
@@ -50,8 +50,10 @@ document.getElementById('usuario-icono').addEventListener('click', () => {
 actualizarFechaHoraParaguay(); // Actualizamos la fecha y hora al cargar la página
 verificarToken(); // Verificamos el token al cargar la página
 
-
-
+const token = localStorage.getItem('token');
+const payload = JSON.parse(atob(token.split('.')[1]));
+        const rol = payload.rol;
+        console.log("Payload del token:", payload);
 
 
 const botones = document.querySelectorAll('.nav-btn');
@@ -208,4 +210,8 @@ document.getElementById('toggle-sidebar').addEventListener('click', function() {
     const sidebar = document.querySelector('.sidebar-menu');
     sidebar.classList.toggle('sidebar-collapsed');
 });
+
+if (rol === "asesor") {
+    window.location.href = "asesor.html";
+}
 

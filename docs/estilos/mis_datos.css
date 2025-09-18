@@ -32,12 +32,10 @@ body {
     height: 100vh;
     padding: 1px;
     flex-shrink: 0; 
-    gap: 3rem;
     
     top: 0;
     justify-content: space-between;
     width: 16.5rem;
-    gap: 6rem;
     
    
 }

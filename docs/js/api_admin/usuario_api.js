@@ -59,7 +59,6 @@ export function CargarUsuarios(valor = "", rol2 = null) {
                     <td>${usuario[1] || ''}</td>
                     <td>${usuario[7] || ''}</td>
                     <td>${usuario[4] || ''}</td>
-                    <td>${usuario[5] + '%' || ''}</td>
                     <td>${usuario[9] || ''}</td>
                     <td>${usuario[10] || ''}</td>
                     <td>${usuario[8] || ''}</td>
@@ -136,11 +135,6 @@ export async function mostrarEditarUsuario(id) {
                 </div>
 
                 <div class="form-group">
-                    <label for="comision-editar">Comisión (%)</label>
-                    <input type="number" id="comision-editar" value="" />
-                </div>
-
-                <div class="form-group">
                     <label for="supervisor-editar">ID Supervisor</label>
                     <input type="number" id="supervisor-editar" value="" />
                 </div>
@@ -196,7 +190,6 @@ export function BuscarUsuarioPorId(id) {
         document.getElementById('ci-editar').value = usuario.usuario || '';
         document.getElementById('telefono-editar').value = usuario.telefono || '';
         document.getElementById('rol-editar').value = usuario.rol || '';
-        document.getElementById('comision-editar').value = usuario.comision || '';
         document.getElementById('supervisor-editar').value = usuario.superior || '';
         document.getElementById('correo-editar').value = usuario.correo || '';
         document.getElementById('password-editar').value = ''; // No llenar la contraseña por seguridad
@@ -222,7 +215,6 @@ export function guardarEditarUsuario(id_usuario) {
     const ci = document.getElementById('ci-editar').value;
     const telefono = document.getElementById('telefono-editar').value;
     const rol = document.getElementById('rol-editar').value;
-    const comision = document.getElementById('comision-editar').value;
     const supervisor = document.getElementById('supervisor-editar').value;
     const correo = document.getElementById('correo-editar').value;
     const password = document.getElementById('password-editar').value;
@@ -236,7 +228,6 @@ export function guardarEditarUsuario(id_usuario) {
         usuario: ci,
         password: password,
         rol: rol,
-        comision: comision,
         superior: supervisor,
         telefono: telefono,
         correo: correo,
@@ -277,7 +268,6 @@ export function CrearUsuario(){
         const ci = document.getElementById('ci').value;
         const telefono = document.getElementById('telefono').value;
         const rol = document.getElementById('rol').value;
-        const comision = document.getElementById('comision').value;
         const supervisor = document.getElementById('supervisor').value;
         const correo = document.getElementById('correo').value;
         const password = document.getElementById('password').value;
@@ -290,7 +280,6 @@ export function CrearUsuario(){
             usuario: ci,
             password: password,
             rol: rol,
-            comision: comision,
             superior: supervisor,
             telefono: telefono,
             correo: correo,

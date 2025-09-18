@@ -38,7 +38,6 @@ export function mostrarGestionUsuario() {
                             <th>Usuario</th>
                             <th>Nombre</th>
                             <th>Rol</th>
-                            <th>Comisiones</th>
                             <th>Correo</th>
                             <th>Teléfono</th>
                             <th>Supervisor</th>
@@ -97,11 +96,6 @@ export function mostrarGestionUsuario() {
                         <option>Supervisor</option>
                         <option>Asesor</option>
                     </select>
-                    </div>
-
-                    <div class="form-group">
-                    <label for="comision">Comisión (%)</label>
-                    <input type="number" id="comision"  />
                     </div>
 
                     <div class="form-group">

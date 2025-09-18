@@ -54,8 +54,8 @@ export function cargarMetas(busqueda = '') {
                 <td class="meta-total-comision">${totalComisionFormateada}</td>
                 <td class="meta-cumplimiento">
                     ${
-                        (meta.meta_personal && meta.total_comision_asesor)
-                            ? `${Math.round((meta.total_comision_asesor / meta.meta_personal) * 100)}%`
+                        (Number(meta.meta_personal) > 0 && Number(meta.total_comision_asesor) >= 0)
+                            ? `${((Number(meta.total_comision_asesor) / Number(meta.meta_personal)) * 100).toFixed(1)}%`
                             : 'N/A'
                     }
                 </td>

@@ -46,20 +46,22 @@ document.getElementById('usuario-icono').addEventListener('click', () => {
   mostrarConfiguracion();
 });
 document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+  const token = localStorage.getItem("token");
+  if (!token) {
     window.location.href = "/login.html";
-    } else {
+  } else {
     try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        if (payload.rol !== "admin") {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      if (payload.rol === "supervisor" || payload.rol === "Supervisor") {
+        window.location.href = "/supervisores.html";
+      } else if (payload.rol === "asesor" || payload.rol === "Asesor") {
         window.location.href = "/asesores.html";
-        }
+      }
     } catch (e) {
-        console.error("Token inválido", e);
-        window.location.href = "/login.html";
+      console.error("Token inválido", e);
+      window.location.href = "/login.html";
     }
-    }
+  }
 });
 
 // ✅ AGREGAR FUNCIÓN PARA EL BOTÓN "mostrarInicio"
@@ -650,3 +652,13 @@ function setupMensajeMotivacianalForm() {
     }
   }, 100);
 }
+
+document.getElementById('toggle-sidebar').addEventListener('click', function() {
+    const svgIcon = document.querySelector('#toggle-sidebar svg');
+    if (svgIcon) {
+        svgIcon.style.transform = svgIcon.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+        svgIcon.style.transition = 'transform 0.3s';
+    }
+    const sidebar = document.querySelector('.sidebar-menu');
+    sidebar.classList.toggle('sidebar-collapsed');
+});

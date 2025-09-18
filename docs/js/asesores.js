@@ -200,9 +200,10 @@ function verificarRolYMostrarAdmin() {
         // Decodificar el token JWT para obtener el rol
         const payload = JSON.parse(atob(token.split('.')[1]));
         const rol = payload.rol;
+        console.log("Payload del token:", payload);
         
         const btnAdmin = document.getElementById('btn-admin');
-        if (rol === 'supervisor') {
+        if (rol === 'Supervisor' || rol === 'supervisor') {
             btnAdmin.style.display = 'flex';
         } else {
             btnAdmin.style.display = 'none';
@@ -231,3 +232,22 @@ document.getElementById('toggle-sidebar').addEventListener('click', function() {
     const sidebar = document.querySelector('.sidebar-menu');
     sidebar.classList.toggle('sidebar-collapsed');
 });
+
+function esSupervisor() {
+    const token = localStorage.getItem("token");
+    if (!token) return false;
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const rol = payload.rol;
+        return rol === 'Supervisor' || rol === 'supervisor';
+    } catch (error) {
+        console.error("Error al verificar rol:", error);
+        return false;
+    }
+}
+window.esSupervisor = esSupervisor;
+
+// Redirigir a supervisor.html si es supervisor
+if (esSupervisor()) {
+    window.location.href = "supervisor.html";
+}

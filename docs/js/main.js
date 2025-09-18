@@ -51,9 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
     try {
         const payload = JSON.parse(atob(token.split(".")[1]));
-        if (payload.rol !== "admin") {
-        window.location.href = "/asesores.html";
+        if (payload.rol === "admin") {
+            // Permitir acceso, no hacer nada
+        } else if (payload.rol === "supervisor") {
+            window.location.href = "/supervisores.html";
+        } else {
+            window.location.href = "/asesores.html";
         }
+
     } catch (e) {
         console.error("Token inválido", e);
         window.location.href = "/login.html";
