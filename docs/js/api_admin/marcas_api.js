@@ -98,7 +98,7 @@ export function CrearNuevaMarca() {
         const busqueda = document.getElementById("filtro-input").value;
         const id_usuario = select.value;
         console.log("Usuario seleccionado:", id_usuario);
-        cargarMarcas(busqueda, id_usuario); 
+         
     })
     .catch(error => {
         console.error('Error:', error);
