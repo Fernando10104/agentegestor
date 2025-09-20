@@ -129,7 +129,7 @@ export function mostrarGestionMarcas() {
     `;
     async function cargarUsuariosEnSelect() {
         const select = document.getElementById("usuario-select");
-        select.innerHTML = `<option value="">Seleccionar usuario...</option>`;
+        select.innerHTML = `<option value="0">Seleccionar usuario...</option>`;
         const url = new URL(`${API_BASE_URL}/usuarios`);
         const token = localStorage.getItem('token');
         try {
