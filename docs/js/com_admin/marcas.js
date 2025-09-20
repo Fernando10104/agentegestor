@@ -17,7 +17,7 @@ export function mostrarGestionMarcas() {
                 <button id="btn-filtrar" onclick="filtrarMarcas()">Filtrar</button>
                 <button id="crear-marca" onclick="mostrarModalCrearMarca()">+ nueva marca</button>
                 <select id="usuario-select">
-                    <option value="">Seleccionar usuario...</option>
+                    <option value="0">Seleccionar usuario...</option>
                 </select>
             </div>
         </div>
