@@ -59,7 +59,7 @@ export function cargarMarcas(busqueda = '', id_usuario = '') {
 }
 
 
-export function CrearNuevaMarca(){
+export function CrearNuevaMarca() {
     const url = new URL(`${API_BASE_URL}/marcas`);
     const token = localStorage.getItem('token');
 
@@ -80,24 +80,27 @@ export function CrearNuevaMarca(){
         },
         body: JSON.stringify(nuevaMarca)
     })
-    .then(response => {
+    .then(async response => {
         if (!response.ok) {
-            throw new Error('Error al crear la marca');
+            // 👇 intentamos obtener el mensaje real del backend
+            const errorData = await response.json().catch(() => null);
+            const errorMessage = errorData?.detail || 'Error desconocido al crear la marca';
+            throw new Error(errorMessage);
         }
         return response.json();
     })
     .then(data => {
         console.log('Marca creada:', data);
         showDialog('success', 'Marca creada correctamente');
-        cerrarModalCrearMarca(); // Cerrar el modal después de crear la marca
-        cargarMarcas(); // Recargar la lista de marcas
-        // Aquí puedes agregar lógica para actualizar la lista de marcas
+        cerrarModalCrearMarca(); 
+        cargarMarcas(); 
     })
     .catch(error => {
         console.error('Error:', error);
-        showDialog('error', 'Error al crear marca: ' + error.message);
+        showDialog('error', error.message);
     });
 }
+
 
 
 export function EditarMarca(id_marca){
