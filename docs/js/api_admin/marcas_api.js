@@ -93,7 +93,12 @@ export function CrearNuevaMarca() {
         console.log('Marca creada:', data);
         showDialog('success', 'Marca creada correctamente');
         cerrarModalCrearMarca(); 
-        cargarMarcas(); 
+        console.log("Detectando usuario seleccionado y cargando marcas...");
+        const select = document.getElementById("usuario-select");
+        const busqueda = document.getElementById("filtro-input").value;
+        const id_usuario = select.value;
+        console.log("Usuario seleccionado:", id_usuario);
+        cargarMarcas(busqueda, id_usuario); 
     })
     .catch(error => {
         console.error('Error:', error);
