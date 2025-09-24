@@ -51,7 +51,6 @@ export function cargarClientes(campo = "nombre", valor = "", page = 1, limit = 1
             <td>${cliente.direccion ?? ''}</td>
             <td>${cliente.correo ?? ''}</td>
             <td>${cliente.faja_inforcomf ?? ''}</td>
-            <td>${cliente.estado_cred ?? ''}</td>
             <td>${cliente.e_registro ?? ''}</td>
             <td>${(cliente.fecha_registro ?? '').split('T')[0]}</td>
           </tr>
@@ -286,7 +285,6 @@ export function mostrarEditarCliente(id) {
           document.getElementById("correo/1").value = cliente.correo || "";
           document.getElementById("faja-1").value = cliente.faja_inforcomf || "";
           document.getElementById("asesor").value = cliente.e_registro || "";
-          document.getElementById("estado-1").value = cliente.estado_cred || "";
         } else {
           console.error("No se encontraron datos del cliente.");
           showDialog("error", "No se encontraron datos del cliente");
