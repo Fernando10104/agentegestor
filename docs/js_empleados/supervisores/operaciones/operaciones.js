@@ -21,7 +21,7 @@ window.CrearClientes = CrearClientes;
 export function mostrarCreditos() {
   document.getElementById('contenido').innerHTML = `
     <div class="header">
-      <h1>Registros Clientes</h1>
+      <h1>Registro Clientes</h1>
     </div>
     <div class="controls">
       <div class="control-filtros">
@@ -229,15 +229,6 @@ export function mostrarCreditos() {
         <div class="form-group">
             <label for="asesor">Asesor:</label>
             <input type="text" id="asesor" name="asesor" disabled/>
-        </div>
-        <div class="form-group">
-            <label for="estado-1">Estado:</label>
-            <select id="estado-1" name="estado">
-                <option value="CANCELADO">Cancelado</option>
-                <option value="INGRESADO">Ingresado</option>
-                <option value="APROBADO">Aprobado</option>
-                <option value="DESEMBOLSADO">Desembolsado</option>
-            </select>
         </div>
         <div class="modal-footer">
             <button type="submit" class="create-btn">Guardar</button>
