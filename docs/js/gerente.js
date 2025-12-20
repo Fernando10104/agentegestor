@@ -3,14 +3,13 @@ import { verificarToken } from "./componentes/verificarToken.js";
 import { cerrarSesion } from "./componentes/cerrarSesion.js";
 import { actualizarFechaHoraParaguay } from "./componentes/Fechahora.js";
 import { mostrarConfiguracion,showDialog } from "./componentes/modales.js";
-import { mostrarGestionUsuario } from "./com_admin/usuario.js";
+import { mostrarGestionUsuario } from "./com_gerente/usuario.js";
 import { mostrarModalCrearUsuario, cerrarModalCrearUsuario, cerrarModalEditarUsuario, mostrarModalCrearMarca, cerrarModalCrearMarca } from "./com_admin/modales_admin.js";
-import { mostrarGestionCategorias } from "./com_admin/categorias.js";
-import { mostrarGestionMarcas } from "./com_admin/marcas.js";
-import { mostrarGestionMetas } from "./com_admin/metas.js";
-import {mostrarGestionImport} from "./com_admin/importacion.js";
-import{svg_importar} from "./../src/svg/svg.js";
-import {mostrarMenuBackup} from './com_admin/backup.js';
+import { mostrarGestionCategorias } from "./com_gerente/categorias.js";
+import { mostrarGestionMarcas } from "./com_gerente/marcas.js";
+import { mostrarGestionMetas } from "./com_gerente/metas.js";
+import {mostrarGestionImport} from "./com_gerente/importacion.js";
+import{svg_importar} from "../src/svg/svg.js";
 
 
 /**
@@ -27,7 +26,6 @@ window.mostrarGestionCategorias = mostrarGestionCategorias;
 window.mostrarGestionMarcas = mostrarGestionMarcas;
 window.mostrarGestionMetas = mostrarGestionMetas;
 window.mostrarGestionImport = mostrarGestionImport;
-window.mostrarMenuBackup = mostrarMenuBackup;
 
 window.cerrarSesion = cerrarSesion;
 window.svg_importar = svg_importar;
@@ -56,6 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "/supervisores.html";
       } else if (payload.rol === "asesor" || payload.rol === "Asesor") {
         window.location.href = "/asesores.html";
+      } else if (payload.rol === "gerente" || payload.rol === "Gerente") {
+        // Permitir acceso
       }
     } catch (e) {
       console.error("Token inválido", e);
@@ -73,7 +73,7 @@ window.mostrarInicio = function () {
   document.getElementById('contenido').innerHTML = `
     <div class="header">
         <h1>Bienvenido al panel de administración</h1>
-        <h4>Aquí puedes gestionar usuarios, categorías y marcas.</h4>
+        <h4>Aquí puedes gestionar usuarios.</h4>
         
         <div style="display: flex; justify-content: space-between; gap: 1.5rem; margin-top:2.0rem;" >
           <div class="resumen" style="background-color: #E6FCEE; color:#14532D;">

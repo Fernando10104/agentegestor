@@ -1,9 +1,10 @@
-import { CargarUsuarios,mostrarEditarUsuario,guardarEditarUsuario,CrearUsuario,EliminarUsuario,MostrarModalAsistencia,cargarAsistencias } from "../api_admin/usuario_api.js"; // ✅ Corregir path
+import { CargarUsuarios,mostrarEditarUsuario,guardarEditarUsuario,CrearUsuario,EliminarUsuario,MostrarModalAsistencia,cargarAsistencias,cargarSupervisoresEnSelect } from "../api_gerente/usuario_api.js"; // ✅ Corregir path
 window.mostrarEditarUsuario = mostrarEditarUsuario;
 window.guardarEditarUsuario = guardarEditarUsuario;
 window.EliminarUsuario = EliminarUsuario;
 window.MostrarModalAsistencia = MostrarModalAsistencia;
 window.cargarAsistencias = cargarAsistencias;
+window.cargarSupervisoresEnSelect = cargarSupervisoresEnSelect;
 
 export function mostrarGestionUsuario() {
     
@@ -19,7 +20,6 @@ export function mostrarGestionUsuario() {
                     <input type="text" placeholder="Buscar por CI o nombre" id="filtro-input">
                     <select name="roles" id="roles">
                         <option value=>Todos</option>
-                        <option value="admin">Admin</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
@@ -92,15 +92,17 @@ export function mostrarGestionUsuario() {
                     <div class="form-group">
                     <label for="rol">Rol *</label>
                     <select id="rol" required>
-                        <option>Admin</option>
+                        <option>Ninguno</option>
                         <option>Supervisor</option>
                         <option>Asesor</option>
                     </select>
                     </div>
 
                     <div class="form-group">
-                    <label for="supervisor">ID Supervisor</label>
-                    <input type="number" id="supervisor"  />
+                    <label for="supervisor">supervisor *</label>
+                    <select id="supervisor" required>
+                        <option>none</option>
+                    </select>
                     </div>
 
                     <div class="form-group">
@@ -139,6 +141,29 @@ export function mostrarGestionUsuario() {
     // Cargar usuarios al iniciar la página
     CargarUsuarios();
     CrearUsuario();
+    
+
+    // Agregar listener para el select de rol
+    const selectRol = document.getElementById('rol');
+    const selectSupervisor = document.getElementById('supervisor');
+    
+    selectRol.addEventListener('change', function() {
+        if (this.value === 'Supervisor') {
+            // Obtener el ID del gerente desde sessionStorage o donde lo tengas guardado
+            const gerenteId = localStorage.getItem('id_usuario'); // Ajusta según tu implementación
+            console.log("ID del gerente:", gerenteId);
+            
+            // Establecer el valor del supervisor como el ID del gerente
+            selectSupervisor.value = gerenteId;
+            selectSupervisor.innerHTML = `<option value="${gerenteId}">${gerenteId}</option>`;
+            selectSupervisor.disabled = true; // Deshabilitar el select
+
+        } else {
+            // Si es Asesor, habilitar el select
+            selectSupervisor.disabled = false;
+            cargarSupervisoresEnSelect();
+        }
+    });
 
     const tbody = document.getElementById("tabla-usuarios");
 
