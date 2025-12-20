@@ -56,7 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "/supervisores.html";
       } else if (payload.rol === "asesor" || payload.rol === "Asesor") {
         window.location.href = "/asesores.html";
-      }
+      } else if (payload.rol === "gerente" || payload.rol === "Gerente") {
+        window.location.href = "/gerente.html";
+      }      
     } catch (e) {
       console.error("Token inválido", e);
       window.location.href = "/login.html";

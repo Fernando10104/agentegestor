@@ -179,6 +179,47 @@ export function mostrarCreditos() {
                   <label for="faja_inforcomf">Faja:</label>
                   <input type="text" id="faja_inforcomf" name="faja">
               </div>
+              <div class="form-group">
+              <label for="categoria">Categoría:</label>
+              <select id="categoria" name="categoria">
+                <option value="ASALARIADO CON IPS">ASALARIADO CON IPS</option>
+                <option value="ASALARIADO CON IVA">ASALARIADO CON IVA</option>
+                <option value="COMERCIANTE">COMERCIANTE</option>
+                <option value="FUNCIONARIO BANCARIO">FUNCIONARIO BANCARIO</option>
+                <option value="FUNCIONARIO PUBLICO CONTRATADO">FUNCIONARIO PUBLICO CONTRATADO</option>
+                <option value="FUNCIONARIO PUBLICO PERMANENTE">FUNCIONARIO PUBLICO PERMANENTE</option>
+                <option value="INFORMAL">INFORMAL</option>
+
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="marca">Marca:</label>
+              <select id="marca" name="marca">
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tipo_comision">Tipo de Comisión:</label>
+              <select id="tipo_comision" name="tipo_comision">
+                <option value="nuevo">Nuevo</option>
+                <option value="renovacion">Renovación</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tipo_credito">Tipo de Crédito:</label>
+              <select id="tipo_credito" name="tipo_credito">
+                <option value="Ventanilla">Ventanilla</option>
+                <option value="Debito">Debito</option>
+                <option value="Credito">Credito</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="importe">Importe:</label>
+              <input type="text" id="importe" name="importe">
+            </div>
+            <div class="form-group">
+              <label for="obs">Obs:</label>
+              <textarea id="obs" name="obs"></textarea>
+            </div>
               <div class="modal-footer">
                   <button type="submit" class="create-btn">Insertar Cliente</button>
                   <button type="button" class="cancel-btn" style="background-color: red;" onclick="ocultarCargarCliente()">Cerrar</button>
