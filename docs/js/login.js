@@ -79,6 +79,9 @@ document.getElementById("login-form").addEventListener("submit", async function 
             }else if(rol === "asesor" || rol === "Asesor"){
                 window.location.href = "/asesores.html";
                 //window.location.href = "/agentegestor/asesores.html";
+            }else if(rol === "gerente" || rol === "Gerente"){
+                window.location.href = "/gerente.html";
+                //window.location.href = "/agentegestor/asesores.html";
             }
             
             

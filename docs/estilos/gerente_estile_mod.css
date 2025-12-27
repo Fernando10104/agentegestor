@@ -1,3 +1,80 @@
+#tabla .handsontable .ht_clone_top .htCore th {
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  vertical-align: middle;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 0.97rem;
+}
+#tabla .handsontable .ht_clone_left .htCore th {
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  vertical-align: middle;
+  padding: 0;
+}
+/* Estilos personalizados para la tabla de marcas (Handsontable) */
+#tabla .handsontable {
+  background: var(--fondo-principal);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(60,131,246,0.08), 0 1.5px 8px rgba(0,0,0,0.08);
+  border: 1.5px solid var(--borde-principal);
+}
+
+#tabla .handsontable th {
+  background: var(--fondo-secundario);
+  color: var(--texto-secundario);
+  font-weight: 600;
+  font-size: 0.97rem;
+  border-bottom: 1.5px solid var(--borde-principal);
+  text-align: left;
+  letter-spacing: 0.5px;
+  padding: 4px 8px 4px 8px;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  vertical-align: middle;
+}
+
+#tabla .handsontable td {
+  background: var(--fondo-terciario);
+  color: var(--texto-principal);
+  border-bottom: 1px solid var(--borde-principal);
+  border-right: 1px solid var(--borde-principal);
+  font-size: 0.97rem;
+  padding: 0.7em 0.7em;
+  transition: background 0.2s;
+}
+
+#tabla .handsontable tr:last-child td {
+  border-bottom: none;
+}
+
+#tabla .handsontable td.current, #tabla .handsontable td.selected {
+  background: #23293a !important; /* fondo más oscuro al seleccionar */
+  color: var(--texto-secundario) !important; /* texto blanco */
+  font-weight: 600;
+  box-shadow: 0 0 0 2px var(--color-principal) inset;
+}
+
+#tabla .handsontable tr:hover td {
+  background: var(--fondo-hover-2);
+}
+
+#tabla .ht_clone_top th {
+  background: var(--fondo-secundario);
+}
+
+#tabla .handsontable .ht_master .htCore {
+  border-radius: 10px;
+}
+
+#tabla .handsontable td.readOnly {
+  background: var(--fondo-modal);
+  color: var(--texto-muted);
+}
 /* Variables de colores y temas */
 :root {
   /* Colores principales */

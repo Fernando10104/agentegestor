@@ -39,6 +39,32 @@ window.mostrarComisiones = mostrarComisiones;
 window.cerrarSesion = cerrarSesion;
 window.showDialog = showDialog;
 
+// Función para redirigir a la página de administración según el rol
+window.redirigirAdministracion = function() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+    
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const rol = payload.rol;
+        
+        if (rol === "admin") {
+            window.location.href = "admin.html";
+        } else if (rol === "gerente" || rol === "Gerente") {
+            window.location.href = "gerente.html";
+        } else {
+            // Si no es admin ni gerente, redirigir a admin por defecto o mostrar mensaje
+            window.location.href = "admin.html";
+        }
+    } catch (e) {
+        console.error("Error al decodificar token", e);
+        window.location.href = "login.html";
+    }
+};
+
 window.API_BASE_URL = API_BASE_URL;
 // Mostramos la vista inicial por defecto
 document.getElementById('usuario-icono').addEventListener('click', () => {
@@ -55,6 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // Permitir acceso, no hacer nada
         } else if (payload.rol === "supervisor") {
             window.location.href = "/supervisores.html";
+        } else if (payload.rol === "gerente") {
+            // Permitir acceso, no hacer nada
         } else {
             window.location.href = "/asesores.html";
         }
