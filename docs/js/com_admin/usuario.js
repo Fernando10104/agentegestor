@@ -20,6 +20,7 @@ export function mostrarGestionUsuario() {
                     <select name="roles" id="roles">
                         <option value=>Todos</option>
                         <option value="admin">Admin</option>
+                        <option value="gerente">Gerente</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
@@ -92,9 +93,10 @@ export function mostrarGestionUsuario() {
                     <div class="form-group">
                     <label for="rol">Rol *</label>
                     <select id="rol" required>
-                        <option>Admin</option>
-                        <option>Supervisor</option>
-                        <option>Asesor</option>
+                        <option value="admin">Admin</option>
+                        <option value="gerente">Gerente</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="asesor">Asesor</option>
                     </select>
                     </div>
 

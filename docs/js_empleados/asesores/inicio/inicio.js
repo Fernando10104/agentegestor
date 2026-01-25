@@ -82,8 +82,8 @@ export async function mostrarInicio() {
       </div>
 
       <!-- Métricas principales -->
-      <div class="metrics-grid">
-        <div class="metric-card metric-grupo">
+      <div class="metrics-grid" >
+        <div class="metric-card metric-grupo" style="display: none;">
         <div class="metric-icon">${svg_grupo}</div>
         <h3>MI GRUPO</h3>
         <div class="metric-value">${formatearMoneda(data.meta_grupo)}</div>

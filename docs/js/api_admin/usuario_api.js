@@ -129,6 +129,7 @@ export async function mostrarEditarUsuario(id) {
                     <label for="rol-editar">Rol *</label>
                     <select id="rol-editar" >
                         <option value="admin">Admin</option>
+                        <option value="gerente">Gerente</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>

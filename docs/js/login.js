@@ -80,7 +80,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
                 window.location.href = "/asesores.html";
                 //window.location.href = "/agentegestor/asesores.html";
             }else if(rol === "gerente" || rol === "Gerente"){
-                window.location.href = "/gerente.html";
+                window.location.href = "/index.html";
                 //window.location.href = "/agentegestor/asesores.html";
             }
             

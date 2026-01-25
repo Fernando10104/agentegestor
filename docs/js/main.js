@@ -57,7 +57,7 @@ window.redirigirAdministracion = function() {
             window.location.href = "gerente.html";
         } else {
             // Si no es admin ni gerente, redirigir a admin por defecto o mostrar mensaje
-            window.location.href = "admin.html";
+            
         }
     } catch (e) {
         console.error("Error al decodificar token", e);

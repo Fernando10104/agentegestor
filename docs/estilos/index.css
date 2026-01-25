@@ -1211,3 +1211,71 @@ dialog {
     margin-left: 0.5rem !important;
 
 }
+/* Modal de cargar clientes - Ajuste de ancho */
+#modal-cargar-clientes {
+  max-width: 500px;
+  width: 90%;
+}
+
+#modal-cargar-clientes::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal-cargar-clientes form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+}
+
+#modal-cargar-clientes fieldset {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 0;
+}
+
+#modal-cargar-clientes fieldset legend {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+  padding: 0 8px;
+}
+
+#modal-cargar-clientes .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+#modal-cargar-clientes .form-row.full {
+  grid-template-columns: 1fr;
+}
+
+#modal-cargar-clientes input,
+#modal-cargar-clientes select,
+#modal-cargar-clientes textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+#modal-cargar-clientes textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+#modal-cargar-clientes .modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+#modal-cargar-clientes button {
+  padding: 8px 16px;
+  font-size: 13px;
+}

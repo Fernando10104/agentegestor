@@ -230,6 +230,33 @@ export function mostrarDashboardIngresos() {
             </select>
           </div>
           <div class="card">
+            <h3>Mes</h3>
+            <select id="mesSelect" onchange="cambiarGrupos()">
+              <option value="1">Enero</option>
+              <option value="2">Febrero</option>
+              <option value="3">Marzo</option>
+              <option value="4">Abril</option>
+              <option value="5">Mayo</option>
+              <option value="6">Junio</option>
+              <option value="7">Julio</option>
+              <option value="8">Agosto</option>
+              <option value="9">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+          </div>
+          <div class="card">
+            <h3>Año</h3>
+            <select id="anioSelect" onchange="cambiarGrupos()">
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026" selected>2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+            </select>
+          </div>
+          <div class="card">
             <h3>Ingresos Totales</h3>
             <div class="kpi" id="ingresosTotales">Gs. 0</div>
           </div>
@@ -243,12 +270,14 @@ export function mostrarDashboardIngresos() {
           </div>
         </div>
 
+
         <!-- Gráficos -->
         <div class="grid-charts">
           <div class="card">
             <h3>Metas vs Logros</h3>
             <canvas id="barChart" style="height: 400px;"></canvas>
           </div>
+          
           <div class="card">
             <h3>Modos de Crédito</h3>
             <canvas id="pieChart"></canvas>
@@ -309,12 +338,19 @@ async function cambiarGrupos() {
   const select = document.getElementById('grupoSelect');
   if (!select) return;
   const grupoSeleccionado = select.value;
+  const mesSelect = document.getElementById('mesSelect');
+  const anioSelect = document.getElementById('anioSelect');
+  
+  const mes = mesSelect ? mesSelect.value : new Date().getMonth() + 1;
+  const anio = anioSelect ? anioSelect.value : 2026;
+  
   console.log("Grupo seleccionado:", grupoSeleccionado);
+  console.log("Mes:", mes, "Año:", anio);
 
   try {
     // Obtener ambos datos en paralelo
     const [dataIngresos, dataGrupo, dataMetas] = await Promise.all([
-      obtenerGrupoPorId(grupoSeleccionado),
+      obtenerGrupoPorId(grupoSeleccionado, mes, anio),
       obtenerGruposPorId(grupoSeleccionado),
       buscarMetas()
     ]);
@@ -517,10 +553,17 @@ export async function obtenerGruposPorId(id) {
   }
 }
 // retorna monto total del grupo. desde suma comision asesor grupal.
-export async function obtenerGrupoPorId(id) {
+export async function obtenerGrupoPorId(id, mes = null, anio = 2026) {
   try {
     const token = localStorage.getItem("token");
-    const res = await fetch(`${API_BASE_URL}/grupos/${id}/resumen-mes`, {
+    let url = `${API_BASE_URL}/grupos/${id}/resumen-mes`;
+    
+    // Agregar parámetros de mes y año a la URL si se proporcionan
+    if (mes !== null) {
+      url += `?mes=${mes}&anio=${anio}`;
+    }
+    
+    const res = await fetch(url, {
       headers: { "Authorization": "Bearer " + token }
     });
     if (!res.ok) {

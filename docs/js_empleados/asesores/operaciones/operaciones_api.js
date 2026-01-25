@@ -189,27 +189,61 @@ export function CargarCredito(){
 
 }
 
-
 export function CrearClientes() {
-  document.getElementById('cargar-clientes-form').addEventListener('submit', async function (e) {
-    e.preventDefault(); // Evita que se recargue la página
+  // Buscar cliente por cédula al abrir/cargar el formulario
+  buscarClientePorCedula();
 
-    // Capturamos los datos del formulario
+  document.getElementById('cargar-clientes-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const documento = document.getElementById('documento').value.toString();
+    const nombre = document.getElementById('Nombre').value;
+    const contacto = document.getElementById('Celular').value;
+    const direccion = document.getElementById('Direccion').value;
+    const correo = document.getElementById('correo').value;
+    const faja_inforcomf = document.getElementById('faja_inforcomf').value.toString();
+    
+    // Datos del crédito (opcionales)
+    const marca = document.getElementById('cliente_marca').value;
+    const tipo_credito = document.getElementById('cliente_tipo_credito').value;
+    const importe = document.getElementById('cliente_importe').value;
+    const categoria = document.getElementById('cliente_categoria').value;
+    const tipo_comision = document.getElementById('cliente_tipo_comision').value;
+    const obs = document.getElementById('cliente_obs').value;
+
+    // Validar que si se carga crédito, estén todos los campos
+    if (importe && (!marca || !tipo_credito || !tipo_comision || !categoria)) {
+      showDialog("error", "Si desea crear crédito, debe rellenar: Marca, Tipo de Crédito, Tipo de Comisión y Categoría");
+      return;
+    }
+
+    // ✅ CAMBIAR: null por "" (string vacío)
     const data = {
       // datos del cliente
-      documento: document.getElementById('documento').value.toString(),
-      nombre: document.getElementById('Nombre').value,
-      contacto: document.getElementById('Celular').value,
-      direccion: document.getElementById('Direccion').value,
-      correo: document.getElementById('correo').value,
-      faja_inforcomf: document.getElementById('faja_inforcomf').value.toString(),
+      documento: documento,
+      nombre: nombre,
+      contacto: contacto,
+      direccion: direccion,
+      correo: correo || "",  // ✅ Si está vacío, enviar ""
+      faja_inforcomf: faja_inforcomf,
+
+      // ✅ CAMBIAR: null por "" en lugar de null
+      marca: marca || "",  // ✅ Cambiar de null a ""
+      tipo_credito: tipo_credito || "",  // ✅ Cambiar de null a ""
+      importe: importe ? parseFloat(importe) : 0,  // ✅ Cambiar de null a 0
+      categoria: categoria || "",  // ✅ Cambiar de null a ""
+      tipo_comision: tipo_comision || "",  // ✅ Cambiar de null a ""
+      obs: obs || "",  // ✅ Cambiar de null a ""
 
       // datos del registro
       id_usuario: parseInt(localStorage.getItem('id_usuario')),
       nombre_usuario: localStorage.getItem('nombre_usuario'),
+      superior: parseInt(localStorage.getItem('superior')),
     };
-    console.log(data);
+    
+    console.log("Datos a enviar:", data);
     const token = localStorage.getItem("token");
+    
     try {
       const response = await fetch(`${API_BASE_URL}/crear-cliente`, {
         method: 'POST',
@@ -221,19 +255,22 @@ export function CrearClientes() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json(); // Intentar obtener el mensaje de error del servidor
-        if (errorData.detail && errorData.detail.includes("El cliente ya existe con este documento")) {
+        const errorData = await response.json();
+        if (errorData.detail) {
           const dialog = document.getElementById("errorDialog");
           dialog.querySelector("p").textContent = errorData.detail;
-          dialog.showModal(); // abre el diálogo
+          dialog.showModal();
         } else {
           throw new Error('Error al insertar cliente');
         }
-        return; // Salir si ya manejamos el error específico
+        return;
       }
 
       const result = await response.json();
-      showDialog("success", "cliente insertado correctamente");
+      const mensaje = result.credito_creado 
+        ? "Cliente y crédito insertados correctamente" 
+        : "Cliente insertado correctamente";
+      showDialog("success", mensaje);
       console.log(result);
 
       // Limpiar formulario y cerrar modal
@@ -245,11 +282,65 @@ export function CrearClientes() {
 
     } catch (error) {
       console.error(error);
-      
+      showDialog("error", "Error al insertar cliente: " + error.message);
     }
   });
 }
 
+
+// ✅ AGREGAR: Función para buscar cliente por cédula
+export function buscarClientePorCedula() {
+  const cedulaInput = document.getElementById('documento');
+  
+  if (!cedulaInput) return;
+
+  let searchTimeout;
+
+  cedulaInput.addEventListener('input', async function () {
+    const cedula = this.value.replace(/\D/g, '');
+    
+    clearTimeout(searchTimeout);
+    
+    if (!cedula) {
+      return;
+    }
+
+    // ✅ Esperar 500ms después de que el usuario deja de escribir
+    searchTimeout = setTimeout(async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/cliente/por-cedula/${cedula}`, {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            // Cliente no encontrado, permitir crear uno nuevo
+            return;
+          }
+          const errorData = await response.json();
+          showDialog("error", errorData.detail || "Error al buscar cliente");
+          return;
+        }
+
+        const cliente = await response.json();
+
+        // ✅ Prellenar los campos del formulario
+        document.getElementById('Nombre').value = cliente.nombre || '';
+        document.getElementById('Celular').value = cliente.contacto || '';
+        document.getElementById('Direccion').value = cliente.direccion || '';
+        document.getElementById('correo').value = cliente.correo || '';
+        document.getElementById('faja_inforcomf').value = cliente.faja_inforcomf || '';
+
+      } catch (error) {
+        console.error("Error al buscar cliente:", error);
+      }
+    }, 500);
+  });
+}
 
 //mostrarEliminarHistorial,mostrarEditarHistorial 
 
