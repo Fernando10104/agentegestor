@@ -88,7 +88,7 @@ export function mostrarGestionUsuario() {
                     </div>
 
                     
-
+                    <!-- Selector de rol del usuario para ver si actualiza-->
                     <div class="form-group">
                     <label for="rol">Rol *</label>
                     <select id="rol" required>

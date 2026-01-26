@@ -128,8 +128,6 @@ export function mostrarCreditos() {
             <div class="form-group">
               <label for="tipo_credito">Tipo de Crédito:</label>
               <select id="tipo_credito" name="tipo_credito">
-                <option value="Ventanilla">Ventanilla</option>
-                <option value="Debito">Debito</option>
                 <option value="Credito">Credito</option>
               </select>
             </div>
@@ -212,9 +210,7 @@ export function mostrarCreditos() {
                   <div class="form-group">
                       <label for="cliente_tipo_credito">Tipo de Crédito:</label>
                       <select id="cliente_tipo_credito" name="tipo_credito">
-                          <option value="">-- Seleccionar --</option>
-                          <option value="Ventanilla">Ventanilla</option>
-                          <option value="Debito">Débito</option>
+                          <option value="">-- Seleccionar --</option>  
                           <option value="Credito">Crédito</option>
                       </select>
                   </div>
