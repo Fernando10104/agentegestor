@@ -94,12 +94,24 @@ export function cargarMarcas() {
     .then(data => {
       marcas = data.marcas ?? [];
 
+      // Cargar marcas en el formulario de cargar crédito
       const marcaSelect = document.getElementById('marca');
       marcaSelect.innerHTML = marcas.map(marca => `
         <option value="${marca.marca}">${marca.marca}</option>
       `).join('');
 
-      // Agregar listener para cuando se seleccione una marca
+      // Cargar marcas en el formulario de crear cliente
+      const clienteMarcaSelect = document.getElementById('cliente_marca');
+      if (clienteMarcaSelect) {
+        clienteMarcaSelect.innerHTML = '<option value="">-- Seleccionar --</option>' + marcas.map(marca => `
+          <option value="${marca.marca}">${marca.marca}</option>
+        `).join('');
+        
+        // Agregar listener para cuando se seleccione una marca
+        clienteMarcaSelect.addEventListener('change', actualizarTipoComisionCliente);
+      }
+
+      // Agregar listener para el formulario de cargar crédito
       marcaSelect.addEventListener('change', actualizarTipoComision);
        // ⚡ Llamamos a la función directamente para precargar la comisión de la primera marca
       if (marcas.length > 0) {
@@ -126,6 +138,22 @@ function actualizarTipoComision() {
     `;
   } else {
     tipoComisionSelect.innerHTML = '<option>Seleccione una marca válida</option>';
+  }
+}
+
+function actualizarTipoComisionCliente() {
+  const marcaSeleccionada = document.getElementById('cliente_marca').value;
+  const marcaObj = marcas.find(m => m.marca === marcaSeleccionada);
+
+  const tipoComisionSelect = document.getElementById('cliente_tipo_comision');
+
+  if (marcaObj) {
+    tipoComisionSelect.innerHTML = `
+      <option value="Nuevo">Nuevo - ${marcaObj.comision_nuevo}%</option>
+      <option value="Renovacion">Renovación - ${marcaObj.comision_renovacion}%</option>
+    `;
+  } else {
+    tipoComisionSelect.innerHTML = '<option value="">-- Seleccionar marca primero --</option>';
   }
 }
 
