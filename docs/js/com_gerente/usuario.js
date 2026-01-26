@@ -92,9 +92,9 @@ export function mostrarGestionUsuario() {
                     <div class="form-group">
                     <label for="rol">Rol *</label>
                     <select id="rol" required>
-                        <option>Ninguno</option>
-                        <option>Supervisor</option>
-                        <option>Asesor</option>
+                        <option value="">Ninguno</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="asesor">Asesor</option>
                     </select>
                     </div>
 
