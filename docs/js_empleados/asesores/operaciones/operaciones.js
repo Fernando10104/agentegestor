@@ -39,7 +39,7 @@ export function mostrarCreditos() {
         <button id="btn-buscar-clientes">Buscar</button>
 
         <button onclick="mostrarCargarCliente()">CARGAR CLIENTES</button>
-        <button onclick="mostrarCargarCredito()">CARGAR CREDITO</button>
+        <button onclick="mostrarCargarCredito()" style="display: none;">CARGAR CREDITO</button>
         <div class="limit-records" style="display: none;">
           <input type="checkbox" id="limit_records" name="limit_records">
           <label for="limit_records">Limitar 50 registros</label>
