@@ -266,7 +266,7 @@ export async function obtenerGruposPorId(idGrupo) {
 export async function cargarListaUsuariosporGrupoId(grupoId) {
     if (!grupoId) return;
 
-    const url = `${API_BASE_URL}/grupos/${grupoId}/resumen-mes`;
+    const url = `${API_BASE_URL}/grupos/${grupoId}/resumen-mes/comisiones`;
     const token = localStorage.getItem('token');
 
     try {
