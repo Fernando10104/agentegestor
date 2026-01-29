@@ -145,6 +145,14 @@ export async function mostrarEditarUsuario(id) {
                     <label for="correo-editar">Correo Electrónico *</label>
                     <input type="email" id="correo-editar" value=""/>
                 </div>
+        
+                <div class="form-group">
+                    <label for="estado-editar">Estado *</label>
+                    <select id="estado-editar">
+                        <option value="ACTIVO">Activo</option>
+                        <option value="DESACTIVADO">Desactivado</option>
+                    </select>
+                </div>
 
                 <div class="form-group">
                     <label for="grupos-editar">Grupos *</label>
@@ -216,6 +224,7 @@ export function BuscarUsuarioPorId(id) {
         document.getElementById('rol-editar').value = usuario.rol || '';
         document.getElementById('correo-editar').value = usuario.correo || '';
         document.getElementById('password-editar').value = ''; // No llenar la contraseña por seguridad
+        document.getElementById('estado-editar').value = usuario.estado || '';
         
         // Verificar si el usuario es supervisor
         const selectSupervisorEditar = document.getElementById('supervisor-editar');
@@ -256,6 +265,7 @@ export function guardarEditarUsuario(id_usuario) {
     const correo = document.getElementById('correo-editar').value;
     const password = document.getElementById('password-editar').value;
     const grupo = document.getElementById('grupos-editar').value; // Agregar grupo
+    const estado = document.getElementById('estado-editar').value; // Agregar estado
     
     const url = `${API_BASE_URL}/usuarios/${id}`;
     const token = localStorage.getItem('token');
@@ -268,7 +278,9 @@ export function guardarEditarUsuario(id_usuario) {
         superior: supervisor,
         telefono: telefono,
         correo: correo,
-        id_grupo: grupo // Agregar grupo a los datos
+        id_grupo: grupo, // Agregar grupo a los datos
+        estado: estado // Agregar estado a los datos
+
     };
 
     fetch(url, {

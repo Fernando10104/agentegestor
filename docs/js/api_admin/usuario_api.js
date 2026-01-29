@@ -150,7 +150,19 @@ export async function mostrarEditarUsuario(id) {
                         <option value="">Cargando grupos...</option>
                     </select>
                 </div>
-
+                <div class="form-group">
+                    <label for="estado-editar">Estado *</label>
+                    <select id="estado-editar">
+                        <option value="ACTIVO">Activo</option>
+                        <option value="DESACTIVADO">Desactivado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="grupos-editar">Grupos *</label>
+                    <select id="grupos-editar">
+                        <option value="">Cargando grupos...</option>
+                    </select>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="cancel-btn" onclick="cerrarModalEditarUsuario()">Cancelar</button>
                     <button type="submit" class="create-btn" onclick="guardarEditarUsuario(${id})">Guardar Cambios</button>
@@ -194,6 +206,7 @@ export function BuscarUsuarioPorId(id) {
         document.getElementById('supervisor-editar').value = usuario.superior || '';
         document.getElementById('correo-editar').value = usuario.correo || '';
         document.getElementById('password-editar').value = ''; // No llenar la contraseña por seguridad
+        document.getElementById('estado-editar').value = usuario.estado || '';
         
         // Seleccionar el grupo del usuario
         const selectGrupos = document.getElementById('grupos-editar');
@@ -220,6 +233,7 @@ export function guardarEditarUsuario(id_usuario) {
     const correo = document.getElementById('correo-editar').value;
     const password = document.getElementById('password-editar').value;
     const grupo = document.getElementById('grupos-editar').value; // Agregar grupo
+    const estado = document.getElementById('estado-editar').value; // Agregar estado
     
     const url = `${API_BASE_URL}/usuarios/${id}`;
     const token = localStorage.getItem('token');
@@ -232,7 +246,8 @@ export function guardarEditarUsuario(id_usuario) {
         superior: supervisor,
         telefono: telefono,
         correo: correo,
-        id_grupo: grupo // Agregar grupo a los datos
+        id_grupo: grupo, // Agregar grupo a los datos
+        estado: estado // Agregar estado a los datos
     };
 
     fetch(url, {
