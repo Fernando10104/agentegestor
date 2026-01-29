@@ -290,7 +290,7 @@ export async function cargarListaUsuariosporGrupoId(grupoId) {
                 row.innerHTML = `
                     <td>${usuario.usuario}</td>
                     <td>${usuario.nombre}</td>
-                    <td>${usuario.total_comision_asesor}</td>
+                    <td>${usuario.total_comision}</td>
                 `;
                 usuariosLista.appendChild(row);
             });
