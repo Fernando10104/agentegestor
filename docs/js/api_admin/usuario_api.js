@@ -157,12 +157,7 @@ export async function mostrarEditarUsuario(id) {
                         <option value="DESACTIVADO">Desactivado</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="grupos-editar">Grupos *</label>
-                    <select id="grupos-editar">
-                        <option value="">Cargando grupos...</option>
-                    </select>
-                </div>
+                
                 <div class="modal-footer">
                     <button type="button" class="cancel-btn" onclick="cerrarModalEditarUsuario()">Cancelar</button>
                     <button type="submit" class="create-btn" onclick="guardarEditarUsuario(${id})">Guardar Cambios</button>

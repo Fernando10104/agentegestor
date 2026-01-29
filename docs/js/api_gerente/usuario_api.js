@@ -147,6 +147,13 @@ export async function mostrarEditarUsuario(id) {
                 </div>
         
                 <div class="form-group">
+                    <label for="grupos-editar">Grupos *</label>
+                    <select id="grupos-editar">
+                        <option value="">Cargando grupos...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
                     <label for="estado-editar">Estado *</label>
                     <select id="estado-editar">
                         <option value="ACTIVO">Activo</option>
@@ -154,12 +161,6 @@ export async function mostrarEditarUsuario(id) {
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="grupos-editar">Grupos *</label>
-                    <select id="grupos-editar">
-                        <option value="">Cargando grupos...</option>
-                    </select>
-                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="cancel-btn" onclick="cerrarModalEditarUsuario()">Cancelar</button>
