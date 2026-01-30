@@ -627,6 +627,7 @@ export async function cargarSupervisoresEnSelect() {
     try {
         const supervisores = await obtenerMisSupervisores();
         const selectSupervisor = document.getElementById('supervisor');
+        const selectorRoles = document.getElementById('rol');
         
         if (!selectSupervisor) {
             console.error('No se encontró el select de supervisor');
@@ -636,6 +637,16 @@ export async function cargarSupervisoresEnSelect() {
         // Limpiar opciones existentes
         selectSupervisor.innerHTML = '';
         
+        if (selectorRoles.value === 'supervisor') {
+            // Obtener el ID del gerente
+            const gerenteId = localStorage.getItem('id_usuario');
+            // Establecer el valor del supervisor como el ID del gerente
+            selectSupervisor.innerHTML = `<option value="${gerenteId}">${gerenteId}</option>`;
+            selectSupervisor.value = gerenteId;
+            selectSupervisor.disabled = true;
+            return;
+        }
+
         // Agregar opción por defecto
         selectSupervisor.innerHTML = '<option value="">Seleccionar supervisor</option>';
         
