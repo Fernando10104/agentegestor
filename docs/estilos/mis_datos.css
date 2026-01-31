@@ -363,6 +363,35 @@ nav button {
   display: block; /* Mostrar el overlay cuando el modal está activo */
 }
 
+.contenedor-3 {
+  position: fixed; /* fixed */
+  left: 50%; /* left-[50%] */
+  top: 50%; /* top-[50%] */
+  z-index: 50; /* z-50 */
+  display: grid; /* grid */
+  width: 100%; /* w-full */
+  transform: translate(-50%, -50%); /* translate-x-[-50%] + translate-y-[-50%] */
+  gap: 1rem; /* gap-4 */
+  border: 1px solid #414958; /* border */
+  background-color: #1D2430; /* bg-background */
+  padding: 1.5rem; /* p-6 */
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); /* shadow-lg */
+  transition-duration: 200ms; /* duration-200 */
+  max-width: 28rem; /* max-w-md */
+  padding-top: 1rem; /* py-4 */
+  padding-bottom: 1rem; /* py-4 */
+  display: flex;
+  flex-direction: column;
+
+    /* Para que no se pase del alto de la pantalla */
+  max-height: 90vh; /* 90% del alto de la ventana */
+  overflow-y: auto; /* Scroll vertical si es necesario */
+  scrollbar-width: thin; /* Scroll fino (Firefox) */
+
+  display: none;
+}
+
+
 
 .modal-crear{
   position: fixed; /* fixed */
@@ -510,6 +539,19 @@ nav button {
   cursor: pointer;
   border: none;
   transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  border: 1px solid #414958;
+  color: rgb(179, 179, 179);
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  align-self: center;
+  
 }
 
 /* Botón cancelar */
@@ -884,3 +926,36 @@ dialog {
   #closeDialog:hover {
     background: darkred;
   }
+
+/* Fondo oscuro */
+.overlay-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;              /* oculto por defecto */
+    align-items: center;        /* centra vertical */
+    justify-content: center;    /* centra horizontal */
+    z-index: 9999;              /* por encima de todo */
+}
+
+/* Caja del modal */
+.modal-custom {
+    background: #1e1e1e;
+    color: #fff;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+}
+
+
+.modal-form{
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    
+    gap: 0.5rem;
+    
+
+}

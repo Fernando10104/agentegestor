@@ -10,6 +10,9 @@ import { API_BASE_URL } from "./config.js";
 window.mostrarConfiguracion = mostrarConfiguracion;
 window.verificarToken = verificarToken;
 window.cerrarSesion = cerrarSesion;
+window.mostrarModalCambiarContrasena = mostrarModalCambiarContrasena;
+window.cerrarModalCambiarContrasena = cerrarModalCambiarContrasena;
+window.cambiarContrasena = cambiarContrasena;
 
 document.getElementById('usuario-icono').addEventListener('click', () => {
     mostrarConfiguracion();
@@ -136,4 +139,98 @@ function actualizarDatosEnHTML(datos) {
 // Llamar la función cuando se carga la página
 document.addEventListener('DOMContentLoaded', cargarMisDatos);
 
+export function mostrarModalCambiarContrasena() {
+    const modaldiv = document.getElementById("contenedor-3");
+    modaldiv.innerHTML = "";
+    modaldiv.style.display = "block";
+    const modalContent = `
+        <div class="modal-header">
+            <h2 class="modal-title">Cambiar Contraseña</h2>
+        </div>
 
+        <div class="modal-body">
+            <form class="modal-form" id="cambiar-contrasena-form">
+                <div class="form-group">
+                    <label for="password_actual">Contraseña actual</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="password_actual" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password_nueva">Nueva contraseña</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="password_nueva" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password_confirmar">Confirmar nueva contraseña</label>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        id="password_confirmar" 
+                        required
+                    >
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="cancel-btn" data-dismiss="modal" style="background-color: red;" onclick="cerrarModalCambiarContrasena()">
+                Cancelar
+            </button>
+            <button type="button" class="create-btn"  onclick="cambiarContrasena()">
+                Guardar cambios
+            </button>
+        </div>
+    `;
+
+    document.getElementById("contenedor-3").innerHTML = modalContent;
+    
+}
+
+export function cerrarModalCambiarContrasena() {
+    const modaldiv = document.getElementById("contenedor-3");
+    modaldiv.style.display = "none";
+    modaldiv.innerHTML = "";
+}
+export async function cambiarContrasena() {
+    const password_actual = document.getElementById('password_actual').value;
+    const password_nueva = document.getElementById('password_nueva').value;
+    const password_confirmar = document.getElementById('password_confirmar').value;
+
+    if (password_nueva !== password_confirmar) {
+        alert('La nueva contraseña y la confirmación no coinciden.');
+        return;
+    }
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_BASE_URL}/cambiar-contrasena`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                password_actual,
+                password_nueva
+            })
+        }); 
+        if (!response.ok) {
+            throw new Error('Error al cambiar la contraseña');
+        }
+        const data = await response.json();
+        alert(data.message || 'Contraseña cambiada exitosamente.');
+        cerrarModalCambiarContrasena();
+    } catch (error) {
+        console.error('Error al cambiar la contraseña:', error);
+        alert('Error al cambiar la contraseña. Por favor, inténtalo de nuevo.');
+    }
+}

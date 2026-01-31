@@ -540,7 +540,7 @@ export async function cargarGruposEnSelect() {
         selectGrupos.innerHTML = '';
         
         // Agregar opción por defecto
-        selectGrupos.innerHTML = '<option value="">Seleccionar grupo</option>';
+        selectGrupos.innerHTML = '<option value="0">Seleccionar grupo</option>';
         
         // Agregar opciones de grupos
         grupos.forEach(grupo => {

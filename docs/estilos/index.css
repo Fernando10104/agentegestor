@@ -684,6 +684,7 @@ textarea:focus {
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
   align-self: center;
+  
 }
 
 .cancel-btn:hover {
