@@ -220,7 +220,7 @@ export async function cambiarContrasena() {
             },
             body: JSON.stringify({
                 password_actual,
-                password_nueva
+                nuevo_password: password_nueva
             })
         }); 
         if (!response.ok) {
