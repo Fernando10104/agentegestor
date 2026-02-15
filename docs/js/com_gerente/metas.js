@@ -53,15 +53,44 @@ export function mostrarGestionMetas(){
                     <h1>Gestión de Grupos</h1>
                 </div>
 
-                <div class="controls">
-                    <div class="control-filtros">
-                        <label for="grupo-select">Seleccionar Grupo:</label>
+                <div class="grid-top">
+                    <div class="card">
+                        
+                        <h3>Seleccionar Grupo</h3>
                         <select id="grupo-select">
                             <option value="">-- Seleccionar Grupo --</option>
                             <!-- Las opciones de grupo se cargarán aquí dinámicamente -->
                         </select>
-
-                        <button id="btn-crear-grupo">+ Crear Grupo</button>
+                    </div>
+                    <div class="card">
+                        <h3>Mes</h3>
+                        <select id="mesSelect_metas">
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="card">
+                        <h3>Año</h3>
+                        <select id="anioSelect_metas">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        </select>
+                    </div>
+                    <div class="control-filtros">
+                    <button id="btn-crear-grupo">+ Crear Grupo</button>
                     </div>
                 </div>
                 <br>
@@ -205,6 +234,14 @@ export function mostrarGestionMetas(){
     document.getElementById('cerrar-modal-editar-grupo-btn').addEventListener('click', cerrarModalGrupo);
     document.getElementById('cerrar-modal-grupo-btn').addEventListener('click', cerrarModalCrearGrupo);
 
+
+    const grupoSelect = document.getElementById('grupo-select');
+    const mesSelect = document.getElementById('mesSelect_metas');
+    const anioSelect = document.getElementById('anioSelect_metas');
+    grupoSelect.addEventListener('change', cambiarGrupos_metas);
+    mesSelect.addEventListener('change', cambiarGrupos_metas);
+    anioSelect.addEventListener('change', cambiarGrupos_metas);
+
    cargarMetas();
 
 
@@ -240,14 +277,19 @@ export function mostrarGestionMetas(){
     });
 
     
-    document.getElementById('grupo-select').addEventListener('change', function() {
+ 
+    function cambiarGrupos_metas() {
+        console.log('Cambiando grupos o filtros...');
         const grupoSelect = document.getElementById('grupo-select');
         const valorSeleccionado = grupoSelect.value;
-        
+        const mesSelect = document.getElementById('mesSelect_metas');
+        const anioSelect = document.getElementById('anioSelect_metas');
+        const mesSeleccionado = mesSelect.value;
+        const anioSeleccionado = anioSelect.value;
         obtenerGruposPorId(valorSeleccionado);
-        cargarListaUsuariosporGrupoId(valorSeleccionado);
+        cargarListaUsuariosporGrupoId(valorSeleccionado, mesSeleccionado, anioSeleccionado);
+    }
 
-    });
 
     function editarGrupo(idGrupo) {
         const modalEditarGrupo = document.getElementById('modal-editar-grupo');

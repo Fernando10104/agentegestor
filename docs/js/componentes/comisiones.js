@@ -61,7 +61,7 @@ export function mostrarComisiones() {
                       <th>Comision gerente</th>    
                       <th>Supervisor</th>
                       <th>Asesor</th>
-                      <th>Estado</th>
+                      <th >Estado</th>
                       <th>Calificacion</th>
                       <th>Sucursal</th>
                       <th>Observacion</th>
