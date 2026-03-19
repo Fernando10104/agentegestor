@@ -149,7 +149,7 @@ export function mostrarGestionMarcas() {
             const idUsuario = document.getElementById('usuario-select').value;
             if (!idUsuario) return alert('Seleccione usuario');
             for(const r of rows){
-                const payload = { marca: r[1], monto_min: r[2], monto_max: r[3], comision_nuevo: r[4], comision_renovacion: r[5], metodo_pago: r[6], id_usuario_destino: parseInt(idUsuario) };
+                const payload = { marca: r[1], monto_min: r[2], monto_max: r[3], comision_nuevo: (r[4] !== '' && r[4] !== null) ? Number(r[4]) : 0, comision_renovacion: (r[5] !== '' && r[5] !== null) ? Number(r[5]) : 0, metodo_pago: r[6], id_usuario_destino: parseInt(idUsuario) };
                 try{
                     if (r[0]){
                         const res = await fetch(`${API_BASE_URL}/marcas/${r[0]}`, { method:'PUT', headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${token}` }, body: JSON.stringify(payload) });
