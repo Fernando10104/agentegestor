@@ -100,7 +100,6 @@ window.mostrarInicio = function () {
           type="month" 
           id="mes-year-input"
           value="${new Date().toISOString().slice(0,7)}"
-          onchange="cargarBalance()"
           style="
             padding:6px 10px;
             border-radius:8px;
@@ -168,6 +167,12 @@ window.mostrarInicio = function () {
   mostrarDashboardIngresos()
   mostrarDatosbalance()
   setupMensajeMotivacianalForm();
+  const inputFecha = document.getElementById("mes-year-input");
+
+  if (inputFecha) {
+    console.log("Listener agregado correctamente");
+    inputFecha.addEventListener("change", mostrarDatosbalance);
+  }
 };
 
 // Inicialización
@@ -648,15 +653,19 @@ window.cargarGruposEnSelect = cargarGruposEnSelect;
 window.cambiarGrupos = cambiarGrupos;
 
 document.getElementById("mes-year-input")
+  console.log("Agregando event listener al input de fecha para balance");
+document.getElementById("mes-year-input")
   .addEventListener("change", mostrarDatosbalance);
 
 export function mostrarDatosbalance() {
   const fecha = document.getElementById("mes-year-input").value;
-  if (fecha) {
-    const [anio, mes] = fecha.split("-");
-    const mesNumero = parseInt(mes);
-    const anioNumero = parseInt(anio);
-  }
+  console.log("Fecha seleccionada para balance:", fecha);
+  if (!fecha) return; // salir si no hay fecha
+
+  const [anio, mes] = fecha.split("-");
+  const mesNumero = parseInt(mes);
+  const anioNumero = parseInt(anio);
+
   const token = localStorage.getItem("token");
   fetch(`${API_BASE_URL}/balance/?mes=${mesNumero}&anio=${anioNumero}`, {
     headers: { "Authorization": "Bearer " + token }
@@ -668,7 +677,6 @@ export function mostrarDatosbalance() {
       document.getElementById('total-balance').textContent = `Gs. ${data.ganancia.toLocaleString()}`;
     })
     .catch(err => console.error("Error al obtener datos de balance:", err));
-
 }
 
 function setupMensajeMotivacianalForm() {
