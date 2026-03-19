@@ -74,7 +74,7 @@ window.mostrarInicio = function () {
     <div class="header">
         <h1>Bienvenido al panel de administración</h1>
         <h4>Aquí puedes gestionar usuarios, categorías y marcas.</h4>
-        
+        ${/* esta es la zona de /balance se envia fecha al backend*/ ''}
         <div style="display: flex; justify-content: space-between; gap: 1.5rem; margin-top:2.0rem;" >
           <div class="resumen" style="background-color: #E6FCEE; color:#14532D;">
               <div style="display: flex; justify-content: space-between; align-items: center;">

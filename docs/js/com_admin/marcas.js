@@ -149,7 +149,7 @@ export function mostrarGestionMarcas() {
             const idUsuario = document.getElementById('usuario-select').value;
             if (!idUsuario) return alert('Seleccione usuario');
             for(const r of rows){
-                const payload = { marca: r[1], monto_min: r[2], monto_max: r[3], comision_nuevo: r[4], comision_renovacion: r[5], metodo_pago: r[6], id_usuario_destino: parseInt(r[7]||idUsuario) };
+                const payload = { marca: r[1], monto_min: r[2], monto_max: r[3], comision_nuevo: r[4], comision_renovacion: r[5], metodo_pago: r[6], id_usuario_destino: parseInt(idUsuario) };
                 try{
                     if (r[0]){
                         const res = await fetch(`${API_BASE_URL}/marcas/${r[0]}`, { method:'PUT', headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${token}` }, body: JSON.stringify(payload) });
@@ -231,25 +231,42 @@ export function mostrarGestionMarcas() {
             };
             menu.appendChild(copiar);
 
-            // Opción: Pegar fila
+           // Opción: Pegar fila
             const pegar = document.createElement('div');
             pegar.textContent = 'Pegar fila';
             pegar.style.padding = '8px 18px';
             pegar.style.cursor = 'pointer';
             pegar.onmouseenter = () => pegar.style.background = '#383d44';
             pegar.onmouseleave = () => pegar.style.background = 'none';
+
             pegar.onclick = () => {
                 if (copiedRow && copiedRow.length) {
+
+                    const idUsuario = document.getElementById('usuario-select').value;
+
+                    if (!idUsuario) {
+                        alert('⚠️ Seleccione un usuario antes de pegar la fila.');
+                        return;
+                    }
+
                     const nueva = copiedRow.slice();
-                    nueva[0] = null; // Limpiar ID
+
+                    nueva[0] = null; // Limpiar ID (para que sea nuevo registro)
+
+                    // 🔥 Reemplazar el último valor (ID_USUARIO)
+                    nueva[7] = parseInt(idUsuario);
+
                     // Insertar arriba de la fila actual (r)
                     hot.alter('insert_row_above', r);
+
                     for (let c = 0; c < nueva.length; c++) {
                         hot.setDataAtCell(r, c, nueva[c]);
                     }
                 }
+
                 menu.remove();
             };
+
             menu.appendChild(pegar);
 
             // Cerrar menú al hacer click fuera
