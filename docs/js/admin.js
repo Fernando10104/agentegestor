@@ -75,6 +75,45 @@ window.mostrarInicio = function () {
         <h1>Bienvenido al panel de administración</h1>
         <h4>Aquí puedes gestionar usuarios, categorías y marcas.</h4>
         ${/* esta es la zona de /balance se envia fecha al backend*/ ''}
+       <div id="fecha-balance" style="
+        margin-top:1rem;
+        padding:12px 16px;
+        background:#1e1e2f;
+        border:1px solid #2c2c3e;
+        border-radius:12px;
+        display:inline-flex;
+        align-items:center;
+        gap:12px;
+        font-size:14px;
+        color:#e4e4e7;
+        box-shadow:0 4px 10px rgba(0,0,0,0.3);
+      ">
+
+        <label for="mes-year-input" style="
+          font-weight:500;
+          color:#c7c7d1;
+        ">
+          📅 Fecha:
+        </label>
+
+        <input 
+          type="month" 
+          id="mes-year-input"
+          value="${new Date().toISOString().slice(0,7)}"
+          onchange="cargarBalance()"
+          style="
+            padding:6px 10px;
+            border-radius:8px;
+            border:1px solid #3a3a4f;
+            background:#2a2a3d;
+            color:#fff;
+            cursor:pointer;
+            outline:none;
+          "
+        >
+
+      </div>
+
         <div style="display: flex; justify-content: space-between; gap: 1.5rem; margin-top:2.0rem;" >
           <div class="resumen" style="background-color: #E6FCEE; color:#14532D;">
               <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -608,10 +647,18 @@ window.mostrarDashboardIngresos = mostrarDashboardIngresos;
 window.cargarGruposEnSelect = cargarGruposEnSelect;
 window.cambiarGrupos = cambiarGrupos;
 
+document.getElementById("mes-year-input")
+  .addEventListener("change", mostrarDatosbalance);
 
 export function mostrarDatosbalance() {
+  const fecha = document.getElementById("mes-year-input").value;
+  if (fecha) {
+    const [anio, mes] = fecha.split("-");
+    const mesNumero = parseInt(mes);
+    const anioNumero = parseInt(anio);
+  }
   const token = localStorage.getItem("token");
-  fetch(`${API_BASE_URL}/balance`, {
+  fetch(`${API_BASE_URL}/balance/?mes=${mesNumero}&anio=${anioNumero}`, {
     headers: { "Authorization": "Bearer " + token }
   })
     .then(res => res.json())
