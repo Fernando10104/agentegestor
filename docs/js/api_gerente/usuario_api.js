@@ -345,7 +345,15 @@ export function CrearUsuario(){
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error en la respuesta de la API');
+                return response.json().then(err => {
+                    const detalle = err.detail;
+
+                    // Si detail es objeto (como en tu backend)
+                    const mensaje = detalle?.mensaje || 'Error en la API';
+                    const error = detalle?.error || '';
+
+                    throw new Error(`${mensaje}${error ? ' - ' + error : ''}`);
+                });
             }
             return response.json();
         })
