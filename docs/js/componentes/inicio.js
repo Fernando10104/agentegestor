@@ -178,6 +178,7 @@ export async function mostrarInicio() {
           <div class="metric-value">${formatearMoneda(data.logrado)}</div>
           </div>
         </div>
+        <!-- top 5 asesores global  -->
         <div style="width:100%; min-width:450px; margin:30px auto; padding:20px; background:#2F3646; border:1px solid #414958; border-radius:8px; color:white; font-family:Arial, sans-serif;">
 
             <h2 style="margin-bottom:15px; text-align:center; font-size:18px;">
@@ -189,6 +190,7 @@ export async function mostrarInicio() {
             </div>
 
         </div>
+        <!-- fin top 5 asesores global  -->
 
       </div>
     `;
