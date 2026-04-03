@@ -652,10 +652,14 @@ window.mostrarDashboardIngresos = mostrarDashboardIngresos;
 window.cargarGruposEnSelect = cargarGruposEnSelect;
 window.cambiarGrupos = cambiarGrupos;
 
-document.getElementById("mes-year-input")
+const input = document.getElementById("mes-year-input");
+
+if (input) {
   console.log("Agregando event listener al input de fecha para balance");
-document.getElementById("mes-year-input")
-  .addEventListener("change", mostrarDatosbalance);
+  input.addEventListener("change", mostrarDatosbalance);
+} else {
+  console.log("No existe mes-year-input todavía");
+}
 
 export function mostrarDatosbalance() {
   const fecha = document.getElementById("mes-year-input").value;
@@ -742,6 +746,8 @@ function setupMensajeMotivacianalForm() {
         }
       });
       
+
+
       console.log('✅ Event listener del mensaje motivacional configurado');
     } else {
       console.warn('⚠️ No se encontró el formulario mensaje-motivacional-form');
