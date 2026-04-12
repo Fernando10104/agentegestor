@@ -69,10 +69,16 @@ export function mostrarHistorial() {
         <div class="modal-header">
           <h2>Editar Historial</h2>
         </div>
+
         <form class="modal-form" id="form-editar-historial">
           <div class="form-group">
             <label for="id">ID:</label>
             <input type="text" id="id" name="id" disabled />
+          </div>
+          <div class="form-group">
+            <label for="fecha">Fecha: (YYYY-MM-DD)</label>
+            <input type="date" id="fecha" name="fecha" disabled />
+
           </div>
           <div class="form-group">
             <label for="documento">Documento:</label>
@@ -82,10 +88,13 @@ export function mostrarHistorial() {
             <label for="contacto">Contacto:</label>
             <input type="text" id="contacto" name="contacto" />
           </div>
+          select marca:
           <div class="form-group">
             <label for="marca">Marca:</label>
-            <input type="text" id="marca" name="marca" disabled />
-          </div>
+            <select id="marca" name="marca">
+              <option value="NISSAN">Nissan</option>
+              <option value="TOYOTA">Toyota</option>
+
           <div class="form-group">
             <label for="tipo">Tipo:</label>
             <input type="text" id="tipo" name="tipo" disabled />

@@ -199,6 +199,7 @@ export function mostrarCreditos() {
                           <option value="FUNCIONARIO PUBLICO CONTRATADO">FUNCIONARIO PUBLICO CONTRATADO</option>
                           <option value="FUNCIONARIO PUBLICO PERMANENTE">FUNCIONARIO PUBLICO PERMANENTE</option>
                           <option value="INFORMAL">INFORMAL</option>
+                          <option value="JUBILADO">JUBILADO</option>
                       </select>
                   </div>
                   <div class="form-group">

@@ -5,7 +5,7 @@ async function cargarTopAsesores() {
   try {
     const token = localStorage.getItem('token');
 
-    const response = await fetch(`${API_BASE_URL}/top-asesores`, {
+    const response = await fetch(`${API_BASE_URL}/top-asesores?period=month`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
