@@ -183,6 +183,7 @@ export function manejarClickOperacion(id) {
       document.getElementById("estado").value = historial.estado || "";
       document.getElementById("fecha").value = (historial.fecha || '').split('T')[0];
       document.getElementById("observaciones").value = historial.observaciones || "";
+      console.log("Fecha cargada en el input:", document.getElementById("fecha").value);
       
       // ⭐ Seleccionar la marca actual
       const selectMarca = document.getElementById('marca');
@@ -220,15 +221,12 @@ export function guardarActualizacion() {
   const obs = document.getElementById("observaciones").value;
   
   // ⭐ CONVERSIÓN DE FECHA DD/MM/YYYY
-  let fechaInput = document.getElementById("fecha").value; // "2026-04-18"
+  let fechaInput = document.getElementById("fecha").value; // "2026-04-12"
   let fecha = "";
-  
+
   if (fechaInput && fechaInput.trim() !== "") {
-    // El input type="date" devuelve YYYY-MM-DD
     const [year, month, day] = fechaInput.split('-');
-    // Convertir a DD/MM/YYYY
-    fecha = `${day}/${month}/${year}`;
-    console.log("Fecha convertida a:", fecha);
+    fecha = `${day}/${month}/${year}`;  // Debería ser "12/04/2026"
   }
 
   const token = localStorage.getItem("token");
