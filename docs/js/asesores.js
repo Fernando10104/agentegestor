@@ -247,7 +247,7 @@ function esSupervisor() {
 }
 window.esSupervisor = esSupervisor;
 
-// Redirigir a supervisores.html si es supervisor
+// Redirigir a supervisor.html si es supervisor
 if (esSupervisor()) {
-    window.location.href = "supervisores.html";
+    window.location.href = "supervisor.html";
 }

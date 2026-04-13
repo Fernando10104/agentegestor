@@ -39,7 +39,7 @@ export function mostrarCreditos() {
         <button id="btn-buscar-clientes">Buscar</button>
 
         <button onclick="mostrarCargarCliente()">CARGAR CLIENTES</button>
-        <button onclick="mostrarCargarCredito() style="display: none; ">CARGAR CREDITO</button>
+        <button onclick="mostrarCargarCredito()">CARGAR CREDITO</button>
         <div class="limit-records" style="display: none;">
           <input type="checkbox" id="limit_records" name="limit_records">
           <label for="limit_records">Limitar 50 registros</label>
@@ -49,7 +49,6 @@ export function mostrarCreditos() {
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
-              <option value="100">100</option>
             </select>
       </div>
     </div>
@@ -134,6 +133,8 @@ export function mostrarCreditos() {
             <div class="form-group">
               <label for="tipo_credito">Tipo de Crédito:</label>
               <select id="tipo_credito" name="tipo_credito">
+                <option value="Ventanilla">Ventanilla</option>
+                <option value="Debito">Debito</option>
                 <option value="Credito">Credito</option>
               </select>
             </div>
@@ -160,75 +161,29 @@ export function mostrarCreditos() {
               <h2>Cargar Cliente</h2>
           </div>
           <form class="modal-form" id="cargar-clientes-form">
-              <div style="padding: 1.5rem; overflow-y: auto;">
-                  <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #b3b3b3;">Datos del Cliente</h3>
-                  <div class="form-group">
-                      <label for="documento">Cédula:</label>
-                      <input type="text" id="documento" name="cedula" required>
-                  </div>
-                  <div class="form-group">
-                      <label for="Nombre">Nombre:</label>
-                      <input type="text" id="Nombre" name="Nombre" required>
-                  </div>
-                  <div class="form-group">
-                      <label for="Celular">Celular:</label>
-                      <input type="text" id="Celular" name="Celular">
-                  </div>
-                  <div class="form-group">
-                      <label for="Direccion">Dirección:</label>
-                      <input type="text" id="Direccion" name="Direccion">
-                  </div>
-                  <div class="form-group">
-                      <label for="correo">Correo:</label>
-                      <input type="email" id="correo" name="correo">
-                  </div>
-                  <div class="form-group">
-                      <label for="faja_inforcomf">Faja:</label>
-                      <input type="text" id="faja_inforcomf" name="faja">
-                  </div>
-
-                  <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1rem; color: #b3b3b3;">Datos del Crédito (Opcional)</h3>
-                  <div class="form-group">
-                      <label for="cliente_categoria">Categoría:</label>
-                      <select id="cliente_categoria" name="categoria">
-                          <option value="">-- Seleccionar --</option>
-                          <option value="ASALARIADO CON IPS">ASALARIADO CON IPS</option>
-                          <option value="ASALARIADO CON IVA">ASALARIADO CON IVA</option>
-                          <option value="COMERCIANTE">COMERCIANTE</option>
-                          <option value="FUNCIONARIO BANCARIO">FUNCIONARIO BANCARIO</option>
-                          <option value="FUNCIONARIO PUBLICO CONTRATADO">FUNCIONARIO PUBLICO CONTRATADO</option>
-                          <option value="FUNCIONARIO PUBLICO PERMANENTE">FUNCIONARIO PUBLICO PERMANENTE</option>
-                          <option value="INFORMAL">INFORMAL</option>
-                          <option value="JUBILADO">JUBILADO</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_marca">Marca:</label>
-                      <select id="cliente_marca" name="marca">
-                          <option value="">-- Seleccionar --</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_tipo_comision">Tipo de Comisión:</label>
-                      <select id="cliente_tipo_comision" name="tipo_comision">
-                          <option value="">-- Seleccionar marca primero --</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_tipo_credito">Tipo de Crédito:</label>
-                      <select id="cliente_tipo_credito" name="tipo_credito">
-                          <option value="">-- Seleccionar --</option>
-                          <option value="Credito">Crédito</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_importe">Importe:</label>
-                      <input type="text" id="cliente_importe" name="importe" placeholder="Dejar vacío si no desea crear crédito">
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_obs">Observaciones:</label>
-                      <textarea id="cliente_obs" name="obs" placeholder="Observaciones del crédito (opcional)"></textarea>
-                  </div>
+              <div class="form-group">
+                  <label for="documento">Cédula:</label>
+                  <input type="text" id="documento" name="cedula">
+              </div>
+              <div class="form-group">
+                  <label for="Nombre">Nombre:</label>
+                  <input type="text" id="Nombre" name="Nombre">
+              </div>
+              <div class="form-group">
+                  <label for="Celular">Celular:</label>
+                  <input type="text" id="Celular" name="Celular">
+              </div>
+              <div class="form-group">
+                  <label for="Direccion">Dirección:</label>
+                  <input type="text" id="Direccion" name="Direccion">
+              </div>
+              <div class="form-group">
+                  <label for="correo">Correo:</label>
+                  <input type="email" id="correo" name="correo">
+              </div>
+              <div class="form-group">
+                  <label for="faja_inforcomf">Faja:</label>
+                  <input type="text" id="faja_inforcomf" name="faja">
               </div>
               <div class="modal-footer">
                   <button type="submit" class="create-btn">Insertar Cliente</button>
@@ -236,8 +191,6 @@ export function mostrarCreditos() {
               </div>
           </form>
         </div>
-
-       
 
         <!-- ------------------------Formulario para editar historial------------------------------------------------------->
         <div class="modal-crear" id="modal-editar-clientes" style="display: none;">

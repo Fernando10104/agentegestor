@@ -208,7 +208,6 @@ export function manejarClickOperacion(id) {
 
 export function guardarActualizacion() {
   const id = document.getElementById("id").value;
-  const fecha = document.getElementById("fecha").value;
   const documento = document.getElementById("documento").value;
   const contacto = document.getElementById("contacto").value;
   const marca = document.getElementById("marca").value;
@@ -230,7 +229,6 @@ export function guardarActualizacion() {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      fecha,
       documento,
       contacto,
       marca,

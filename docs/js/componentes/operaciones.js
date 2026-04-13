@@ -49,7 +49,6 @@ export function mostrarCreditos() {
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
-              <option value="100">100</option>
             </select>
       </div>
     </div>
@@ -83,26 +82,40 @@ export function mostrarCreditos() {
       <button id="btn-siguiente">Siguiente</button>
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- ------------------------Formulario para cargar credito------------------------------------------------------->
+        
         <div class="modal-crear" id="cargar-credito" style="display: none;">
           <div class="modal-header">
             <h2>Cargar Crédito</h2>
           </div>
           <form class="modal-form" id="cargar-credito-form">
             <div class="form-group">
-              <label for="cedula">Cédula:</label>
-              <input type="text" id="cedula" name="cedula">
+              <label for="cedula_credito">Cédula:</label>
+              <input type="text" id="cedula_credito" name="cedula">
             </div>
             <div class="form-group">
-              <label for="celular">Celular:</label>
-              <input type="text" id="celular" name="celular">
+              <label for="celular_credito">Celular:</label>
+              <input type="text" id="celular_credito" name="celular">
             </div>
             <div class="form-group">
-              <label for="faja">Faja:</label>
-              <input type="text" id="faja" name="faja">
+              <label for="faja_credito">Faja:</label>
+              <input type="text" id="faja_credito" name="faja">
             </div>
             <div class="form-group">
-              <label for="categoria">Categoría:</label>
-              <select id="categoria" name="categoria">
+              <label for="categoria_credito">Categoría:</label>
+              <select id="categoria_credito" name="categoria">
                 <option value="ASALARIADO CON IPS">ASALARIADO CON IPS</option>
                 <option value="ASALARIADO CON IVA">ASALARIADO CON IVA</option>
                 <option value="COMERCIANTE">COMERCIANTE</option>
@@ -110,126 +123,139 @@ export function mostrarCreditos() {
                 <option value="FUNCIONARIO PUBLICO CONTRATADO">FUNCIONARIO PUBLICO CONTRATADO</option>
                 <option value="FUNCIONARIO PUBLICO PERMANENTE">FUNCIONARIO PUBLICO PERMANENTE</option>
                 <option value="INFORMAL">INFORMAL</option>
-
               </select>
             </div>
             <div class="form-group">
-              <label for="marca">Marca:</label>
-              <select id="marca" name="marca">
-              </select>
+              <label for="marca_credito">Marca:</label>
+              <select id="marca_credito" name="marca"></select>
             </div>
             <div class="form-group">
-              <label for="tipo_comision">Tipo de Comisión:</label>
-              <select id="tipo_comision" name="tipo_comision">
+              <label for="tipo_comision_credito">Tipo de Comisión:</label>
+              <select id="tipo_comision_credito" name="tipo_comision">
                 <option value="nuevo">Nuevo</option>
                 <option value="renovacion">Renovación</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="tipo_credito">Tipo de Crédito:</label>
-              <select id="tipo_credito" name="tipo_credito">
+              <label for="tipo_credito_credito">Tipo de Crédito:</label>
+              <select id="tipo_credito_credito" name="tipo_credito">
+                <option value="Ventanilla">Ventanilla</option>
+                <option value="Debito">Debito</option>
                 <option value="Credito">Credito</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="importe">Importe:</label>
-              <input type="text" id="importe" name="importe">
+              <label for="importe_credito">Importe:</label>
+              <input type="text" id="importe_credito" name="importe">
             </div>
             <div class="form-group">
-              <label for="obs">Obs:</label>
-              <textarea id="obs" name="obs"></textarea>
+              <label for="obs_credito">Obs:</label>
+              <textarea id="obs_credito" name="obs"></textarea>
             </div>
             <div class="modal-footer">
               <button type="submit" class="create-btn">Insertar Crédito</button>
-              <button type="button" class="cancel-btn " style="background-color: red;" onclick="ocultarCargarCredito()">Cerrar</button>
-
+              <button type="button" class="cancel-btn" style="background-color: red;" onclick="ocultarCargarCredito()">Cerrar</button>
             </div>
-          
           </form>
-
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- ------------------------Formulario para cargar clientes------------------------------------------------------->
 
         <div class="modal-crear" id="cargar-cliente" style="display: none;">
           <div class="modal-header">
-              <h2>Cargar Cliente</h2>
+            <h2>Cargar Cliente</h2>
           </div>
           <form class="modal-form" id="cargar-clientes-form">
-              <div style="padding: 1.5rem; overflow-y: auto;">
-                  <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #b3b3b3;">Datos del Cliente</h3>
-                  <div class="form-group">
-                      <label for="documento">Cédula:</label>
-                      <input type="text" id="documento" name="cedula" required>
-                  </div>
-                  <div class="form-group">
-                      <label for="Nombre">Nombre:</label>
-                      <input type="text" id="Nombre" name="Nombre" required>
-                  </div>
-                  <div class="form-group">
-                      <label for="Celular">Celular:</label>
-                      <input type="text" id="Celular" name="Celular">
-                  </div>
-                  <div class="form-group">
-                      <label for="Direccion">Dirección:</label>
-                      <input type="text" id="Direccion" name="Direccion">
-                  </div>
-                  <div class="form-group">
-                      <label for="correo">Correo:</label>
-                      <input type="email" id="correo" name="correo">
-                  </div>
-                  <div class="form-group">
-                      <label for="faja_inforcomf">Faja:</label>
-                      <input type="text" id="faja_inforcomf" name="faja">
-                  </div>
-
-                  <h3 style="margin: 1.5rem 0 1rem 0; font-size: 1rem; color: #b3b3b3;">Datos del Crédito (Opcional)</h3>
-                  <div class="form-group">
-                      <label for="cliente_categoria">Categoría:</label>
-                      <select id="cliente_categoria" name="categoria">
-                          <option value="">-- Seleccionar --</option>
-                          <option value="ASALARIADO CON IPS">ASALARIADO CON IPS</option>
-                          <option value="ASALARIADO CON IVA">ASALARIADO CON IVA</option>
-                          <option value="COMERCIANTE">COMERCIANTE</option>
-                          <option value="FUNCIONARIO BANCARIO">FUNCIONARIO BANCARIO</option>
-                          <option value="FUNCIONARIO PUBLICO CONTRATADO">FUNCIONARIO PUBLICO CONTRATADO</option>
-                          <option value="FUNCIONARIO PUBLICO PERMANENTE">FUNCIONARIO PUBLICO PERMANENTE</option>
-                          <option value="INFORMAL">INFORMAL</option>
-                          <option value="JUBILADO">JUBILADO</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_marca">Marca:</label>
-                      <select id="cliente_marca" name="marca">
-                          <option value="">-- Seleccionar --</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_tipo_comision">Tipo de Comisión:</label>
-                      <select id="cliente_tipo_comision" name="tipo_comision">
-                          <option value="">-- Seleccionar marca primero --</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_tipo_credito">Tipo de Crédito:</label>
-                      <select id="cliente_tipo_credito" name="tipo_credito">
-                          <option value="">-- Seleccionar --</option>  
-                          <option value="Credito">Crédito</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_importe">Importe:</label>
-                      <input type="text" id="cliente_importe" name="importe" placeholder="Dejar vacío si no desea crear crédito">
-                  </div>
-                  <div class="form-group">
-                      <label for="cliente_obs">Observaciones:</label>
-                      <textarea id="cliente_obs" name="obs" placeholder="Observaciones del crédito (opcional)"></textarea>
-                  </div>
-              </div>
-              <div class="modal-footer">
-                  <button type="submit" class="create-btn">Insertar Cliente</button>
-                  <button type="button" class="cancel-btn" style="background-color: red;" onclick="ocultarCargarCliente()">Cerrar</button>
-              </div>
+            <div class="form-group">
+              <label for="cedula_cliente">Cédula:</label>
+              <input type="text" id="cedula_cliente" name="cedula">
+            </div>
+            <div class="form-group">
+              <label for="nombre_cliente">Nombre:</label>
+              <input type="text" id="nombre_cliente" name="Nombre">
+            </div>
+            <div class="form-group">
+              <label for="celular_cliente">Celular:</label>
+              <input type="text" id="celular_cliente" name="Celular">
+            </div>
+            <div class="form-group">
+              <label for="direccion_cliente">Dirección:</label>
+              <input type="text" id="direccion_cliente" name="Direccion">
+            </div>
+            <div class="form-group">
+              <label for="correo_cliente">Correo:</label>
+              <input type="email" id="correo_cliente" name="correo">
+            </div>
+            <div class="form-group">
+              <label for="faja_cliente">Faja:</label>
+              <input type="text" id="faja_cliente" name="faja">
+            </div>
+            <div class="form-group">
+              <label for="categoria_cliente">Categoría:</label>
+              <select id="categoria_cliente" name="categoria">
+                <option value="ASALARIADO CON IPS">ASALARIADO CON IPS</option>
+                <option value="ASALARIADO CON IVA">ASALARIADO CON IVA</option>
+                <option value="COMERCIANTE">COMERCIANTE</option>
+                <option value="FUNCIONARIO BANCARIO">FUNCIONARIO BANCARIO</option>
+                <option value="FUNCIONARIO PUBLICO CONTRATADO">FUNCIONARIO PUBLICO CONTRATADO</option>
+                <option value="FUNCIONARIO PUBLICO PERMANENTE">FUNCIONARIO PUBLICO PERMANENTE</option>
+                <option value="INFORMAL">INFORMAL</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="marca_cliente">Marca:</label>
+              <select id="marca_cliente" name="marca"></select>
+            </div>
+            <div class="form-group">
+              <label for="tipo_comision_cliente">Tipo de Comisión:</label>
+              <select id="tipo_comision_cliente" name="tipo_comision">
+                <option value="nuevo">Nuevo</option>
+                <option value="renovacion">Renovación</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tipo_credito_cliente">Tipo de Crédito:</label>
+              <select id="tipo_credito_cliente" name="tipo_credito">
+                <option value="Ventanilla">Ventanilla</option>
+                <option value="Debito">Debito</option>
+                <option value="Credito">Credito</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="importe_cliente">Importe:</label>
+              <input type="text" id="importe_cliente" name="importe">
+            </div>
+            <div class="form-group">
+              <label for="obs_cliente">Obs:</label>
+              <textarea id="obs_cliente" name="obs"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="create-btn">Insertar Cliente</button>
+              <button type="button" class="cancel-btn" style="background-color: red;" onclick="ocultarCargarCliente()">Cerrar</button>
+            </div>
           </form>
         </div>
+
+
+
+
+
+
+
+
+
 
         <!-- ------------------------Formulario para editar historial------------------------------------------------------->
         <div class="modal-crear" id="modal-editar-clientes" style="display: none;">
@@ -459,4 +485,3 @@ export function mostrarCreditos() {
 
 
 }
-

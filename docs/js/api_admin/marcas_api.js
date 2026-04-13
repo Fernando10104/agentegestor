@@ -5,46 +5,63 @@ import { SVG_EDITAR, SVG_ELIMINAR, SVG_ASISTENCIAS } from '../../src/svg/svg.js'
 
 
 
-export async function cargarMarcas(busqueda = '', id_usuario = '') {
+export function cargarMarcas(busqueda = '', id_usuario = '') {
     const url = new URL(`${API_BASE_URL}/marcas_all`);
     const token = localStorage.getItem('token');
 
     if (busqueda) {
-        url.searchParams.append('busqueda', busqueda);
+        url.searchParams.append("busqueda", busqueda);
     }
-    url.searchParams.append('id_usuario', id_usuario);
-
-    try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            const errData = await response.json().catch(() => null);
-            const message = errData?.detail || 'Error al cargar las marcas';
-            throw new Error(message);
+    url.searchParams.append("id_usuario", id_usuario);
+    console.log("datos de url",url.toString());
+    
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
-
-        const data = await response.json();
-        // Retornar el objeto de datos para que el llamador lo procese
-        return data;
-    } catch (error) {
-        console.error('Error en cargarMarcas:', error);
-        throw error;
-    }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al cargar las marcas');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Marcas cargadas:', data);
+        const marcasLista = document.getElementById('marcas-lista');
+        marcasLista.innerHTML = ''; // Limpiar la lista antes de cargar nuevas marcas
+        const marcas = data.marcas || []; // Asegurarse de que marcas sea un array
+        marcas.forEach(marca => {
+            const row = document.createElement('tr');
+            row.setAttribute('data-id', marca.id_marca);
+            row.innerHTML = `
+                <td class="acciones">
+                    <button class="btn-editar" onclick="mostrarModalEditarMarca(${marca.id_marca})">${SVG_EDITAR}</button>
+                    <button class="btn-eliminar" onclick="mostrarModalEliminarMarca(${marca.id_marca})">${SVG_ELIMINAR}</button>
+                </td>
+                <td>${marca.id_marca}</td>
+                <td class="marca-nombre">${marca.marca}</td>
+                <td class="marca-minimo">${marca.monto_min}</td>
+                <td class="marca-maximo">${marca.monto_max}</td>
+                <td class="marca-comision-nuevo">${marca.comision_nuevo}</td>
+                <td class="marca-comision-renovacion">${marca.comision_renovacion}</td>
+                <td class="marca-metodo-pago">${marca.metodo_pago}</td>
+                <td class="marca-id-usuario">${marca.id_usuario}</td>
+            `;
+            marcasLista.appendChild(row);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 
-export async function CrearNuevaMarca() {
+export function CrearNuevaMarca() {
     const url = new URL(`${API_BASE_URL}/marcas`);
     const token = localStorage.getItem('token');
-
-    const select = document.getElementById("usuario-select");
-    const id_usuario_destino = select ? parseInt(select.value) : null;
 
     const nuevaMarca = {
         marca: document.getElementById("nombre-marca").value,
@@ -52,40 +69,41 @@ export async function CrearNuevaMarca() {
         monto_max: document.getElementById("monto-maximo").value,
         comision_nuevo: document.getElementById("comision-nuevo").value,
         comision_renovacion: document.getElementById("comision-renovacion").value,
-        metodo_pago: document.getElementById("metodo-pago").value,
-        id_usuario_destino: id_usuario_destino
+        metodo_pago: document.getElementById("metodo-pago").value
     };
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(nuevaMarca)
-        });
-
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(nuevaMarca)
+    })
+    .then(async response => {
         if (!response.ok) {
+            // 👇 intentamos obtener el mensaje real del backend
             const errorData = await response.json().catch(() => null);
             const errorMessage = errorData?.detail || 'Error desconocido al crear la marca';
             throw new Error(errorMessage);
         }
-
-        const data = await response.json();
+        return response.json();
+    })
+    .then(data => {
         console.log('Marca creada:', data);
-        if (typeof showDialog === 'function') showDialog('success', 'Marca creada correctamente');
-        if (typeof cerrarModalCrearMarca === 'function') cerrarModalCrearMarca();
-
-        // Notificar al resto de la app que se creó una marca (para recargar la lista)
-        try { document.dispatchEvent(new CustomEvent('marcas:created', { detail: { id_usuario: id_usuario_destino } })); } catch (e) {}
-
-        return data;
-    } catch (error) {
+        showDialog('success', 'Marca creada correctamente');
+        cerrarModalCrearMarca(); 
+        console.log("Detectando usuario seleccionado y cargando marcas...");
+        const select = document.getElementById("usuario-select");
+        const busqueda = document.getElementById("filtro-input").value;
+        const id_usuario = select.value;
+        console.log("Usuario seleccionado:", id_usuario);
+         
+    })
+    .catch(error => {
         console.error('Error:', error);
-        if (typeof showDialog === 'function') showDialog('error', error.message);
-        throw error;
-    }
+        showDialog('error', error.message);
+    });
 }
 
 
@@ -131,7 +149,6 @@ export function EditarMarca(id_marca){
         console.log("Usuario seleccionado:", id_usuario);
         cargarMarcas(busqueda, id_usuario);
         // Recargar la lista de marcas después de editar
-        try { document.dispatchEvent(new CustomEvent('marcas:edited', { detail: { id_usuario: id_usuario } })); } catch (e) {}
     })
     .catch(error => {
         console.error('Error:', error);
@@ -160,7 +177,6 @@ export function EliminarMarca(id_marca) {
     .then(data => {
         console.log('Marca eliminada:', data);
         showDialog('success', 'Marca eliminada correctamente');
-        try { document.dispatchEvent(new CustomEvent('marcas:deleted', { detail: { id_marca } })); } catch (e) {}
     })
     .catch(error => {
         console.error('Error:', error);

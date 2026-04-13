@@ -1,74 +1,6 @@
 import { API_BASE_URL } from '../../../js/config.js';
 import {svg_grupo,svg_contactos,svg_logrado,svg_meta,svg_circulo } from '../../../src/svg/svg.js';
 
-async function cargarTopAsesores() {
-  try {
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(`${API_BASE_URL}/top-asesores?period=month`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    const data = await response.json();
-
-    const contenedor = document.getElementById("tabla-top");
-    if (!contenedor) return;
-
-    contenedor.innerHTML = "";
-
-    // 🔴 Caso: no hay datos
-    if (!data || data.length === 0) {
-      contenedor.innerHTML = `
-        <div style="padding:20px; text-align:center; color:#aaa;">
-          📊 No hay datos disponibles aún<br>
-          <small>Los registros aparecerán cuando existan créditos desembolsados</small>
-        </div>
-      `;
-      return;
-    }
-
-    // encabezado
-    contenedor.innerHTML += `
-      <div style="display:grid; grid-template-columns:60px 1fr 140px 100px; padding:12px 10px; background:#232833; font-weight:bold; border-bottom:2px solid #414958;">
-          <div style="text-align:center;">Top</div>
-          <div>Asesor</div>
-          <div style="text-align:center;">Desembolsado</div>
-          <div style="text-align:center;">Carpetas</div>
-      </div>
-    `;
-
-    data.forEach((item, index) => {
-      let medalla = index === 0 ? "🥇" :
-                    index === 1 ? "🥈" :
-                    index === 2 ? "🥉" : "";
-
-      contenedor.innerHTML += `
-        <div style="display:grid; grid-template-columns:60px 1fr 140px 100px; padding:12px 10px; border-bottom:1px solid #414958;">
-            <div style="text-align:center;">${medalla} ${index + 1}</div>
-            <div>${item.asesor}</div>
-            <div style="text-align:center;">${Number(item.desembolsado).toLocaleString('es-PY')}</div>
-            <div style="text-align:center;">${item.carpetas}</div>
-        </div>
-      `;
-    });
-
-  } catch (error) {
-    console.error("Error cargando top asesores:", error);
-
-    const contenedor = document.getElementById("tabla-top");
-    if (contenedor) {
-      contenedor.innerHTML = `
-        <div style="padding:20px; text-align:center; color:#ff6b6b;">
-          ⚠️ Error al cargar datos
-        </div>
-      `;
-    }
-  }
-}
-
-
 
 // Función para obtener mensaje motivacional
 async function obtenerMensajeMotivacional() {
@@ -116,10 +48,6 @@ export async function mostrarInicio() {
 
     const urlImagen = localStorage.getItem('url_imagen');
     const roluser = localStorage.getItem('rol');
-
-    
-    cargarTopAsesores();
-    setInterval(cargarTopAsesores, 5 * 60 * 1000); // cada 5 minutos
 
     document.getElementById('contenido').innerHTML = `
       <div class="user-info">
@@ -179,19 +107,6 @@ export async function mostrarInicio() {
         <div class="metric-value">${formatearMoneda(data.logrado)}</div>
         </div>
       </div>
-      <!-- top 5 asesores global  -->
-        <div style="width:100%; min-width:450px; margin:30px auto; padding:20px; background:#2F3646; border:1px solid #414958; border-radius:8px; color:white; font-family:Arial, sans-serif;">
-
-            <h2 style="margin-bottom:15px; text-align:center; font-size:18px;">
-                🏆 Top Asesores - Créditos Desembolsados
-            </h2>
-
-            <div id="tabla-top" style="display:flex; flex-direction:column;">
-                <!-- JS inyecta aquí -->
-            </div>
-
-        </div>
-        <!-- fin top 5 asesores global  -->
       </div>
     `;
   } catch (error) {

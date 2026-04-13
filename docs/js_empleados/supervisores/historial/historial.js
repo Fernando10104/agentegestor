@@ -68,8 +68,7 @@ export function mostrarHistorial() {
       <div class="modal-crear" id="modal-editar-historial" style="display: none;"> 
         <div class="modal-header">
           <h2>Editar Historial</h2>
-        </div>  
-        añadir el coso de fechas 
+        </div>
         <form class="modal-form" id="form-editar-historial">
           <div class="form-group">
             <label for="id">ID:</label>
@@ -83,8 +82,6 @@ export function mostrarHistorial() {
             <label for="contacto">Contacto:</label>
             <input type="text" id="contacto" name="contacto" />
           </div>
-
-          hacer un select y traer del front.
           <div class="form-group">
             <label for="marca">Marca:</label>
             <input type="text" id="marca" name="marca" disabled />

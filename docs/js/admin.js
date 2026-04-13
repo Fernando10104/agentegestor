@@ -74,45 +74,7 @@ window.mostrarInicio = function () {
     <div class="header">
         <h1>Bienvenido al panel de administración</h1>
         <h4>Aquí puedes gestionar usuarios, categorías y marcas.</h4>
-        ${/* esta es la zona de /balance se envia fecha al backend*/ ''}
-       <div id="fecha-balance" style="
-        margin-top:1rem;
-        padding:12px 16px;
-        background:#1e1e2f;
-        border:1px solid #2c2c3e;
-        border-radius:12px;
-        display:inline-flex;
-        align-items:center;
-        gap:12px;
-        font-size:14px;
-        color:#e4e4e7;
-        box-shadow:0 4px 10px rgba(0,0,0,0.3);
-      ">
-
-        <label for="mes-year-input" style="
-          font-weight:500;
-          color:#c7c7d1;
-        ">
-          📅 Fecha:
-        </label>
-
-        <input 
-          type="month" 
-          id="mes-year-input"
-          value="${new Date().toISOString().slice(0,7)}"
-          style="
-            padding:6px 10px;
-            border-radius:8px;
-            border:1px solid #3a3a4f;
-            background:#2a2a3d;
-            color:#fff;
-            cursor:pointer;
-            outline:none;
-          "
-        >
-
-      </div>
-
+        
         <div style="display: flex; justify-content: space-between; gap: 1.5rem; margin-top:2.0rem;" >
           <div class="resumen" style="background-color: #E6FCEE; color:#14532D;">
               <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -167,12 +129,6 @@ window.mostrarInicio = function () {
   mostrarDashboardIngresos()
   mostrarDatosbalance()
   setupMensajeMotivacianalForm();
-  const inputFecha = document.getElementById("mes-year-input");
-
-  if (inputFecha) {
-    console.log("Listener agregado correctamente");
-    inputFecha.addEventListener("change", mostrarDatosbalance);
-  }
 };
 
 // Inicialización
@@ -274,33 +230,6 @@ export function mostrarDashboardIngresos() {
             </select>
           </div>
           <div class="card">
-            <h3>Mes</h3>
-            <select id="mesSelect" onchange="cambiarGrupos()">
-              <option value="1">Enero</option>
-              <option value="2">Febrero</option>
-              <option value="3">Marzo</option>
-              <option value="4">Abril</option>
-              <option value="5">Mayo</option>
-              <option value="6">Junio</option>
-              <option value="7">Julio</option>
-              <option value="8">Agosto</option>
-              <option value="9">Septiembre</option>
-              <option value="10">Octubre</option>
-              <option value="11">Noviembre</option>
-              <option value="12">Diciembre</option>
-            </select>
-          </div>
-          <div class="card">
-            <h3>Año</h3>
-            <select id="anioSelect" onchange="cambiarGrupos()">
-              <option value="2024">2024</option>
-              <option value="2025">2025</option>
-              <option value="2026" selected>2026</option>
-              <option value="2027">2027</option>
-              <option value="2028">2028</option>
-            </select>
-          </div>
-          <div class="card">
             <h3>Ingresos Totales</h3>
             <div class="kpi" id="ingresosTotales">Gs. 0</div>
           </div>
@@ -380,19 +309,12 @@ async function cambiarGrupos() {
   const select = document.getElementById('grupoSelect');
   if (!select) return;
   const grupoSeleccionado = select.value;
-  const mesSelect = document.getElementById('mesSelect');
-  const anioSelect = document.getElementById('anioSelect');
-  
-  const mes = mesSelect ? mesSelect.value : new Date().getMonth() + 1;
-  const anio = anioSelect ? anioSelect.value : 2026;
-  
   console.log("Grupo seleccionado:", grupoSeleccionado);
-  console.log("Mes:", mes, "Año:", anio);
 
   try {
     // Obtener ambos datos en paralelo
     const [dataIngresos, dataGrupo, dataMetas] = await Promise.all([
-      obtenerGrupoPorId(grupoSeleccionado, mes, anio),
+      obtenerGrupoPorId(grupoSeleccionado),
       obtenerGruposPorId(grupoSeleccionado),
       buscarMetas()
     ]);
@@ -595,17 +517,10 @@ export async function obtenerGruposPorId(id) {
   }
 }
 // retorna monto total del grupo. desde suma comision asesor grupal.
-export async function obtenerGrupoPorId(id, mes = null, anio = 2026) {
+export async function obtenerGrupoPorId(id) {
   try {
     const token = localStorage.getItem("token");
-    let url = `${API_BASE_URL}/grupos/${id}/resumen-mes`;
-    
-    // Agregar parámetros de mes y año a la URL si se proporcionan
-    if (mes !== null) {
-      url += `?mes=${mes}&anio=${anio}`;
-    }
-    
-    const res = await fetch(url, {
+    const res = await fetch(`${API_BASE_URL}/grupos/${id}/resumen-mes`, {
       headers: { "Authorization": "Bearer " + token }
     });
     if (!res.ok) {
@@ -652,26 +567,10 @@ window.mostrarDashboardIngresos = mostrarDashboardIngresos;
 window.cargarGruposEnSelect = cargarGruposEnSelect;
 window.cambiarGrupos = cambiarGrupos;
 
-const input = document.getElementById("mes-year-input");
-
-if (input) {
-  console.log("Agregando event listener al input de fecha para balance");
-  input.addEventListener("change", mostrarDatosbalance);
-} else {
-  console.log("No existe mes-year-input todavía");
-}
 
 export function mostrarDatosbalance() {
-  const fecha = document.getElementById("mes-year-input").value;
-  console.log("Fecha seleccionada para balance:", fecha);
-  if (!fecha) return; // salir si no hay fecha
-
-  const [anio, mes] = fecha.split("-");
-  const mesNumero = parseInt(mes);
-  const anioNumero = parseInt(anio);
-
   const token = localStorage.getItem("token");
-  fetch(`${API_BASE_URL}/balance/?mes=${mesNumero}&anio=${anioNumero}`, {
+  fetch(`${API_BASE_URL}/balance`, {
     headers: { "Authorization": "Bearer " + token }
   })
     .then(res => res.json())
@@ -681,6 +580,7 @@ export function mostrarDatosbalance() {
       document.getElementById('total-balance').textContent = `Gs. ${data.ganancia.toLocaleString()}`;
     })
     .catch(err => console.error("Error al obtener datos de balance:", err));
+
 }
 
 function setupMensajeMotivacianalForm() {
@@ -746,8 +646,6 @@ function setupMensajeMotivacianalForm() {
         }
       });
       
-
-
       console.log('✅ Event listener del mensaje motivacional configurado');
     } else {
       console.warn('⚠️ No se encontró el formulario mensaje-motivacional-form');

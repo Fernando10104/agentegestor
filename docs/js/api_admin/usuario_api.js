@@ -129,7 +129,6 @@ export async function mostrarEditarUsuario(id) {
                     <label for="rol-editar">Rol *</label>
                     <select id="rol-editar" >
                         <option value="admin">Admin</option>
-                        <option value="gerente">Gerente</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
@@ -150,14 +149,7 @@ export async function mostrarEditarUsuario(id) {
                         <option value="">Cargando grupos...</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="estado-editar">Estado *</label>
-                    <select id="estado-editar">
-                        <option value="ACTIVO">Activo</option>
-                        <option value="DESACTIVADO">Desactivado</option>
-                    </select>
-                </div>
-                
+
                 <div class="modal-footer">
                     <button type="button" class="cancel-btn" onclick="cerrarModalEditarUsuario()">Cancelar</button>
                     <button type="submit" class="create-btn" onclick="guardarEditarUsuario(${id})">Guardar Cambios</button>
@@ -201,7 +193,6 @@ export function BuscarUsuarioPorId(id) {
         document.getElementById('supervisor-editar').value = usuario.superior || '';
         document.getElementById('correo-editar').value = usuario.correo || '';
         document.getElementById('password-editar').value = ''; // No llenar la contraseña por seguridad
-        document.getElementById('estado-editar').value = usuario.estado || '';
         
         // Seleccionar el grupo del usuario
         const selectGrupos = document.getElementById('grupos-editar');
@@ -228,7 +219,6 @@ export function guardarEditarUsuario(id_usuario) {
     const correo = document.getElementById('correo-editar').value;
     const password = document.getElementById('password-editar').value;
     const grupo = document.getElementById('grupos-editar').value; // Agregar grupo
-    const estado = document.getElementById('estado-editar').value; // Agregar estado
     
     const url = `${API_BASE_URL}/usuarios/${id}`;
     const token = localStorage.getItem('token');
@@ -241,8 +231,7 @@ export function guardarEditarUsuario(id_usuario) {
         superior: supervisor,
         telefono: telefono,
         correo: correo,
-        id_grupo: grupo, // Agregar grupo a los datos
-        estado: estado // Agregar estado a los datos
+        id_grupo: grupo // Agregar grupo a los datos
     };
 
     fetch(url, {
@@ -306,15 +295,7 @@ export function CrearUsuario(){
         })
         .then(response => {
             if (!response.ok) {
-                return response.json().then(err => {
-                    const detalle = err.detail;
-
-                    // Si detail es objeto (como en tu backend)
-                    const mensaje = detalle?.mensaje || 'Error en la API';
-                    const error = detalle?.error || '';
-
-                    throw new Error(`${mensaje}${error ? ' - ' + error : ''}`);
-                });
+                throw new Error('Error en la respuesta de la API');
             }
             return response.json();
         })
@@ -548,7 +529,7 @@ export async function cargarGruposEnSelect() {
         selectGrupos.innerHTML = '';
         
         // Agregar opción por defecto
-        selectGrupos.innerHTML = '<option value="0">Seleccionar grupo</option>';
+        selectGrupos.innerHTML = '<option value="">Seleccionar grupo</option>';
         
         // Agregar opciones de grupos
         grupos.forEach(grupo => {
