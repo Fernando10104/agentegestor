@@ -215,7 +215,6 @@ export async function obtenerGruposPorId(idGrupo) {
         grupoLista.innerHTML = '<tr><td colspan="4" class="text-center text-danger">seleccione un grupo</td></tr>';
         return;
     }
-    
     const url = `${API_BASE_URL}/grupos/${idGrupo}`;
     const token = localStorage.getItem('token');
 
@@ -264,13 +263,10 @@ export async function obtenerGruposPorId(idGrupo) {
 
 
 
-export async function cargarListaUsuariosporGrupoId(grupoId, mes, anio) {
+export async function cargarListaUsuariosporGrupoId(grupoId) {
     if (!grupoId) return;
 
-    let url = `${API_BASE_URL}/grupos/${grupoId}/resumen-mes/comisiones`;
-    if (mes !== null && anio !== null) {
-        url += `?mes=${mes}&anio=${anio}`;
-    }
+    const url = `${API_BASE_URL}/grupos/${grupoId}/resumen-mes/comisiones`;
     const token = localStorage.getItem('token');
 
     try {

@@ -158,49 +158,56 @@ export function mostrarEliminarHistorial(id) {
 }
 
 export function manejarClickOperacion(id) {
-  const modal = document.getElementById('modal-editar-historial');
+    // Aquí puedes manejar el evento de clic en la operación
+    console.log("Operación clickeada para editar:", id);
+    const token = localStorage.getItem("token");
 
-  if (modal) {
-    modal.style.display = 'block'; // Mostrar modal
+    fetch(`${API_BASE_URL}/historial-id?num_operacion=${encodeURIComponent(id)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Error al obtener los datos del historial");
+        }
+        return response.json();
+            })
+            .then(data => {
+        console.log("Datos del historial:", data);
 
-    // Buscar el historial en la variable global todasLasFilas
-    const historial = todasLasFilas.find(item => item.num_operacion == id);
+        // Verificar si el historial contiene datos
+        if (data.historial && data.historial.length > 0) {
+          const historial = data.historial[0]; // Acceder al primer elemento del array
 
-    if (historial) {
-      console.log("Historial encontrado:", historial);
-      
-      // Cargar los datos en el formulario
-      document.getElementById("id").value = historial.num_operacion || "";
-      document.getElementById("documento").value = historial.documento || "";
-      document.getElementById("contacto").value = historial.contacto || "";
-      document.getElementById("tipo").value = historial.tipo || "";
-      document.getElementById("faja").value = historial.faja || "";
-      document.getElementById("categoria").value = historial.categoria || "";
-      document.getElementById("importe").value = historial.importe || "";
-      document.getElementById("asesor").value = historial.responsable || "";
-      document.getElementById("tipo_comision").value = historial.tipo_comision || "nuevo";
-      document.getElementById("comision").value = historial.comision || "";
-      document.getElementById("estado").value = historial.estado || "";
-      document.getElementById("fecha").value = (historial.fecha || '').split('T')[0];
-      document.getElementById("observaciones").value = historial.observaciones || "";
-      console.log("Fecha cargada en el input:", document.getElementById("fecha").value);
-      
-      // ⭐ Seleccionar la marca actual
-      const selectMarca = document.getElementById('marca');
-      if (selectMarca) {
-        selectMarca.value = historial.id_marca || '';
-      }
-      
-      // ⭐ Actualizar la comisión según la marca y tipo de comisión seleccionados
-      if (typeof actualizarComisionHistorial === 'function') {
-        actualizarComisionHistorial();
-      }
-    } else {
-      console.error("No se encontraron datos del historial con id:", id);
-      modal.style.display = 'none';
-    }
-  }
-}
+          // Cargar los datos en el formulario del modal
+          document.getElementById("id").value = historial.num_operacion || "";
+          document.getElementById("documento").value = historial.documento || "";
+          document.getElementById("contacto").value = historial.contacto || "";
+          document.getElementById("marca").value = historial.marca || "";
+          document.getElementById("tipo").value = historial.tipo || "";
+          document.getElementById("faja").value = historial.faja || "";
+          document.getElementById("categoria").value = historial.categoria || "";
+          document.getElementById("importe").value = historial.importe || "";
+          document.getElementById("asesor").value = historial.responsable || "";
+          document.getElementById("comision").value = historial.comision || "";
+          document.getElementById("estado").value = historial.estado || "";
+          document.getElementById("observaciones").value = historial.obs|| "";
+
+          // Mostrar el modal
+          const modal = document.getElementById("modal-editar-historial");
+          modal.style.display = "flex";
+        } else {
+          console.error("No se encontraron datos en el historial.");
+        }
+            })
+            .catch(error => {
+        console.error("Error:", error);
+            });
+        }
+
 
 export function guardarActualizacion() {
   const id = document.getElementById("id").value;
@@ -212,42 +219,11 @@ export function guardarActualizacion() {
   const categoria = document.getElementById("categoria").value;
   const importe = document.getElementById("importe").value;
   const responsable = document.getElementById("asesor").value;
-  
-  // Convertir comisión: reemplazar coma por punto
-  let comision = document.getElementById("comision").value;
-  comision = comision.replace(',', '.').trim();
-  
+  const comision = document.getElementById("comision").value;
   const estado = document.getElementById("estado").value;
   const obs = document.getElementById("observaciones").value;
-  
-  // ⭐ CONVERSIÓN DE FECHA DD/MM/YYYY
-  let fechaInput = document.getElementById("fecha").value; // "2026-04-12"
-  let fecha = "";
-
-  if (fechaInput && fechaInput.trim() !== "") {
-    const [year, month, day] = fechaInput.split('-');
-    fecha = `${day}/${month}/${year}`;  // Debería ser "12/04/2026"
-  }
 
   const token = localStorage.getItem("token");
-
-  // Construir el objeto a enviar
-  const datos = {
-    documento: documento || "",
-    contacto: contacto || "",
-    marca: marca || "",
-    tipo: tipo || "",
-    faja: faja || "",
-    categoria: categoria || "",
-    importe: importe ? parseInt(importe) : null,
-    responsable: responsable || "",
-    comision: comision ? parseFloat(comision) : null,
-    estado: estado || "",
-    obs: obs || "",
-    fecha: fecha || null  // Enviar como string "DD/MM/YYYY" o null
-  };
-
-  console.log("Datos a enviar:", JSON.stringify(datos, null, 2));
 
   fetch(`${API_BASE_URL}/historial/${id}`, {
     method: "PUT",
@@ -255,27 +231,37 @@ export function guardarActualizacion() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(datos),
+    body: JSON.stringify({
+      documento,
+      contacto,
+      marca,
+      tipo,
+      faja,
+      categoria,
+      importe,
+      responsable,
+      comision,
+      estado,
+      obs
+    }),
   })
     .then(response => {
       if (!response.ok) {
-        return response.json().then(err => {
-          throw new Error(JSON.stringify(err));
-        });
+        throw new Error("Error al actualizar el historial");
       }
       return response.json();
     })
     .then(data => {
-      console.log("Historial actualizado:", data);
-      alert("Historial actualizado correctamente");
-      document.getElementById("modal-editar-historial").style.display = "none";
-      cargarHistorial();
+      showDialog("success", "Crédito actualizado correctamente");
+
+      mostrarHistorial()
     })
     .catch(error => {
       console.error("Error al actualizar:", error);
-      alert("Error al actualizar el historial: " + error.message);
+      showDialog("error", "Error al actualizar crédito: " + error.message);
     });
 }
+
 
 export function EliminarHistorial(id) {
   

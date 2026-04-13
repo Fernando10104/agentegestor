@@ -128,28 +128,31 @@ export async function mostrarEditarUsuario(id) {
                 <div class="form-group">
                     <label for="rol-editar">Rol *</label>
                     <select id="rol-editar" >
-                        <option value="admin">Admin</option>
-                        <option value="gerente">Gerente</option>
+                        <option value="ninguna">Ninguna</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="supervisor-editar">ID Supervisor</label>
-                    <input type="number" id="supervisor-editar" value="" />
+                    <label for="supervisor-editar">supervisor *</label>
+                    <select id="supervisor-editar" required>
+                        
+                    </select>
                 </div>
+
                 <div class="form-group">
                     <label for="correo-editar">Correo Electrónico *</label>
                     <input type="email" id="correo-editar" value=""/>
                 </div>
-
+        
                 <div class="form-group">
                     <label for="grupos-editar">Grupos *</label>
                     <select id="grupos-editar">
                         <option value="">Cargando grupos...</option>
                     </select>
                 </div>
+                
                 <div class="form-group">
                     <label for="estado-editar">Estado *</label>
                     <select id="estado-editar">
@@ -157,7 +160,8 @@ export async function mostrarEditarUsuario(id) {
                         <option value="DESACTIVADO">Desactivado</option>
                     </select>
                 </div>
-                
+
+
                 <div class="modal-footer">
                     <button type="button" class="cancel-btn" onclick="cerrarModalEditarUsuario()">Cancelar</button>
                     <button type="submit" class="create-btn" onclick="guardarEditarUsuario(${id})">Guardar Cambios</button>
@@ -165,9 +169,30 @@ export async function mostrarEditarUsuario(id) {
             </form>
         `;
         
-        // Cargar grupos primero y luego los datos del usuario
+        // Cargar grupos y supervisores
         await cargarGruposEnSelect();
-        BuscarUsuarioPorId(id);
+        await cargarSupervisoresEnSelectEditar();
+        await BuscarUsuarioPorId(id);
+
+        // Agregar listener para el select de rol en editar
+        const selectRolEditar = document.getElementById('rol-editar');
+        const selectSupervisorEditar = document.getElementById('supervisor-editar');
+        
+        selectRolEditar.addEventListener('change', function() {
+            if (this.value === 'supervisor') {
+                // Obtener el ID del gerente
+                const gerenteId = localStorage.getItem('id_usuario');
+                
+                // Establecer el valor del supervisor como el ID del gerente
+                selectSupervisorEditar.innerHTML = `<option value="${gerenteId}">${gerenteId}</option>`;
+                selectSupervisorEditar.value = gerenteId;
+                selectSupervisorEditar.disabled = true;
+            } else {
+                // Si es Asesor, habilitar el select y recargar supervisores
+                selectSupervisorEditar.disabled = false;
+                cargarSupervisoresEnSelectEditar();
+            }
+        });
     }
 }
 
@@ -198,10 +223,23 @@ export function BuscarUsuarioPorId(id) {
         document.getElementById('ci-editar').value = usuario.usuario || '';
         document.getElementById('telefono-editar').value = usuario.telefono || '';
         document.getElementById('rol-editar').value = usuario.rol || '';
-        document.getElementById('supervisor-editar').value = usuario.superior || '';
         document.getElementById('correo-editar').value = usuario.correo || '';
         document.getElementById('password-editar').value = ''; // No llenar la contraseña por seguridad
         document.getElementById('estado-editar').value = usuario.estado || '';
+        
+        // Verificar si el usuario es supervisor
+        const selectSupervisorEditar = document.getElementById('supervisor-editar');
+        if (usuario.rol === 'supervisor') {
+            // Si es supervisor, establecer el ID del gerente y deshabilitar
+            const gerenteId = localStorage.getItem('id_usuario');
+            selectSupervisorEditar.innerHTML = `<option value="${gerenteId}">${gerenteId}</option>`;
+            selectSupervisorEditar.value = gerenteId;
+            selectSupervisorEditar.disabled = true;
+        } else {
+            // Si es asesor, establecer el valor del superior
+            selectSupervisorEditar.value = usuario.superior || '';
+            selectSupervisorEditar.disabled = false;
+        }
         
         // Seleccionar el grupo del usuario
         const selectGrupos = document.getElementById('grupos-editar');
@@ -243,6 +281,7 @@ export function guardarEditarUsuario(id_usuario) {
         correo: correo,
         id_grupo: grupo, // Agregar grupo a los datos
         estado: estado // Agregar estado a los datos
+
     };
 
     fetch(url, {
@@ -566,6 +605,109 @@ export async function cargarGruposEnSelect() {
         }
     }
 }
+
+
+export async function obtenerMisSupervisores() {
+    const url = `${API_BASE_URL}/usuarios/gerente/id_mis_supervisores`;
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                Authorization: "Bearer " + token,
+            },
+        });
+        
+        if (!response.ok) {
+            throw new Error('Error al cargar supervisores');
+        }
+        
+        const data = await response.json();
+        console.log("Datos de supervisores:", data);
+        return data.mis_supervisores;
+    } catch (error) {
+        console.error('Error al cargar supervisores:', error);
+        throw error;
+    }
+}
+
+export async function cargarSupervisoresEnSelect() {
+    try {
+        const supervisores = await obtenerMisSupervisores();
+        const selectSupervisor = document.getElementById('supervisor');
+        const selectorRoles = document.getElementById('rol');
+        
+        if (!selectSupervisor) {
+            console.error('No se encontró el select de supervisor');
+            return;
+        }
+
+        // Limpiar opciones existentes
+        selectSupervisor.innerHTML = '';
+        
+        if (selectorRoles.value === 'supervisor') {
+            // Obtener el ID del gerente
+            const gerenteId = localStorage.getItem('id_usuario');
+            // Establecer el valor del supervisor como el ID del gerente
+            selectSupervisor.innerHTML = `<option value="${gerenteId}">${gerenteId}</option>`;
+            selectSupervisor.value = gerenteId;
+            selectSupervisor.disabled = true;
+            return;
+        }
+
+        // Agregar opción por defecto
+        selectSupervisor.innerHTML = '<option value="">Seleccionar supervisor</option>';
+        
+        // Agregar opciones de supervisores
+        supervisores.forEach(supervisor => {
+            const option = document.createElement('option');
+            option.value = supervisor.id_usuario;
+            option.textContent = supervisor.usuario + ' | ID:' + supervisor.id_usuario;
+            selectSupervisor.appendChild(option);
+        });
+        
+    } catch (error) {
+        console.error('Error al cargar supervisores en select:', error);
+        const selectSupervisor = document.getElementById('supervisor');
+        if (selectSupervisor) {
+            selectSupervisor.innerHTML = '<option value="">Error al cargar supervisores</option>';
+        }
+    }
+}
+
+export async function cargarSupervisoresEnSelectEditar() {
+    try {
+        const supervisores = await obtenerMisSupervisores();
+        const selectSupervisor = document.getElementById('supervisor-editar');
+        
+        if (!selectSupervisor) {
+            console.error('No se encontró el select de supervisor en editar');
+            return;
+        }
+
+        // Limpiar opciones existentes
+        selectSupervisor.innerHTML = '';
+        
+        // Agregar opción por defecto
+        selectSupervisor.innerHTML = '<option value="">Seleccionar supervisor</option>';
+        
+        // Agregar opciones de supervisores
+        supervisores.forEach(supervisor => {
+            const option = document.createElement('option');
+            option.value = supervisor.id_usuario;
+            option.textContent = supervisor.usuario + ' | ID:' + supervisor.id_usuario;
+            selectSupervisor.appendChild(option);
+        });
+        
+    } catch (error) {
+        console.error('Error al cargar supervisores en select editar:', error);
+        const selectSupervisor = document.getElementById('supervisor-editar');
+        if (selectSupervisor) {
+            selectSupervisor.innerHTML = '<option value="">Error al cargar supervisores</option>';
+        }
+    }
+}
+
 
 
 

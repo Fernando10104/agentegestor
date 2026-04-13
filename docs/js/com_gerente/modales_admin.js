@@ -49,7 +49,6 @@ function closeModalById(id, options = {}) {
 export function mostrarModalCrearUsuario() {
     // ID usado en el HTML: 'modalcrear'
     openModalById('modalcrear');
-    
 }
 
 /**

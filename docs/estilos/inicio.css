@@ -441,26 +441,20 @@ nav button {
   left: 50%; /* left-[50%] */
   top: 50%; /* top-[50%] */
   z-index: 50; /* z-50 */
-  display: grid; /* grid */
-  width: 100%; /* w-full */
+  display: flex;
+  flex-direction: column;
+  width: auto; /* w-full */
   transform: translate(-50%, -50%); /* translate-x-[-50%] + translate-y-[-50%] */
   gap: 1rem; /* gap-4 */
   border: 1px solid #414958; /* border */
   background-color: #1D2430; /* bg-background */
-  padding: 1.5rem; /* p-6 */
+  padding: 0; /* p-6 */
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); /* shadow-lg */
   transition-duration: 200ms; /* duration-200 */
-  max-width: 28rem; /* max-w-md */
-  padding-top: 1rem; /* py-4 */
-  padding-bottom: 1rem; /* py-4 */
-  display: flex;
-  flex-direction: column;
-
-    /* Para que no se pase del alto de la pantalla */
+  max-width: 550px; /* Aumentar ancho máximo */
   max-height: 90vh; /* 90% del alto de la ventana */
   overflow-y: auto; /* Scroll vertical si es necesario */
   scrollbar-width: thin; /* Scroll fino (Firefox) */
-
   display: none;
 }
 
@@ -472,30 +466,47 @@ nav button {
     display: flex;
     align-items: center;
     flex-direction: column;
-
-
-    
+    background-color: #29303D;
+    padding: 1.5rem;
+    border-bottom: 1px solid #414958;
 }
+
 .modal-header h2{
     font-weight: 600;
     line-height: 28px;
     font-size: 20px;
+    margin: 0;
+}
+
+.modal-footer{
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background-color: #29303D;
+    border-top: 1px solid #414958;
+    flex-shrink: 0;
 }
 
 .modal-form{
-    margin-top: 0.5rem;
+    margin-top: 0;
     display: flex;
     flex-direction: column;
-    
-    gap: 0.5rem;
-    
-
+    gap: 0;
+    flex: 1;
 }
+
+.modal-form > div:first-child {
+  flex: 1;
+  overflow-y: auto;
+}
+
 /* Contenedor principal del grupo */
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .mensaje{
@@ -534,10 +545,11 @@ nav button {
   border: 1px solid #414958;
   background-color: #29303D;
   height: 40px;
-  width: 398px;
+  width: 100%;
   padding: 9px 12px;
   border-radius: 8px;
   color: white;
+  box-sizing: border-box;
 }
 
 /* Personalización del select */

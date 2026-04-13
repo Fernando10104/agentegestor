@@ -81,36 +81,44 @@ export function cargarMarcas() {
   url.searchParams.append("nombre_usuario", nombre_usuario);
 
   return fetch(url, {
-    headers: { Authorization: "Bearer " + token },
+    headers: {
+      Authorization: "Bearer " + token,
+    },
   })
     .then(res => {
-      if (!res.ok) throw new Error("Error en la respuesta de la API");
+      if (!res.ok) {
+        throw new Error("Error en la respuesta de la API");
+      }
       return res.json();
     })
     .then(data => {
       marcas = data.marcas ?? [];
 
-      // Obtener ambos selects
-      const marcaCredito = document.getElementById("marca_credito");
-      const marcaCliente = document.getElementById("marca_cliente");
+      // Llenar select de cargar crédito
+      const marcaSelect = document.getElementById('marca');
+      if (marcaSelect) {
+        marcaSelect.innerHTML = marcas.map(marca => `
+          <option value="${marca.marca}">${marca.marca}</option>
+        `).join('');
 
-      // Renderizado
-      const opciones = marcas.map(m => `<option value="${m.marca}">${m.marca}</option>`).join('');
-
-      if (marcaCredito) marcaCredito.innerHTML = opciones;
-      if (marcaCliente) marcaCliente.innerHTML = opciones;
-
-      // Listener
-      [marcaCredito, marcaCliente].forEach(select => {
-        if (select) {
-          select.addEventListener('change', actualizarTipoComision);
+        // Agregar listener para cuando se seleccione una marca
+        marcaSelect.addEventListener('change', actualizarTipoComision);
+        // ⚡ Llamamos a la función directamente para precargar la comisión de la primera marca
+        if (marcas.length > 0) {
+          actualizarTipoComision(); // carga comisiones por defecto
         }
-      });
-
-      // Precargar comisiones al inicio
-      if (marcas.length > 0) {
-        actualizarTipoComision();
       }
+
+      // Llenar select de cargar cliente
+      const clienteMarcaSelect = document.getElementById('cliente_marca');
+      if (clienteMarcaSelect) {
+        clienteMarcaSelect.innerHTML = `<option value="">-- Seleccionar --</option>` + marcas.map(marca => `
+          <option value="${marca.marca}">${marca.marca}</option>
+        `).join('');
+        // Agregar listener para actualizar tipo de comisión cuando cambio de marca
+        clienteMarcaSelect.addEventListener('change', actualizarTipoComisionCliente);
+      }
+
     })
     .catch(err => {
       console.error(err);
@@ -118,55 +126,43 @@ export function cargarMarcas() {
     });
 }
 
+function actualizarTipoComision() {
+  const marcaSeleccionada = document.getElementById('marca').value;
+  const marcaObj = marcas.find(m => m.marca === marcaSeleccionada);
 
-export function actualizarTipoComision(marcaSelect = null) {
-  // Si no se pasa un select, tomamos todos los selects de marca
-  const selects = marcaSelect
-    ? [marcaSelect]
-    : Array.from(document.querySelectorAll('.modal-crear select[name="marca"]'));
+  const tipoComisionSelect = document.getElementById('tipo_comision');
 
-  selects.forEach(select => {
-    const marcaSeleccionada = select.value;
-    const marcaObj = marcas.find(m => m.marca === marcaSeleccionada);
-
-    // Obtener el modal correspondiente
-    const modal = select.closest('.modal-crear');
-    if (!modal) return;
-
-    // Buscar el select de tipo_comision dentro de este modal
-    const tipoComisionSelect = modal.querySelector('select[name="tipo_comision"]');
-    if (!tipoComisionSelect) return;
-
-    // Renderizar las opciones según la marca seleccionada
-    if (marcaObj) {
-      tipoComisionSelect.innerHTML = `
-        <option value="Nuevo">Nuevo - ${marcaObj.comision_nuevo}%</option>
-        <option value="Renovacion">Renovación - ${marcaObj.comision_renovacion}%</option>
-      `;
-    } else {
-      tipoComisionSelect.innerHTML = '<option value="">Seleccione una marca válida</option>';
-    }
-  });
+  if (marcaObj) {
+    tipoComisionSelect.innerHTML = `
+      <option value="Nuevo">Nuevo - ${marcaObj.comision_nuevo}%</option>
+      <option value="Renovacion">Renovación - ${marcaObj.comision_renovacion}%</option>
+    `;
+  } else {
+    tipoComisionSelect.innerHTML = '<option>Seleccione una marca válida</option>';
+  }
 }
 
-// Evento para actualizar automáticamente al cambiar la marca
-document.querySelectorAll('.modal-crear select[name="marca"]').forEach(select => {
-  select.addEventListener('change', () => actualizarTipoComision(select));
-});
+function actualizarTipoComisionCliente() {
+  const marcaSeleccionada = document.getElementById('cliente_marca').value;
+  const marcaObj = marcas.find(m => m.marca === marcaSeleccionada);
 
-// Llamada inicial para rellenar los tipos de comisión si alguna marca ya está seleccionada
-actualizarTipoComision();
+  const tipoComisionSelect = document.getElementById('cliente_tipo_comision');
 
-
-// Evento para actualizar automáticamente al cambiar la marca
-document.querySelectorAll('.modal-crear select[name="marca"]').forEach(select => {
-  select.addEventListener('change', () => actualizarTipoComision(select));
-});
-
-// Llamada inicial para rellenar los tipos de comisión si alguna marca ya está seleccionada
-actualizarTipoComision();
+  if (marcaObj) {
+    tipoComisionSelect.innerHTML = `
+      <option value="">-- Seleccionar --</option>
+      <option value="Nuevo">Nuevo - ${marcaObj.comision_nuevo}%</option>
+      <option value="Renovacion">Renovación - ${marcaObj.comision_renovacion}%</option>
+    `;
+  } else {
+    tipoComisionSelect.innerHTML = '<option value="">-- Seleccione una marca --</option>';
+  }
+}
 
 export function CargarCredito(){
+  // Buscar cliente por cédula al abrir el formulario
+  buscarClientePorCedula();
+
   document.getElementById('cargar-credito-form').addEventListener('submit', async function (e) {
     e.preventDefault(); // Evita que se recargue la página
 
@@ -228,31 +224,56 @@ export function CargarCredito(){
 
 
 export function CrearClientes() {
+  // Buscar cliente por cédula al abrir/cargar el formulario
+  buscarClientePorCedula();
+
   document.getElementById('cargar-clientes-form').addEventListener('submit', async function (e) {
     e.preventDefault(); // Evita que se recargue la página
 
     // Capturamos los datos del formulario
+    const documento = document.getElementById('documento').value.toString();
+    const nombre = document.getElementById('Nombre').value;
+    const contacto = document.getElementById('Celular').value;
+    const direccion = document.getElementById('Direccion').value;
+    const correo = document.getElementById('correo').value;
+    const faja_inforcomf = document.getElementById('faja_inforcomf').value.toString();
+    
+    // Datos del crédito (opcionales)
+    const marca = document.getElementById('cliente_marca').value;
+    const tipo_credito = document.getElementById('cliente_tipo_credito').value;
+    const importe = document.getElementById('cliente_importe').value;
+    const categoria = document.getElementById('cliente_categoria').value;
+    const tipo_comision = document.getElementById('cliente_tipo_comision').value;
+    const obs = document.getElementById('cliente_obs').value;
+
+    // Validar que si se carga crédito, estén todos los campos
+    if (importe && (!marca || !tipo_credito || !tipo_comision || !categoria)) {
+      showDialog("error", "Si desea crear crédito, debe rellenar: Marca, Tipo de Crédito, Tipo de Comisión y Categoría");
+      return;
+    }
+
     const data = {
       // datos del cliente
-      documento: document.getElementById('documento').value.toString(),
-      nombre: document.getElementById('Nombre').value,
-      contacto: document.getElementById('Celular').value,
-      direccion: document.getElementById('Direccion').value,
-      correo: document.getElementById('correo').value,
-      faja_inforcomf: document.getElementById('faja_inforcomf').value.toString(),
-      categoria: document.getElementById('categoria').value,
-      marca: document.getElementById('marca').value,
-      tipo_comision: document.getElementById('tipo_comision').value,
-      tipo_credito: document.getElementById('tipo_credito').value,
-      importe: parseFloat(document.getElementById('importe').value.replace(/\D/g, '')),
-      obs: document.getElementById('obs').value,
-      superior: parseInt(localStorage.getItem('superior')),
+      documento: documento,
+      nombre: nombre,
+      contacto: contacto,
+      direccion: direccion,
+      correo: correo,
+      faja_inforcomf: faja_inforcomf,
+
+      // datos del crédito (opcionales)
+      marca: marca || null,
+      tipo_credito: tipo_credito || null,
+      importe: importe ? parseFloat(importe) : null,
+      categoria: categoria || null,
+      tipo_comision: tipo_comision || null,
+      obs: obs || null,
 
       // datos del registro
       id_usuario: parseInt(localStorage.getItem('id_usuario')),
       nombre_usuario: localStorage.getItem('nombre_usuario'),
+      superior: parseInt(localStorage.getItem('superior')),
     };
-
     console.log(data);
     const token = localStorage.getItem("token");
     try {
@@ -267,7 +288,7 @@ export function CrearClientes() {
 
       if (!response.ok) {
         const errorData = await response.json(); // Intentar obtener el mensaje de error del servidor
-        if (errorData.detail && errorData.detail.includes("El cliente ya existe con este documento")) {
+        if (errorData.detail) {
           const dialog = document.getElementById("errorDialog");
           dialog.querySelector("p").textContent = errorData.detail;
           dialog.showModal(); // abre el diálogo
@@ -278,7 +299,10 @@ export function CrearClientes() {
       }
 
       const result = await response.json();
-      showDialog("success", "cliente insertado correctamente");
+      const mensaje = result.credito_creado 
+        ? "Cliente y crédito insertados correctamente" 
+        : "Cliente insertado correctamente";
+      showDialog("success", mensaje);
       console.log(result);
 
       // Limpiar formulario y cerrar modal
@@ -301,11 +325,11 @@ export function CrearClientes() {
 
 
 export function mostrarEditarCliente(id) {
-  const modal = document.getElementById('modal-editar-clientes'); // ← Corregir ID
+  const modal = document.getElementById('modal-editar-clientes');
   const token = localStorage.getItem("token");
 
   if (modal) {
-    modal.style.display = 'flex'; // ← Cambiar a 'flex' para mostrar correctamente
+    modal.showModal(); // ← Cambiar a showModal() para usar el estilo original
 
     fetch(`${API_BASE_URL}/cliente/${id}`, {
       headers: {
@@ -324,7 +348,7 @@ export function mostrarEditarCliente(id) {
           // Cargar los datos en el formulario del modal usando los IDs correctos
           document.getElementById("id").value = cliente.id_cliente || "";
           document.getElementById("nombre").value = cliente.nombre || "";
-          document.getElementById("documento/1").value = cliente.documento || ""; // pongo /1 porque parece que hay conflicto con otro id
+          document.getElementById("documento/1").value = cliente.documento || "";
           document.getElementById("contacto").value = cliente.contacto || "";
           document.getElementById("direccion").value = cliente.direccion || "";
           document.getElementById("correo/1").value = cliente.correo || "";
@@ -338,7 +362,7 @@ export function mostrarEditarCliente(id) {
       .catch(err => {
         console.error("Error al cargar cliente:", err);
         showDialog("error", "Error al cargar cliente");
-        modal.style.display = 'none'; // Ocultar modal en caso de error
+        modal.close(); // ← Usar close() en lugar de style.display
       });
   } else {
     console.error("Modal no encontrado");
@@ -413,7 +437,7 @@ export function mostrarEliminarCliente(id) {
       </div>
     </div>
     `;
-    modal.style.display = 'flex';
+    modal.showModal(); // ← Cambiar a showModal()
   }
 }
 
@@ -435,17 +459,74 @@ export function EliminarCliente(id) {
     .then(data => {
       console.log("Eliminación exitosa:", data);
       showDialog("success", "Cliente eliminado correctamente");
-      mostrarCreditos(); // Recargar la lista de créditos para reflejar el cambio
+      mostrarCreditos();
       
       // Cerrar el modal
       const modal = document.getElementById("modal-eliminar-cliente");
-      modal.style.display = "none";
+      modal.close(); // ← Usar close() en lugar de style.display
       
     })
     .catch(error => {
       console.error("Error al eliminar:", error);
       showDialog("error", "Error al eliminar el cliente: " + error.message);
     });
+}
+
+export function buscarClientePorCedula() {
+  const cedulaInput = document.getElementById('documento');
+  
+  if (!cedulaInput) return;
+
+  let searchTimeout; // Variable para controlar el timeout
+
+  cedulaInput.addEventListener('input', async function () {
+    const cedula = this.value.replace(/\D/g, '');
+    
+    // Limpiar el timeout anterior si existe
+    clearTimeout(searchTimeout);
+    
+    // Si la cédula está vacía, no hacer nada
+    if (!cedula) {
+      return;
+    }
+
+    // ✅ Esperar 500ms después de que el usuario deja de escribir
+    searchTimeout = setTimeout(async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/cliente/por-cedula/${cedula}`, {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            // Cliente no encontrado, permitir crear uno nuevo
+            return;
+          }
+          const errorData = await response.json();
+          showDialog("error", errorData.detail || "Error al buscar cliente");
+          return;
+        }
+
+        const cliente = await response.json();
+
+        // Prellenar los campos del formulario
+        document.getElementById('Nombre').value = cliente.nombre || '';
+        document.getElementById('Celular').value = cliente.contacto || '';
+        document.getElementById('Direccion').value = cliente.direccion || '';
+        document.getElementById('correo').value = cliente.correo || '';
+        document.getElementById('faja_inforcomf').value = cliente.faja_inforcomf || '';
+        
+        
+
+      } catch (error) {
+        showDialog("error", "Error al buscar cliente");
+      }
+    }, 500); // ⏱️ Esperar 500ms después de dejar de escribir
+  });
 }
 
 

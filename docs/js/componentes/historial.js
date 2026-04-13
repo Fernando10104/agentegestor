@@ -1,5 +1,4 @@
-import { cargarHistorial, manejarClickOperacion, guardarActualizacion, mostrarEliminarHistorial, EliminarHistorial } from "../api/historial_api.js";
-import { cargarMarcas } from '../api/marcas_api.js';
+import { cargarHistorial,manejarClickOperacion,guardarActualizacion,mostrarEliminarHistorial,EliminarHistorial} from "../api/historial_api.js";
 
 export function mostrarHistorial() {
   document.getElementById('contenido').innerHTML = `
@@ -84,9 +83,8 @@ export function mostrarHistorial() {
             <input type="text" id="contacto" name="contacto" />
           </div>
           <div class="form-group">
-              <label for="marca">Marca:</label>
-              <select id="marca" name="marca">
-              </select>
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" name="marca" />
           </div>
           <div class="form-group">
             <label for="tipo">Tipo:</label>
@@ -109,15 +107,8 @@ export function mostrarHistorial() {
             <input type="text" id="asesor" name="asesor" />
           </div>
           <div class="form-group">
-            <label for="tipo_comision">Tipo de Comisión:</label>
-            <select id="tipo_comision" name="tipo_comision">
-              <option value="nuevo">Nuevo</option>
-              <option value="renovacion">Renovación</option>
-            </select>
-          </div>
-          <div class="form-group">
             <label for="comision">Comisión:</label>
-            <input type="text" id="comision" name="comision" placeholder="Ej: 3,5 o 3.5" />
+            <input type="number" id="comision" name="comision" />
           </div>
           <div class="form-group">
             <label for="estado">Estado:</label>
@@ -129,14 +120,9 @@ export function mostrarHistorial() {
             </select>
           </div>
           <div class="form-group">
-            <label for="fecha">Fecha:</label>
-            <input type="date" id="fecha" name="fecha" />
-          </div>  
-          <div class="form-group">
             <label for="observaciones">Observaciones:</label>
             <textarea id="observaciones" name="observaciones"></textarea>
           </div>
-          
           <div class="modal-footer">
             <button type="submit" class="create-btn">Guardar</button>
             <button type="button" class="cancel-btn" onclick="cerrarModificarHistorial()">Cancelar</button>
@@ -231,67 +217,136 @@ export function mostrarHistorial() {
     guardarActualizacion(); // Llamar a tu función
   });
 
-  // --- CARGA DE MARCAS Y COMISIÓN ---
-  let marcas = [];
-  cargarMarcas().then(marcasData => {
-    marcas = marcasData;
-    const selectMarca = document.getElementById('marca');
-    if (selectMarca) {
-      selectMarca.innerHTML = '<option value="">Seleccione una marca</option>' +
-        marcas.map(m => `<option value="${m.marca}">${m.marca}</option>`).join('');
-      
-      // Agregar listener para cuando se seleccione una marca
-      selectMarca.addEventListener('change', actualizarComisionHistorial);
+
+
+
+  //---------------------------------------------------------------------------------------------
+
+
+  window.guardarActualizacion = guardarActualizacion;
+  window.exportarExcel = exportarExcel;
+  window.EliminarHistorial = EliminarHistorial;
+  //--------------------------------------------------------------------------------------------------
+  function exportarExcel() {
+    const tabla = document.getElementById("tabla");
+    let csv = "";
+
+    for (let fila of tabla.rows) {
+      // Recorremos las celdas de cada fila correctamente
+      let celdas = [...fila.cells].map(td => `${td.innerText}`).join(";");
+      csv += celdas + "\n";
+    }
+
+    // Agregamos el BOM para que Excel o LibreOffice lo lean con acentos
+    const BOM = "\uFEFF";
+    const blob = new Blob([BOM + csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "tabla_exportada.csv";
+    link.click();
+  }
+
+
+
+  function updatePaginationButtons() {
+    if (totalPages < 1) totalPages = 1;
+    btnAnterior.disabled = currentPage <= 1;
+    btnSiguiente.disabled = currentPage >= totalPages;
+    pageNumberSpan.textContent = `Página ${currentPage} de ${totalPages}`;
+  }
+
+  function aplicarFiltro(campoManual = null, valorManual = null, fechaInicio = null, fechaFin = null) {
+    currentPage = 1;
+    const campo = campoManual || selectCampo.value;
+    const valor = valorManual || inputBusqueda.value.trim();
+    const valorTexto = String(valor);
+    const fechaInicioTexto = fechaInicio || fechaInicioInput.value;
+    const fechaFinTexto = fechaFin || fechaFinInput.value;
+
+    cargarHistorial(campo, valorTexto, currentPage, limit, fechaInicioTexto, fechaFinTexto)
+      .then(pagination => {
+        totalPages = pagination.totalPages;
+        updatePaginationButtons();
+      });
+  }
+
+  function goToPage(page) {
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    const campo = selectCampo.value;
+    const valor = inputBusqueda.value.trim();
+    const valorTexto = String(valor);
+    const fechaInicioTexto = fechaInicioInput.value;
+    const fechaFinTexto = fechaFinInput.value;
+
+    cargarHistorial(campo, valorTexto, currentPage, limit, fechaInicioTexto, fechaFinTexto)
+      .then(pagination => {
+
+        totalPages = pagination.totalPages;
+        updatePaginationButtons();
+      });
+  }
+
+
+  botonBuscarHistorial.addEventListener("click", (e) => {
+    e.preventDefault();
+    aplicarFiltro();
+  });
+  inputBusqueda.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      aplicarFiltro();
     }
   });
 
-  // Función para actualizar la comisión según marca y tipo de comisión
-  window.actualizarComisionHistorial = function() {
-    const selectMarca = document.getElementById('marca');
-    const tipoComision = document.getElementById('tipo_comision');
-    const comisionInput = document.getElementById('comision');
-    
-    if (!selectMarca || !tipoComision || !comisionInput) return;
 
-    const marcaSeleccionada = selectMarca.value; // Cambio: usar el valor directamente (es el nombre)
-    const tipo = tipoComision.value;
-    const marcaObj = marcas.find(m => m.marca === marcaSeleccionada); // Cambio: buscar por marca (nombre)
 
-    if (marcaObj) {
-      if (tipo === "nuevo") {
-        comisionInput.value = marcaObj.comision_nuevo || '';
-      } else if (tipo === "renovacion") {
-        comisionInput.value = marcaObj.comision_renovacion || '';
-      }
-    } else {
-      comisionInput.value = '';
-    }
-  };
-
-  // Listeners para actualizar comisión
-  document.getElementById('marca').addEventListener('change', window.actualizarComisionHistorial);
-  document.getElementById('tipo_comision').addEventListener('change', window.actualizarComisionHistorial);
-
-  // Cargar historial inicial
-  cargarHistorial();
-}
-
-// Función para permitir comas en el input de comisión
-function permitirComisión() {
-  const comisionInput = document.getElementById('comision');
-  
-  comisionInput.addEventListener('input', function(e) {
-    // Permitir solo números, comas y puntos
-    let valor = e.target.value;
-    valor = valor.replace(/[^0-9,\.]/g, ''); // Eliminar caracteres inválidos
-    e.target.value = valor;
+  btnAnterior.addEventListener("click", () => {
+    goToPage(currentPage - 1);
   });
-}
 
-// Llamar la función después de cargar marcas
-setTimeout(() => {
-  permitirComisión();
-}, 100);
+  btnSiguiente.addEventListener("click", () => {
+    goToPage(currentPage + 1);
+  });
+
+  function filtrarPorEstado(estado) {
+    aplicarFiltro("estado", estado);
+  }
+
+  window.filtrarPorEstado = filtrarPorEstado;
+
+  // Cargar inicialmente sin filtro
+  cargarHistorial("num_operacion", "", currentPage, limit, null, null)
+    .then(pagination => {
+      console.log("Respuesta paginación:", pagination);
+      totalPages = pagination.totalPages;
+      updatePaginationButtons();
+    });
+
+
+    document.getElementById('limpiar-filtros').addEventListener('click', (e) => {
+
+      e.preventDefault();
+      inputBusqueda.value = null;
+      selectCampo.value = "num_operacion";
+      fechaInicioInput.value = null;
+      fechaFinInput.value = null;
+      cargarHistorial("num_operacion", "", currentPage, limit, null, null)
+        .then(pagination => {
+          totalPages = pagination.totalPages;
+          updatePaginationButtons();
+        });
+    });
+
+
+    limitadorSelect.addEventListener("change", (e) => {
+      limit = parseInt(e.target.value);
+      currentPage = 1;
+      aplicarFiltro();
+    });
+
+
+}
 
 
 

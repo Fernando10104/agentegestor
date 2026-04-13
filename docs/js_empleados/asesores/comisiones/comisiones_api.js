@@ -85,7 +85,7 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
             <td>${item.monto_asesor ?? ''}</td>
             <td>${item.supervisor ?? ''}</td>
             <td>${item.asesor ?? ''}</td>
-            <td>${item.estado ?? ''}</td>
+            <td><button class="estado-desembolsado">${item.estado ?? ''}</button></td>
             <td>${item.calificacion ?? ''}</td>
             <td>${item.sucursal ?? ''}</td>
             <td>${item.obs ?? ''}</td>
