@@ -84,7 +84,15 @@ export function mostrarHistorial() {
           </div>
           <div class="form-group">
             <label for="marca">Marca:</label>
-            <input type="text" id="marca" name="marca" disabled />
+            <select id="marca" name="marca">
+            <option value="">-- Seleccionar marca --</option>
+            </select>
+          </div>
+          <div class="form-group">
+              <label for="cliente_tipo_comision">Tipo de Comisión:</label>
+              <select id="cliente_tipo_comision" name="tipo_comision">
+                  <option value="">-- Seleccionar marca primero --</option>
+              </select>
           </div>
           <div class="form-group">
             <label for="tipo">Tipo:</label>
@@ -96,11 +104,11 @@ export function mostrarHistorial() {
           </div>
           <div class="form-group">
             <label for="categoria">Categoría:</label>
-            <input type="text" id="categoria" name="categoria" disabled />
+            <input type="text" id="categoria" name="categoria"/>
           </div>
           <div class="form-group">
             <label for="importe">Importe:</label>
-            <input type="number" id="importe" name="importe" disabled />
+            <input type="number" id="importe" name="importe"/>
           </div>
           <div class="form-group">
             <label for="asesor">Asesor:</label>
@@ -109,6 +117,10 @@ export function mostrarHistorial() {
           <div class="form-group">
             <label for="comision">Comisión:</label>
             <input type="number" id="comision" name="comision" disabled />
+          </div>
+          <div class="form-group">
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha"/>
           </div>
           <div class="form-group">
             <label for="estado">Estado:</label>

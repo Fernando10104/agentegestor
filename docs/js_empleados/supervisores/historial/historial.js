@@ -68,8 +68,7 @@ export function mostrarHistorial() {
       <div class="modal-crear" id="modal-editar-historial" style="display: none;"> 
         <div class="modal-header">
           <h2>Editar Historial</h2>
-        </div>  
-        añadir el coso de fechas 
+        </div>
         <form class="modal-form" id="form-editar-historial">
           <div class="form-group">
             <label for="id">ID:</label>
@@ -83,11 +82,17 @@ export function mostrarHistorial() {
             <label for="contacto">Contacto:</label>
             <input type="text" id="contacto" name="contacto" />
           </div>
-
-          hacer un select y traer del front.
           <div class="form-group">
             <label for="marca">Marca:</label>
-            <input type="text" id="marca" name="marca" disabled />
+            <select id="marca" name="marca">
+            <option value="">-- Seleccionar marca --</option>
+            </select>
+          </div>
+          <div class="form-group">
+              <label for="cliente_tipo_comision">Tipo de Comisión:</label>
+              <select id="cliente_tipo_comision" name="tipo_comision">
+                  <option value="">-- Seleccionar marca primero --</option>
+              </select>
           </div>
           <div class="form-group">
             <label for="tipo">Tipo:</label>
@@ -99,11 +104,11 @@ export function mostrarHistorial() {
           </div>
           <div class="form-group">
             <label for="categoria">Categoría:</label>
-            <input type="text" id="categoria" name="categoria" disabled />
+            <input type="text" id="categoria" name="categoria"/>
           </div>
           <div class="form-group">
             <label for="importe">Importe:</label>
-            <input type="number" id="importe" name="importe" disabled />
+            <input type="number" id="importe" name="importe"/>
           </div>
           <div class="form-group">
             <label for="asesor">Asesor:</label>
@@ -112,6 +117,10 @@ export function mostrarHistorial() {
           <div class="form-group">
             <label for="comision">Comisión:</label>
             <input type="number" id="comision" name="comision" disabled />
+          </div>
+          <div class="form-group">
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha"/>
           </div>
           <div class="form-group">
             <label for="estado">Estado:</label>

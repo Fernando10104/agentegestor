@@ -492,7 +492,7 @@ nav button {
 
 
 .modal-crear{
-  position: fixed; /* fixed */
+ position: fixed; /* fixed */
   left: 50%; /* left-[50%] */
   top: 50%; /* top-[50%] */
   z-index: 50; /* z-50 */
@@ -500,10 +500,10 @@ nav button {
   width: 100%; /* w-full */
   transform: translate(-50%, -50%); /* translate-x-[-50%] + translate-y-[-50%] */
   gap: 1rem; /* gap-4 */
-  border: 1px solid var(--borde-principal); /* border */
-  background-color: var(--fondo-principal); /* bg-background */
+  border: 1px solid #414958; /* border */
+  background-color: #1D2430; /* bg-background */
   padding: 1.5rem; /* p-6 */
-  box-shadow: var(--sombra-modal);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); /* shadow-lg */
   transition-duration: 200ms; /* duration-200 */
   max-width: 28rem; /* max-w-md */
   padding-top: 1rem; /* py-4 */

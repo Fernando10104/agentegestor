@@ -158,56 +158,98 @@ export function mostrarEliminarHistorial(id) {
 }
 
 export function manejarClickOperacion(id) {
-    // Aquí puedes manejar el evento de clic en la operación
-    console.log("Operación clickeada para editar:", id);
-    const token = localStorage.getItem("token");
+  const modal = document.getElementById('modal-editar-historial');
 
-    fetch(`${API_BASE_URL}/historial-id?num_operacion=${encodeURIComponent(id)}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+  if (modal) {
+    modal.style.display = 'flex';
+
+    // Buscar el historial en la variable global todasLasFilas
+    const historial = todasLasFilas.find(item => item.num_operacion == id);
+
+    if (historial) {
+      console.log("Historial encontrado:", historial);
+      
+      // Cargar los datos en el formulario
+      document.getElementById("id").value = historial.num_operacion || "";
+      document.getElementById("documento").value = historial.documento || "";
+      document.getElementById("contacto").value = historial.contacto || "";
+      document.getElementById("tipo").value = historial.tipo || "";
+      document.getElementById("faja").value = historial.faja || "";
+      document.getElementById("categoria").value = historial.categoria || "";
+      document.getElementById("importe").value = historial.importe || "";
+      document.getElementById("asesor").value = historial.responsable || "";
+      document.getElementById("comision").value = historial.comision || "";
+      document.getElementById("estado").value = historial.estado || "";
+      document.getElementById("observaciones").value = historial.obs || "";
+      
+      // Cargar marcas desde la API
+      cargarMarcasEnSelect(historial.id_marca || historial.marca);
+      
+    } else {
+      console.error("No se encontraron datos del historial con id:", id);
+      modal.style.display = 'none';
+    }
+  }
+}
+
+/**
+ * Carga las marcas desde la API y las muestra en el select
+ * @param {string|number} marcaSeleccionada - El ID o nombre de la marca a seleccionar
+ */
+function cargarMarcasEnSelect(marcaSeleccionada = null) {
+  const token = localStorage.getItem("token");
+  const selectMarca = document.getElementById('marca');
+
+  if (!selectMarca) {
+    console.error("Select de marca no encontrado");
+    return;
+  }
+
+  // Mostrar loading
+  selectMarca.innerHTML = '<option value="">Cargando marcas...</option>';
+  selectMarca.disabled = true;
+
+  fetch(`${API_BASE_URL}/marcas`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Error al cargar las marcas");
+      }
+      return response.json();
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Error al obtener los datos del historial");
-        }
-        return response.json();
-            })
-            .then(data => {
-        console.log("Datos del historial:", data);
-
-        // Verificar si el historial contiene datos
-        if (data.historial && data.historial.length > 0) {
-          const historial = data.historial[0]; // Acceder al primer elemento del array
-
-          // Cargar los datos en el formulario del modal
-          document.getElementById("id").value = historial.num_operacion || "";
-          document.getElementById("documento").value = historial.documento || "";
-          document.getElementById("contacto").value = historial.contacto || "";
-          document.getElementById("marca").value = historial.marca || "";
-          document.getElementById("tipo").value = historial.tipo || "";
-          document.getElementById("faja").value = historial.faja || "";
-          document.getElementById("categoria").value = historial.categoria || "";
-          document.getElementById("importe").value = historial.importe || "";
-          document.getElementById("asesor").value = historial.responsable || "";
-          document.getElementById("comision").value = historial.comision || "";
-          document.getElementById("estado").value = historial.estado || "";
-          document.getElementById("observaciones").value = historial.obs|| "";
-
-          // Mostrar el modal
-          const modal = document.getElementById("modal-editar-historial");
-          modal.style.display = "flex";
-        } else {
-          console.error("No se encontraron datos en el historial.");
-        }
-            })
-            .catch(error => {
-        console.error("Error:", error);
-            });
-        }
-
+    .then(data => {
+      console.log("Marcas recibidas:", data);
+      
+      // Limpiar el select
+      selectMarca.innerHTML = '<option value="">-- Seleccionar marca --</option>';
+      
+      // Agregar las marcas al select
+      const marcas = data.marcas || data || [];
+      marcas.forEach(marca => {
+        const option = document.createElement('option');
+        option.value = marca.id || marca.nombre;
+        option.textContent = marca.nombre || marca;
+        selectMarca.appendChild(option);
+      });
+      
+      // Seleccionar la marca actual
+      if (marcaSeleccionada) {
+        selectMarca.value = marcaSeleccionada;
+      }
+      
+      selectMarca.disabled = false;
+    })
+    .catch(error => {
+      console.error("Error al cargar marcas:", error);
+      selectMarca.innerHTML = '<option value="">Error al cargar marcas</option>';
+      selectMarca.disabled = false;
+    });
+}
 
 export function guardarActualizacion() {
   const id = document.getElementById("id").value;
@@ -219,11 +261,30 @@ export function guardarActualizacion() {
   const categoria = document.getElementById("categoria").value;
   const importe = document.getElementById("importe").value;
   const responsable = document.getElementById("asesor").value;
-  const comision = document.getElementById("comision").value;
+  
+  let comision = document.getElementById("comision").value;
+  comision = comision.replace(',', '.').trim();
+  
   const estado = document.getElementById("estado").value;
   const obs = document.getElementById("observaciones").value;
 
   const token = localStorage.getItem("token");
+
+  const datos = {
+    documento,
+    contacto,
+    marca,
+    tipo,
+    faja,
+    categoria,
+    importe: importe ? parseInt(importe) : null,
+    responsable,
+    comision: comision ? parseFloat(comision) : null,
+    estado,
+    obs
+  };
+
+  console.log("Datos a enviar:", JSON.stringify(datos, null, 2));
 
   fetch(`${API_BASE_URL}/historial/${id}`, {
     method: "PUT",
@@ -231,19 +292,7 @@ export function guardarActualizacion() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({
-      documento,
-      contacto,
-      marca,
-      tipo,
-      faja,
-      categoria,
-      importe,
-      responsable,
-      comision,
-      estado,
-      obs
-    }),
+    body: JSON.stringify(datos),
   })
     .then(response => {
       if (!response.ok) {
@@ -253,15 +302,14 @@ export function guardarActualizacion() {
     })
     .then(data => {
       showDialog("success", "Crédito actualizado correctamente");
-
-      mostrarHistorial()
+      document.getElementById("modal-editar-historial").style.display = "none";
+      mostrarHistorial();
     })
     .catch(error => {
       console.error("Error al actualizar:", error);
       showDialog("error", "Error al actualizar crédito: " + error.message);
     });
 }
-
 
 export function EliminarHistorial(id) {
   
