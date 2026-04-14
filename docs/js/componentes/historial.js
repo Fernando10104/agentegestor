@@ -76,7 +76,7 @@ export function mostrarHistorial() {
           </div>
           <div class="form-group">
             <label for="documento">Documento:</label>
-            <input type="text" id="documento" name="documento" />
+            <input type="text" id="documento" name="documento" disabled />
           </div>
           <div class="form-group">
             <label for="contacto">Contacto:</label>
@@ -84,31 +84,43 @@ export function mostrarHistorial() {
           </div>
           <div class="form-group">
             <label for="marca">Marca:</label>
-            <input type="text" id="marca" name="marca" />
+            <select id="marca" name="marca">
+            <option value="">-- Seleccionar marca --</option>
+            </select>
+          </div>
+          <div class="form-group">
+              <label for="cliente_tipo_comision">Tipo de Comisión:</label>
+              <select id="cliente_tipo_comision" name="tipo_comision">
+                  <option value="">-- Seleccionar marca primero --</option>
+              </select>
           </div>
           <div class="form-group">
             <label for="tipo">Tipo:</label>
-            <input type="text" id="tipo" name="tipo" />
+            <input type="text" id="tipo" name="tipo" disabled />
           </div>
           <div class="form-group">
             <label for="faja">Faja:</label>
-            <input type="text" id="faja" name="faja" />
+            <input type="text" id="faja" name="faja"  />
           </div>
           <div class="form-group">
             <label for="categoria">Categoría:</label>
-            <input type="text" id="categoria" name="categoria" />
+            <input type="text" id="categoria" name="categoria"/>
           </div>
           <div class="form-group">
             <label for="importe">Importe:</label>
-            <input type="number" id="importe" name="importe" />
+            <input type="number" id="importe" name="importe"/>
           </div>
           <div class="form-group">
             <label for="asesor">Asesor:</label>
-            <input type="text" id="asesor" name="asesor" />
+            <input type="text" id="asesor" name="asesor" disabled />
           </div>
           <div class="form-group">
             <label for="comision">Comisión:</label>
-            <input type="number" id="comision" name="comision" />
+            <input type="number" id="comision" name="comision" disabled />
+          </div>
+          <div class="form-group">
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha"/>
           </div>
           <div class="form-group">
             <label for="estado">Estado:</label>

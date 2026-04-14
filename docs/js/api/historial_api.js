@@ -98,9 +98,6 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
             return `
             <tr id="${item.num_operacion}" style="background-color: transparent;">
               <td>
-              <button class="btn-eliminar" style="background-color: transparent; border: none; border-radius: 15px; padding: 5px 5px;" onmouseover="this.style.backgroundColor='darkgray'" onmouseout="this.style.backgroundColor='transparent'"  data-id="${item.num_operacion}" title="Eliminar">
-              ${SVG_ELIMINAR}
-              </button>
               
               <button class="btn-editar" style="background-color: transparent; border: none; border-radius: 15px; padding: 5px 5px;" onmouseover="this.style.backgroundColor='darkgray'" onmouseout="this.style.backgroundColor='transparent'" data-id="${item.num_operacion}" title="Editar">
               ${SVG_EDITAR}
@@ -158,58 +155,80 @@ export function mostrarEliminarHistorial(id) {
 }
 
 export function manejarClickOperacion(id) {
-  const modal = document.getElementById('modal-editar-historial');
+    console.log("Operación clickeada para editar:", id);
+    const token = localStorage.getItem("token");
 
-  if (modal) {
-    modal.style.display = 'flex';
+    fetch(`${API_BASE_URL}/historial-id?num_operacion=${encodeURIComponent(id)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Error al obtener los datos del historial");
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log("Datos del historial:", data);
 
-    // Buscar el historial en la variable global todasLasFilas
-    const historial = todasLasFilas.find(item => item.num_operacion == id);
+        if (data.historial && data.historial.length > 0) {
+          const historial = data.historial[0]; // Acceder al primer elemento del array
 
-    if (historial) {
-      console.log("Historial encontrado:", historial);
-      
-      // Cargar los datos en el formulario
-      document.getElementById("id").value = historial.num_operacion || "";
-      document.getElementById("documento").value = historial.documento || "";
-      document.getElementById("contacto").value = historial.contacto || "";
-      document.getElementById("tipo").value = historial.tipo || "";
-      document.getElementById("faja").value = historial.faja || "";
-      document.getElementById("categoria").value = historial.categoria || "";
-      document.getElementById("importe").value = historial.importe || "";
-      document.getElementById("asesor").value = historial.responsable || "";
-      document.getElementById("comision").value = historial.comision || "";
-      document.getElementById("estado").value = historial.estado || "";
-      document.getElementById("observaciones").value = historial.obs || "";
-      
-      // Cargar marcas desde la API
-      cargarMarcasEnSelect(historial.id_marca || historial.marca);
-      
-    } else {
-      console.error("No se encontraron datos del historial con id:", id);
-      modal.style.display = 'none';
-    }
-  }
+          // Cargar los datos en el formulario del modal
+          document.getElementById("id").value = historial.num_operacion || "";
+          document.getElementById("documento").value = historial.documento || "";
+          document.getElementById("contacto").value = historial.contacto || "";
+          document.getElementById("marca").value = historial.marca || "";
+          document.getElementById("tipo").value = historial.tipo || "";
+          document.getElementById("faja").value = historial.faja || "";
+          document.getElementById("categoria").value = historial.categoria || "";
+          document.getElementById("importe").value = historial.importe || "";
+          document.getElementById("asesor").value = historial.responsable || "";
+          document.getElementById("comision").value = historial.comision || "";
+          document.getElementById("estado").value = historial.estado || "";
+          document.getElementById("observaciones").value = historial.obs || "";
+          document.getElementById("fecha").value = historial.fecha
+          ? historial.fecha.split("T")[0]
+          : "";
+
+          // ⭐ Cargar marcas desde la API
+          cargarMarcasEnSelect(historial.marca || "seleccionar");
+
+          // Mostrar el modal
+          const modal = document.getElementById("modal-editar-historial");
+          modal.style.display = "flex";
+        } else {
+          console.error("No se encontraron datos en el historial.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
 }
 
 /**
  * Carga las marcas desde la API y las muestra en el select
  * @param {string|number} marcaSeleccionada - El ID o nombre de la marca a seleccionar
  */
-function cargarMarcasEnSelect(marcaSeleccionada = null) {
+let marcasGlobal = [];
+
+export function cargarMarcasEnSelect(marcaSeleccionada = null) {
   const token = localStorage.getItem("token");
   const selectMarca = document.getElementById('marca');
+  const clienteMarcaSelect = document.getElementById('marca');
 
   if (!selectMarca) {
-    console.error("Select de marca no encontrado");
+    console.error("❌ Select de marca no encontrado");
     return;
   }
 
-  // Mostrar loading
   selectMarca.innerHTML = '<option value="">Cargando marcas...</option>';
   selectMarca.disabled = true;
 
-  fetch(`${API_BASE_URL}/marcas`, {
+  fetch(`${API_BASE_URL}/marcas_all?id_usuario=${encodeURIComponent(localStorage.getItem("id_usuario"))}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -218,37 +237,78 @@ function cargarMarcasEnSelect(marcaSeleccionada = null) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error("Error al cargar las marcas");
+        return response.text().then(text => {
+          throw new Error(`HTTP ${response.status}: ${text}`);
+        });
       }
       return response.json();
     })
     .then(data => {
-      console.log("Marcas recibidas:", data);
-      
-      // Limpiar el select
       selectMarca.innerHTML = '<option value="">-- Seleccionar marca --</option>';
-      
-      // Agregar las marcas al select
-      const marcas = data.marcas || data || [];
-      marcas.forEach(marca => {
-        const option = document.createElement('option');
-        option.value = marca.id || marca.nombre;
-        option.textContent = marca.nombre || marca;
-        selectMarca.appendChild(option);
-      });
-      
-      // Seleccionar la marca actual
+
+      let marcas = [];
+      if (Array.isArray(data)) {
+        marcas = data;
+      } else if (data.marcas) {
+        marcas = data.marcas;
+      } else if (data.data) {
+        marcas = data.data;
+      }
+
+      // ✅ Guardar global
+      marcasGlobal = marcas;
+
+      if (marcas.length === 0) {
+        selectMarca.innerHTML += '<option value="">No hay marcas disponibles</option>';
+      } else {
+        marcas.forEach(marca => {
+          const option = document.createElement('option');
+          const marcaNombre = marca.marca || marca.nombre;
+
+          option.value = marcaNombre;
+          option.textContent = marcaNombre;
+
+          selectMarca.appendChild(option);
+        });
+      }
+
+      // ✅ Seleccionar si viene valor
       if (marcaSeleccionada) {
         selectMarca.value = marcaSeleccionada;
+
+        // 🔥 FORZAR actualización automática
+        actualizarTipoComisionCliente();
       }
-      
+
       selectMarca.disabled = false;
+
+      // ✅ SOLO UNA VEZ (evitar duplicados)
+      if (clienteMarcaSelect && !clienteMarcaSelect.dataset.listener) {
+        clienteMarcaSelect.addEventListener('change', actualizarTipoComisionCliente);
+        clienteMarcaSelect.dataset.listener = "true";
+      }
     })
     .catch(error => {
-      console.error("Error al cargar marcas:", error);
-      selectMarca.innerHTML = '<option value="">Error al cargar marcas</option>';
+      console.error("❌ Error al cargar marcas:", error);
+      selectMarca.innerHTML = '<option value="">Error: ' + error.message + '</option>';
       selectMarca.disabled = false;
     });
+}
+
+function actualizarTipoComisionCliente() {
+  const marcaSeleccionada = document.getElementById('marca').value;
+  const marcaObj = marcasGlobal.find(m => m.marca === marcaSeleccionada);
+
+  const tipoComisionSelect = document.getElementById('cliente_tipo_comision');
+
+  if (marcaObj) {
+    tipoComisionSelect.innerHTML = `
+      <option value="Nuevo">Nuevo - ${marcaObj.comision_nuevo}%</option>
+      <option value="Renovacion">Renovación - ${marcaObj.comision_renovacion}%</option>
+    `;
+  } else {
+    tipoComisionSelect.innerHTML = '<option value="">-- Seleccionar marca primero --</option>';
+  }
 }
 
 export function guardarActualizacion() {
@@ -256,35 +316,24 @@ export function guardarActualizacion() {
   const documento = document.getElementById("documento").value;
   const contacto = document.getElementById("contacto").value;
   const marca = document.getElementById("marca").value;
+  const tipo_comision = document.getElementById("cliente_tipo_comision").value;
   const tipo = document.getElementById("tipo").value;
   const faja = document.getElementById("faja").value;
   const categoria = document.getElementById("categoria").value;
   const importe = document.getElementById("importe").value;
   const responsable = document.getElementById("asesor").value;
-  
-  let comision = document.getElementById("comision").value;
-  comision = comision.replace(',', '.').trim();
-  
+  const comision = document.getElementById("comision").value;
   const estado = document.getElementById("estado").value;
   const obs = document.getElementById("observaciones").value;
+  const fechaInput = document.getElementById("fecha").value;
+  let fecha = null;
+
+  if (fechaInput) {
+    const [anio, mes, dia] = fechaInput.split("-");
+    fecha = `${dia}/${mes}/${anio}`; // 👉 formato que espera el backend
+  }
 
   const token = localStorage.getItem("token");
-
-  const datos = {
-    documento,
-    contacto,
-    marca,
-    tipo,
-    faja,
-    categoria,
-    importe: importe ? parseInt(importe) : null,
-    responsable,
-    comision: comision ? parseFloat(comision) : null,
-    estado,
-    obs
-  };
-
-  console.log("Datos a enviar:", JSON.stringify(datos, null, 2));
 
   fetch(`${API_BASE_URL}/historial/${id}`, {
     method: "PUT",
@@ -292,7 +341,21 @@ export function guardarActualizacion() {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(datos),
+    body: JSON.stringify({
+      documento,
+      contacto,
+      marca,
+      tipo_comision,
+      tipo,
+      faja,
+      categoria,
+      importe,
+      responsable,
+      comision,
+      estado,
+      obs,
+      fecha
+    }),
   })
     .then(response => {
       if (!response.ok) {
@@ -302,14 +365,15 @@ export function guardarActualizacion() {
     })
     .then(data => {
       showDialog("success", "Crédito actualizado correctamente");
-      document.getElementById("modal-editar-historial").style.display = "none";
-      mostrarHistorial();
+
+      mostrarHistorial()
     })
     .catch(error => {
       console.error("Error al actualizar:", error);
       showDialog("error", "Error al actualizar crédito: " + error.message);
     });
 }
+
 
 export function EliminarHistorial(id) {
   
@@ -337,3 +401,11 @@ export function EliminarHistorial(id) {
       showDialog("error", "Error al eliminar crédito: " + error.message);
     });
 }
+
+// Exportar funciones al scope global
+window.manejarClickOperacion = manejarClickOperacion;
+window.guardarActualizacion = guardarActualizacion;
+window.EliminarHistorial = EliminarHistorial;
+window.cargarHistorial = cargarHistorial;
+window.cargarMarcasEnSelect = cargarMarcasEnSelect;
+window.mostrarEliminarHistorial = mostrarEliminarHistorial;
