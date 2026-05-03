@@ -404,11 +404,19 @@ nav button {
   color: white;
 }
 
-.pagination button.active {
-  background-color: #3c83f6;
-  border-color: #3c83f6;
-  color: white;
-  pointer-events: none;
+.pagination button.activado {
+  /* Baja el brillo al 60% y oscurece el fondo original del HTML */
+  filter: brightness(0.6) contrast(1.2) !important;
+  
+  /* Esto simula que el botón está hundido */
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.5) !important;
+  
+  /* Un pequeño desplazamiento hacia abajo da sensación de presión */
+  transform: translateY(2px) !important;
+  
+  /* Mantiene el color de texto blanco */
+  color: white !important;
+  
 }
 
 

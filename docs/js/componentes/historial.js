@@ -8,7 +8,7 @@ export function mostrarHistorial() {
     <!-- ------------------------Controles de filtro y búsqueda------------------------------------------------------->
     <div class="controls">
       <div class="control-filtros">
-        <label for="filter_by">Filtrar por:</label>
+        <label for="filter_by">1° Filtro:</label>
         <select id="filtros-historial-select" name="filter_by">
           <option value="num_operacion">ID</option>
           <option value="documento">DOCUMENTO</option>
@@ -22,6 +22,22 @@ export function mostrarHistorial() {
           <option value="comision">COMISION</option>
         </select>
         <input type="text" id="filtros-historial-busqueda" placeholder="Buscar por ..." />
+
+        <label for="filter_by">2° Filtro:</label>
+        <select id="filtros-historial-select-segundo" name="filter_by">
+          <option value="">-- Desactivar --</option>
+          <option value="num_operacion">ID</option>
+          <option value="documento">DOCUMENTO</option>
+          <option value="contacto">CONTACTO</option>
+          <option value="marca">MARCA</option>
+          <option value="tipo">TIPO</option>
+          <option value="faja">FAJA</option>
+          <option value="categoria">CATEGORIA</option>
+          <option value="importe">IMPORTE</option>
+          <option value="responsable">ASESOR</option>
+          <option value="comision">COMISION</option>
+        </select>
+        <input type="text" id="filtros-historial-busqueda-segundo" placeholder="Buscar por ..." />
       
           <label for="fecha_inicio">Inicio:</label>
           <input type="date" id="fecha_inicio" value="">
@@ -34,6 +50,7 @@ export function mostrarHistorial() {
             <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
+            <option value="100">100</option>
           </select>
         </div>
       </div>
@@ -148,29 +165,10 @@ export function mostrarHistorial() {
       <!-- ------------------------Botones de paginación y exportación------------------------------------------------------->
     </div>
     <div class="pagination">
-      <button id="cancelado" 
-              style="background-color: red; color: white;" 
-              onclick="filtrarPorEstado('cancelado')">
-        Cancelado
-      </button>
-
-      <button id="ingresado" 
-              style="background-color: orange; color: white;" 
-              onclick="filtrarPorEstado('ingresado')">
-        Ingresado
-      </button>
-
-      <button id="aprobado" 
-              style="background-color: blue; color: white;" 
-              onclick="filtrarPorEstado('aprobado')">
-        Aprobado
-      </button>
-
-      <button id="desembolsado" 
-              style="background-color: green; color: white;" 
-              onclick="filtrarPorEstado('desembolsado')">
-        Desembolsado
-      </button>
+        <button id="cancelado" style="background-color: red; color: white;">Cancelado</button>
+        <button id="ingresado" style="background-color: orange; color: white;">Ingresado</button>
+        <button id="aprobado" style="background-color: blue; color: white;">Aprobado</button>
+        <button id="desembolsado" style="background-color: green; color: white;">Desembolsado</button>
     </div>
 
     <div class="pagination">
@@ -187,13 +185,18 @@ export function mostrarHistorial() {
   // Variables de paginación y referencias DOM
   let currentPage = 1;
   let limit = 10;
-
-  
+  let estadoSeleccionado = null;
   let totalPages = 1;
+
   const limitadorSelect = document.getElementById("limitador");
   // Referencias a los elementos del DOM
   const inputBusqueda = document.getElementById("filtros-historial-busqueda");
   const selectCampo = document.getElementById("filtros-historial-select");
+
+  const inputBusquedaSegundo = document.getElementById("filtros-historial-busqueda-segundo");
+  const selectCampoSegundo = document.getElementById("filtros-historial-select-segundo");
+  
+
   const fechaInicioInput = document.getElementById("fecha_inicio");
   const fechaFinInput = document.getElementById("fecha_fin");
   const botonBuscarHistorial = document.getElementById("boton-buscar-historial");
@@ -267,15 +270,36 @@ export function mostrarHistorial() {
     pageNumberSpan.textContent = `Página ${currentPage} de ${totalPages}`;
   }
 
-  function aplicarFiltro(campoManual = null, valorManual = null, fechaInicio = null, fechaFin = null) {
+  function aplicarFiltro(campoManual = null, valorManual = null, fechaInicio = null, fechaFin = null, estado = null, campoManualSegundo = null, valorManualSegundo = null) {
     currentPage = 1;
     const campo = campoManual || selectCampo.value;
     const valor = valorManual || inputBusqueda.value.trim();
     const valorTexto = String(valor);
+    
+    const campoSegundo = campoManualSegundo || selectCampoSegundo.value;
+    const valorSegundo = valorManualSegundo || inputBusquedaSegundo.value.trim();
+    const valorSegundoTexto = String(valorSegundo);
+    
     const fechaInicioTexto = fechaInicio || fechaInicioInput.value;
     const fechaFinTexto = fechaFin || fechaFinInput.value;
+    const estadoFinal = estado || estadoSeleccionado;
 
-    cargarHistorial(campo, valorTexto, currentPage, limit, fechaInicioTexto, fechaFinTexto)
+    // 📋 Console.log detallado de lo que se envía
+    console.group("🔍 FILTRO APLICADO");
+    console.log("1° Filtro:", { campo, valor: valorTexto });
+    if (campoSegundo && valorSegundoTexto) {
+      console.log("2° Filtro:", { campo: campoSegundo, valor: valorSegundoTexto });
+    }
+    if (fechaInicioTexto || fechaFinTexto) {
+      console.log("Fechas:", { fecha_inicio: fechaInicioTexto, fecha_fin: fechaFinTexto });
+    }
+    if (estadoFinal) {
+      console.log("Estado:", estadoFinal);
+    }
+    console.log("Paginación:", { page: currentPage, limit: limit });
+    console.groupEnd();
+
+    cargarHistorial(campo, valorTexto, currentPage, limit, fechaInicioTexto, fechaFinTexto, estadoFinal, campoSegundo, valorSegundoTexto)
       .then(pagination => {
         totalPages = pagination.totalPages;
         updatePaginationButtons();
@@ -321,29 +345,46 @@ export function mostrarHistorial() {
     goToPage(currentPage + 1);
   });
 
-  function filtrarPorEstado(estado) {
-    aplicarFiltro("estado", estado);
-  }
+  ["cancelado", "ingresado", "aprobado", "desembolsado"].forEach(id => {
+      document.getElementById(id).addEventListener("click", (e) => {
+          const yaActivo = estadoSeleccionado === id.toUpperCase();
 
-  window.filtrarPorEstado = filtrarPorEstado;
+          ["cancelado", "ingresado", "aprobado", "desembolsado"].forEach(btnId => {
+              document.getElementById(btnId).classList.remove("activado");
+          });
 
-  // Cargar inicialmente sin filtro
-  cargarHistorial("num_operacion", "", currentPage, limit, null, null)
-    .then(pagination => {
-      console.log("Respuesta paginación:", pagination);
-      totalPages = pagination.totalPages;
-      updatePaginationButtons();
-    });
+          if (yaActivo) {
+              estadoSeleccionado = null;
+              console.log("Estado deseleccionado, ahora estadoSeleccionado es:", estadoSeleccionado);
+          } else {
+              estadoSeleccionado = id.toUpperCase();
+              e.target.classList.add("activado");
+              console.log("Estado seleccionado actualizado a:", estadoSeleccionado);
+          }
+
+          e.target.blur();
+      });
+  });
 
 
     document.getElementById('limpiar-filtros').addEventListener('click', (e) => {
 
       e.preventDefault();
-      inputBusqueda.value = null;
+      inputBusqueda.value = "";
       selectCampo.value = "num_operacion";
-      fechaInicioInput.value = null;
-      fechaFinInput.value = null;
-      cargarHistorial("num_operacion", "", currentPage, limit, null, null)
+      inputBusquedaSegundo.value = "";
+      selectCampoSegundo.value = "";
+      fechaInicioInput.value = "";
+      fechaFinInput.value = "";
+      estadoSeleccionado = null; // Limpiar estado seleccionado
+      
+      // Limpiar estilos activos
+      document.getElementById("cancelado").classList.remove("activado");
+      document.getElementById("ingresado").classList.remove("activado");
+      document.getElementById("aprobado").classList.remove("activado");
+      document.getElementById("desembolsado").classList.remove("activado");
+      
+      cargarHistorial("num_operacion", "", currentPage, limit, null, null, null, null, null)
         .then(pagination => {
           totalPages = pagination.totalPages;
           updatePaginationButtons();
@@ -356,6 +397,14 @@ export function mostrarHistorial() {
       currentPage = 1;
       aplicarFiltro();
     });
+
+    // Cargar inicialmente sin filtro
+    cargarHistorial("num_operacion", "", currentPage, limit, null, null, null, null, null)
+      .then(pagination => {
+        console.log("Respuesta paginación:", pagination);
+        totalPages = pagination.totalPages;
+        updatePaginationButtons();
+      });
 
 
 }

@@ -55,7 +55,9 @@ verificarToken(); // Verificamos el token al cargar la página
 
 // ✅ CARGAR USUARIOS AL INICIAR LA PÁGINA
 document.addEventListener('DOMContentLoaded', async () => {
-    await mostrarInicio(); // Mostrar la pantalla de inicio al cargar la página
+    console.log("Antes:", document.getElementById('btn-admin'));
+    await mostrarInicio();
+    console.log("Después:", document.getElementById('btn-admin'));
     verificarRolYMostrarAdmin(); // Verificar rol y mostrar botón admin si corresponde
 });
 
@@ -206,7 +208,9 @@ function verificarRolYMostrarAdmin() {
         if (rol === 'Supervisor' || rol === 'supervisor') {
             btnAdmin.style.display = 'flex';
         } else {
-            btnAdmin.style.display = 'none';
+            if (btnAdmin) {
+                btnAdmin.style.display = 'none';
+            }
         }
     } catch (error) {
         console.error("Error al verificar rol:", error);

@@ -2,7 +2,7 @@ import { API_BASE_URL } from '../../../js/config.js';
 // Variable global para guardar todas las filas
 let todasLasFilas = [];
 
-export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1, limit = 10, fecha_inicio = null, fecha_fin = null) {
+export function cargarComisiones(campo = "nombre_cliente", valor = "", page = 1, limit = 10, fecha_inicio = null, fecha_fin = null, campoFiltroSegundo = "", valorFiltroSegundo = "") {
   const url = new URL(`${API_BASE_URL}/comisiones`);
 
   url.searchParams.append("page", page);
@@ -14,6 +14,10 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
 
   if (valor) {
     url.searchParams.append("search", valor);
+  }
+  if (campoFiltroSegundo && valorFiltroSegundo) {
+    url.searchParams.append("campoFiltroSegundo", campoFiltroSegundo);
+    url.searchParams.append("valorFiltroSegundo", valorFiltroSegundo);
   }
   if (fecha_inicio) {
     url.searchParams.append("fecha_inicio", fecha_inicio);
@@ -32,6 +36,12 @@ export function cargarComisiones(campo = "Nombre_cliente", valor = "", page = 1,
   }
 
   const token = localStorage.getItem("token");
+
+  // 📡 Console.log de la URL final que se envía a la API
+  console.group("📡 ENVIANDO A API");
+  console.log("URL Completa:", url.toString());
+  console.log("Token:", token ? "✅ Presente" : "❌ No presente");
+  console.groupEnd();
 
   return fetch(url, {
     headers: {

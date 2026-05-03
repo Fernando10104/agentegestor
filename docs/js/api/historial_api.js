@@ -19,7 +19,7 @@ let todasLasFilas = [];
  *   .then(data => console.log(data.totalPages))
  *   .catch(err => console.error(err));
  */
-export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, limit = 10, fecha_inicio = null, fecha_fin = null) {
+export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, limit = 10, fecha_inicio = null, fecha_fin = null, estado = null, campo_segundo = null, valor_segundo = null) {
   console.log("Cargando historial con los siguientes parámetros:");
   const url = new URL(`${API_BASE_URL}/historial`);
 
@@ -34,12 +34,21 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
     url.searchParams.append("search", valor);
   }
 
+  if (campo_segundo && valor_segundo) {
+    url.searchParams.append("campo_segundo", campo_segundo);
+    url.searchParams.append("search_segundo", valor_segundo);
+  }
+
   if (fecha_inicio) {
     url.searchParams.append("fecha_inicio", fecha_inicio);
   }
 
   if (fecha_fin) {
     url.searchParams.append("fecha_fin", fecha_fin);
+  }
+
+  if (estado) {
+    url.searchParams.append("estado", estado);
   }
 
   if (id_usuario) {
@@ -55,6 +64,12 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
   }
 
   const token = localStorage.getItem("token");
+
+  // 📡 Console.log de la URL final que se envía a la API
+  console.group("📡 ENVIANDO A API");
+  console.log("URL Completa:", url.toString());
+  console.log("Token:", token ? "✅ Presente" : "❌ No presente");
+  console.groupEnd();
 
   return fetch(url, {
     headers: {

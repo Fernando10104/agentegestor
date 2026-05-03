@@ -165,7 +165,7 @@ function marcarEntrada() {
     
     const hora = `${año}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
     const horaEncoded = encodeURIComponent(hora);
-
+    
     fetch(`${API_BASE_URL}/conexiones/entrada/${horaEncoded}`, {
         method: "POST",
         headers: {

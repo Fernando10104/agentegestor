@@ -10,16 +10,21 @@ let todasLasFilas = [];
  * @param {string} [valor=""] - El valor a buscar en el campo especificado.
  * @param {number} [page=1] - El número de página a obtener.
  * @param {number} [limit=10] - La cantidad de registros a obtener por página.
+ * @param {string} [fecha_inicio=null] - Fecha de inicio para filtrar.
+ * @param {string} [fecha_fin=null] - Fecha de fin para filtrar.
+ * @param {string} [estado=null] - Estado a filtrar (ej: "desembolsado", "aprobado", etc).
+ * @param {string} [campo_segundo=null] - Segundo campo para filtrar (opcional).
+ * @param {string} [valor_segundo=null] - Valor a buscar en el segundo campo (opcional).
  * @returns {Promise<{ totalPages: number }>} Una promesa que se resuelve con un objeto que contiene el número total de páginas.
  *
  * @throws {Error} Lanza un error si la respuesta de la API no es correcta o si hay un problema de red.
  *
  * @example
- * cargarHistorial("num_operacion", "12345", 1, 10)
+ * cargarHistorial("marca", "VISA", 1, 10, null, null, null, "responsable", "Juan")
  *   .then(data => console.log(data.totalPages))
  *   .catch(err => console.error(err));
  */
-export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, limit = 10, fecha_inicio = null, fecha_fin = null) {
+export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, limit = 10, fecha_inicio = null, fecha_fin = null, estado = null, campo_segundo = null, valor_segundo = null) {
   console.log("Cargando historial con los siguientes parámetros:");
   const url = new URL(`${API_BASE_URL}/historial`);
 
@@ -34,12 +39,21 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
     url.searchParams.append("search", valor);
   }
 
+  if (campo_segundo && valor_segundo) {
+    url.searchParams.append("campo_segundo", campo_segundo);
+    url.searchParams.append("search_segundo", valor_segundo);
+  }
+
   if (fecha_inicio) {
     url.searchParams.append("fecha_inicio", fecha_inicio);
   }
 
   if (fecha_fin) {
     url.searchParams.append("fecha_fin", fecha_fin);
+  }
+
+  if (estado) {
+    url.searchParams.append("estado", estado);
   }
 
   if (id_usuario) {
@@ -55,6 +69,12 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
   }
 
   const token = localStorage.getItem("token");
+
+  // 📡 Console.log de la URL final que se envía a la API
+  console.group("📡 ENVIANDO A API");
+  console.log("URL Completa:", url.toString());
+  console.log("Token:", token ? "✅ Presente" : "❌ No presente");
+  console.groupEnd();
 
   return fetch(url, {
     headers: {

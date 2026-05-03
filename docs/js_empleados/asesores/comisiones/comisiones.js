@@ -17,14 +17,44 @@ export function mostrarComisiones() {
 
               <div class="controls">
                 <div class="control-filtros">
-                  <label for="filtro-select">Filtrar por:</label>
+                  <label for="filtro-select">1° Filtro:</label>
                   <select id="filtro-select">
-                  <option value="nombre_cliente">Nombre</option>
-                    <option value="asesor">Asesor</option>
-                    <option value="cedula">CI</option>
-                    <option value="entidad">Entidad</option>
+                  <option value="id">ID</option>
+                  <option value="nombre_cliente">NOMBRE CLIENTE</option>
+                  <option value="cedula">DOCUMENTO</option>
+                  <option value="monto">IMPORTE</option>
+                  <option value="porcentaje">PORCENTAJE</option>
+                  <option value="entidad">MARCA</option>
+                  <option value="comision_asesor">COMISION</option>
+                  <option value="supervisor">SUPERVISOR</option>
+                  <option value="asesor">ASESOR</option>
+                  <option value="calificacion">CALIFICACION</option>
+                  <option value="sucursar">SUCURSAL</option>
+                  <option value="observacion">OBSERVACION</option>
+
                   </select>
                   <input type="text" id="filtro-input" placeholder="Buscar...">
+
+
+                  <label for="filtro-select">2° Filtro:</label>
+                  <select id="filtro-select-segundo">
+                  <option value="">-- Desactivar --</option>
+                  <option value="id">ID</option>
+                  <option value="nombre_cliente">NOMBRE CLIENTE</option>
+                  <option value="cedula">DOCUMENTO</option>
+                  <option value="monto">IMPORTE</option>
+                  <option value="porcentaje">PORCENTAJE</option>
+                  <option value="entidad">MARCA</option>
+                  <option value="comision_asesor">COMISION</option>
+                  <option value="supervisor">SUPERVISOR</option>
+                  <option value="asesor">ASESOR</option>
+                  <option value="calificacion">CALIFICACION</option>
+                  <option value="sucursar">SUCURSAL</option>
+                  <option value="observacion">OBSERVACION</option>
+                  </select>
+                  <input type="text" id="filtro-input-segundo" placeholder="Buscar...">
+
+
                   <label for="fecha_inicio">Inicio:</label>
                   <input type="date" id="fecha_inicio" value="">
                   <label for="fecha_fin">Fin:</label>
@@ -35,6 +65,8 @@ export function mostrarComisiones() {
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="1000">1000</option>
                   </select>
                 </div>
               </div>
@@ -106,6 +138,8 @@ export function mostrarComisiones() {
   const pageNumberSpan = document.getElementById('page-number');
   const filtroSelect = document.getElementById('filtro-select');
   const filtroInput = document.getElementById('filtro-input');
+  const filtroSelectSegundo = document.getElementById('filtro-select-segundo');
+  const filtroInputSegundo = document.getElementById('filtro-input-segundo');
   const botonBuscarComisiones = document.querySelector('.buscar-comisiones');
   const formEditarcomisiones = document.getElementById("modal-editar-comision");
 
@@ -161,14 +195,17 @@ export function mostrarComisiones() {
   }
 
   // Función para aplicar filtros
-  function aplicarFiltro(campoManual = null, valorManual = null, fechaInicio = null, fechaFin = null) {
+  function aplicarFiltro(campoManual = null, valorManual = null, fechaInicio = null, fechaFin = null,campoFiltroSegundoManual = null, valorFiltroSegundoManual = null) {
     currentPage = 1;
     const campoFiltro = campoManual || filtroSelect.value;
     const valorFiltro = valorManual || filtroInput.value.trim();
+    const campoFiltroSegundo = campoFiltroSegundoManual || filtroSelectSegundo.value;
+    const valorFiltroSegundo = valorFiltroSegundoManual || filtroInputSegundo.value.trim();
+
     const fechaInicioFiltro = fechaInicio || document.getElementById('fecha_inicio').value;
     const fechaFinFiltro = fechaFin || document.getElementById('fecha_fin').value;
 
-    cargarComisiones(campoFiltro, valorFiltro, currentPage, limit, fechaInicioFiltro, fechaFinFiltro)
+    cargarComisiones(campoFiltro, valorFiltro, currentPage, limit, fechaInicioFiltro, fechaFinFiltro, campoFiltroSegundo, valorFiltroSegundo)
       .then(pagination => {
         totalPages = pagination.totalPages;
         updatePaginationButtons();
@@ -184,10 +221,12 @@ export function mostrarComisiones() {
     currentPage = page;
     const campo = filtroSelect.value;
     const valor = filtroInput.value.trim();
+    const campoFiltroSegundo = filtroSelectSegundo.value;
+    const valorFiltroSegundo = filtroInputSegundo.value.trim();
     const fechaInicioTexto = document.getElementById('fecha_inicio').value;
     const fechaFinTexto = document.getElementById('fecha_fin').value;
 
-    cargarComisiones(campo, valor, currentPage, limit, fechaInicioTexto, fechaFinTexto)
+    cargarComisiones(campo, valor, currentPage, limit, fechaInicioTexto, fechaFinTexto, campoFiltroSegundo, valorFiltroSegundo)
       .then(pagination => {
         totalPages = pagination.totalPages;
         updatePaginationButtons();
