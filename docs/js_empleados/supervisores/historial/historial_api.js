@@ -97,6 +97,7 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
       const historial = data.historial ?? [];
       const total = data.totalPages ?? 0;
       const totalPages = total;
+      const totalDatos = data.totalItems ?? 0;
 
       // Guardar todas las filas para filtro local
       todasLasFilas = historial;
@@ -127,6 +128,7 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
               <td>${item.num_operacion ?? ''}</td>
               <td>${fechaFormateada}</td>
               <td>${item.documento ?? ''}</td>
+              <td>${item.nombre_cliente ?? ''}</td>
               <td>${item.contacto ?? ''}</td>
               <td>${item.marca ?? ''}</td>
               <td>${item.tipo ?? ''}</td>
@@ -143,7 +145,10 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
         }).join('');
       }
 
-      return { totalPages: totalPages };
+      return { 
+        totalPages: totalPages,
+        totalDatos: totalDatos
+      };
     })
     .catch(err => {
       const tbody = document.querySelector('.table-responsive tbody');

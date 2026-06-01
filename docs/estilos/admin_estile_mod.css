@@ -1220,3 +1220,86 @@ dialog {
   color: white !important;
   
 }
+
+
+/*donde empieza la tabla general*/
+.table-responsive {
+    border-radius: 0.5rem; /* rounded-lg */
+    border: 1px solid #414958; /* border-border */
+    color: white; /* text-card-foreground */
+    box-shadow: 0 1px 2px rgba(60, 131, 246, 0.3), 0 1px 2px rgba(0,0,0,0.05); /* sombra combinada */
+    background: #1D2430; /* bg-gradient-card */
+
+    overflow-x: auto;
+}
+
+.table-responsive table {
+    width: 100%; /* w-full */
+    font-size: 0.875rem; /* text-sm */
+    line-height: 1.25rem;
+    border-collapse: collapse; /* para bordes más consistentes */
+}
+
+.table-responsive table tr {
+    /* No pongas border aquí, mejor en td para mayor compatibilidad */
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out; /* transition-colors */
+}
+
+.table-responsive table tr:not(:last-child) td {
+    border-bottom: 1px solid #414958; /* border-b, excepto en última fila */
+}
+
+.table-responsive table td {
+    padding: 1rem; /* p-4 */
+    vertical-align: middle; /* items-center */
+}
+.table-responsive table td .acciones {
+    text-align: center;
+}
+
+.acciones .btn-editar,
+.acciones .btn-eliminar,
+.acciones .btn-asistencias {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+
+  /* Quitar efectos por defecto */
+  outline: none;
+  box-shadow: none;
+
+  /* Quitar highlight en móviles */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.table-responsive table th,
+.table-responsive table td {
+    padding: 1rem;          /* Igual que td */
+    vertical-align: middle; /* Centrar verticalmente */
+    text-align: left;       /* Que todos empiecen alineados a la izquierda */
+    white-space: nowrap;    /* Evita que el texto se rompa en varias líneas */
+}
+
+.table-responsive table th {
+    font-weight: 600;       /* Que destaque pero sin desplazar */
+
+}
+
+/* Forzamos a que la tabla maneje su propio scroll de manera independiente */
+.table-responsive {
+  flex: 1;          /* Ocupa todo el espacio disponible entre el header y los botones */
+  overflow-x: auto; /* Scroll horizontal tipo Excel */
+  overflow-y: auto; /* Scroll vertical si hay muchas filas */
+
+}
+
+/* Opcional: Mantener el encabezado de la tabla fijo arriba mientras haces scroll vertical */
+table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: #40506b;
+  padding: 24px;
+}

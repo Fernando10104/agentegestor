@@ -11,6 +11,7 @@ export function mostrarHistorial() {
         <label for="filter_by">1° Filtro:</label>
         <select id="filtros-historial-select" name="filter_by">
           <option value="num_operacion">ID</option>
+          <option value="nombre_cliente">NOMBRE CLIENTE</option>
           <option value="documento">DOCUMENTO</option>
           <option value="contacto">CONTACTO</option>
           <option value="marca">MARCA</option>
@@ -27,6 +28,7 @@ export function mostrarHistorial() {
         <select id="filtros-historial-select-segundo" name="filter_by">
           <option value="">-- Desactivar --</option>
           <option value="num_operacion">ID</option>
+          <option value="nombre_cliente">NOMBRE CLIENTE</option>
           <option value="documento">DOCUMENTO</option>
           <option value="contacto">CONTACTO</option>
           <option value="marca">MARCA</option>
@@ -65,6 +67,7 @@ export function mostrarHistorial() {
             <th>ID</th>
             <th>FECHA</th>
             <th>DOCUMENTO</th>
+            <th>NOMBRE CLIENTE</th>
             <th>CONTACTO</th>
             <th>MARCA</th>
             <th>TIPO</th>
@@ -174,6 +177,7 @@ export function mostrarHistorial() {
     <div class="pagination">
       <button id="btn-anterior" disabled>Anterior</button>
       <span id="page-number">Página 1</span>
+      <span id="total-registros" style="margin-left: 5px; color: #8f99a7; font-weight: bold;">(Total: 0)</span>
       <button id="btn-siguiente">Siguiente</button>
     </div>
 
@@ -187,7 +191,7 @@ export function mostrarHistorial() {
   let limit = 10;
   let estadoSeleccionado = null;
   let totalPages = 1;
-
+  let totalItems = 0;
   const limitadorSelect = document.getElementById("limitador");
   // Referencias a los elementos del DOM
   const inputBusqueda = document.getElementById("filtros-historial-busqueda");
@@ -204,6 +208,7 @@ export function mostrarHistorial() {
   const btnAnterior = document.getElementById("btn-anterior");
   const btnSiguiente = document.getElementById("btn-siguiente");
   const pageNumberSpan = document.getElementById("page-number");
+  const totalRegistrosSpan = document.getElementById("total-registros");
   //---------------------------------------------------------------------------------------------
   const tbody = document.getElementById("tbody-operaciones");
 
@@ -268,6 +273,7 @@ export function mostrarHistorial() {
     btnAnterior.disabled = currentPage <= 1;
     btnSiguiente.disabled = currentPage >= totalPages;
     pageNumberSpan.textContent = `Página ${currentPage} de ${totalPages}`;
+    totalRegistrosSpan.textContent = `(Total: ${totalItems})`;
   }
 
   function aplicarFiltro(campoManual = null, valorManual = null, fechaInicio = null, fechaFin = null, estado = null, campoManualSegundo = null, valorManualSegundo = null) {
@@ -302,6 +308,7 @@ export function mostrarHistorial() {
     cargarHistorial(campo, valorTexto, currentPage, limit, fechaInicioTexto, fechaFinTexto, estadoFinal, campoSegundo, valorSegundoTexto)
       .then(pagination => {
         totalPages = pagination.totalPages;
+        totalItems = pagination.totalItems;
         updatePaginationButtons();
       });
   }
@@ -319,6 +326,7 @@ export function mostrarHistorial() {
       .then(pagination => {
 
         totalPages = pagination.totalPages;
+        totalItems = pagination.totalItems;
         updatePaginationButtons();
       });
   }
@@ -387,6 +395,7 @@ export function mostrarHistorial() {
       cargarHistorial("num_operacion", "", currentPage, limit, null, null, null, null, null)
         .then(pagination => {
           totalPages = pagination.totalPages;
+          totalItems = pagination.totalItems;
           updatePaginationButtons();
         });
     });
@@ -403,6 +412,7 @@ export function mostrarHistorial() {
       .then(pagination => {
         console.log("Respuesta paginación:", pagination);
         totalPages = pagination.totalPages;
+        totalItems = pagination.totalItems;
         updatePaginationButtons();
       });
 
