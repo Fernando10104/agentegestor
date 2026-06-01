@@ -191,7 +191,6 @@ export function mostrarHistorial() {
   let totalPages = 1;
   let totalItems = 0;
   let estadoSeleccionado = null; // Para rastrear el estado seleccionado
-  let totalItems = 0;
   const limitadorSelect = document.getElementById("limitador");
   // Referencias a los elementos del DOM
   const inputBusqueda = document.getElementById("filtros-historial-busqueda");
