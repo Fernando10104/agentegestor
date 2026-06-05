@@ -50,11 +50,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
     formData.append("username", username);
     formData.append("password", password); 
     
-<<<<<<< HEAD
-    const URL_api = "https://api.evolucionpy.com.py/"; // Cambia esto por tu URL base
-=======
-    const URL_api = "159.112.148.147"; // Cambia esto por tu URL base
->>>>>>> a695622dbd870088231935b0081c16d1cc962a2e
+    const URL_api = ""; // Cambia esto por tu URL base
     //const URL_api = "http://localhost:8000"; // Cambia esto por tu URL base
 
     try {

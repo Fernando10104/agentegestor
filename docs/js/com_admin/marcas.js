@@ -23,7 +23,7 @@ export function mostrarGestionMarcas() {
     `;
 
     // Ensure API base is available (use global or fallback)
-    const API_BASE = window.API_BASE_URL || window.API_BASE || 'https://api.evolucionpy.com.py/';
+    const API_BASE = window.API_BASE_URL || window.API_BASE || '/';
     // expose for other modules (marcas_api.js expects API_BASE_URL)
     window.API_BASE_URL = API_BASE;
 
