@@ -72,9 +72,36 @@ export function mostrarDashboardIngresos() {
         <!-- Paneles superiores -->
         <div class="grid-top">
           <div class="card">
-            <h3>Mi grupo</h3>
+            <h3>Seleccionar Grupo</h3>
             <select id="grupoSelect" onchange="cambiarGrupos()">
-            <option value="">Cargando...</option>
+            <option value="">Seleccione un grupo</option>
+            </select>
+          </div>
+          <div class="card">
+            <h3>Mes</h3>
+            <select id="mesSelect" onchange="cambiarGrupos()">
+              <option value="1">Enero</option>
+              <option value="2">Febrero</option>
+              <option value="3">Marzo</option>
+              <option value="4">Abril</option>
+              <option value="5">Mayo</option>
+              <option value="6">Junio</option>
+              <option value="7">Julio</option>
+              <option value="8">Agosto</option>
+              <option value="9">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+          </div>
+          <div class="card">
+            <h3>Año</h3>
+            <select id="anioSelect" onchange="cambiarGrupos()">
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026" selected>2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
             </select>
           </div>
           <div class="card">
@@ -214,9 +241,15 @@ export async function cargarGruposEnSelect() {
 async function cambiarGrupos() {
   const select = document.getElementById('grupoSelect');
   if (!select) return;
-  
   const grupoSeleccionado = select.value;
+  const mesSelect = document.getElementById('mesSelect');
+  const anioSelect = document.getElementById('anioSelect');
+  
+  const mes = mesSelect ? mesSelect.value : new Date().getMonth() + 1;
+  const anio = anioSelect ? anioSelect.value : 2026;
+  
   console.log("Grupo seleccionado:", grupoSeleccionado);
+  console.log("Mes:", mes, "Año:", anio);
 
   if (!grupoSeleccionado) {
     // Limpiar datos si no hay grupo seleccionado
@@ -237,16 +270,15 @@ async function cambiarGrupos() {
   }
 
   try {
-    console.log("Obteniendo datos para grupo:", grupoSeleccionado);
     
     // Obtener datos del grupo
     const [dataIngresos, dataGrupo, dataMetas] = await Promise.all([
-      obtenerGrupoPorId(grupoSeleccionado),
+      obtenerGrupoPorId(grupoSeleccionado, mes, anio),
       obtenerGruposPorId(grupoSeleccionado),
       buscarMetas()
     ]);
 
-    console.log("Datos obtenidos:", { dataIngresos, dataGrupo, dataMetas });
+
 
     if (!dataIngresos || !dataGrupo) {
       console.error("No se pudieron obtener todos los datos necesarios");
@@ -255,6 +287,7 @@ async function cambiarGrupos() {
 
     // Obtener valores para KPIs
     const ingresosTotales = dataIngresos.suma_comision_asesor_grupal || 0;
+
     const metaTotal = dataGrupo.meta_grupo || 0;
 
     // Calcular porcentaje
@@ -272,6 +305,7 @@ async function cambiarGrupos() {
     const empleados = [];
     const logrados = [];
     const metas = [];
+    const carpeta_usuario = []; // Para usar en el gráfico si es necesario
 
     // Procesar cada usuario del grupo
     usuariosGrupo.forEach(usuario => {
@@ -281,9 +315,10 @@ async function cambiarGrupos() {
       // Buscar la meta personal del usuario en dataMetas
       const metaUsuario = dataMetas.find(meta => meta.usuario === usuario.usuario);
       metas.push(metaUsuario ? (metaUsuario.meta_personal || 0) : 0);
+      carpeta_usuario.push(metaUsuario ? (metaUsuario.cantidad_operaciones || 0) : 0);
     });
 
-    console.log("Datos para gráfico:", { empleados, logrados, metas });
+    console.log("Datos para gráfico:", { empleados, logrados, metas, carpeta_usuario });
 
     // Función para formatear guaraníes
     function formatearGs(valor) {
@@ -304,7 +339,7 @@ async function cambiarGrupos() {
           labels: empleados,
           datasets: [
             {
-              label: "Logrado",
+              label: "Logrado" ,
               data: logrados,
               backgroundColor: "rgba(54, 162, 235, 0.8)",
               borderColor: "rgba(54, 162, 235, 1)",
@@ -333,6 +368,11 @@ async function cambiarGrupos() {
                 label: function (context) {
                   const label = context.dataset.label || '';
                   const value = context.parsed.x || 0;
+                  if (label === "Logrado") {
+                    const dataIndex = context.dataIndex;
+                    const operaciones = carpeta_usuario[dataIndex] || 0;
+                    return `${label}: ${formatearGs(value)} (${operaciones} carpeta${operaciones !== 1 ? 's' : ''})`;
+                  }
                   return `${label}: ${formatearGs(value)}`;
                 }
               }
@@ -371,18 +411,30 @@ async function cambiarGrupos() {
     
     // Solo mostrar gráfico si hay datos
     if (ingresosTotales > 0 || metaTotal > 0) {
-      const pieData = [
-        {
-          label: "Ingresos Logrados",
-          value: ingresosTotales,
-          color: "#0D86D9"
-        },
-        {
+      // Paleta de colores para los empleados (20 colores)
+      const coloresEmpleados = [
+        "#0D86D9", "#FF6B6B", "#4ECDC4", "#45B7D1", 
+        "#FFA07A", "#98D8C8", "#F7DC6F", "#BB8FCE",
+        "#85C1E2", "#F8B88B", "#FF9E64", "#7AA2F7",
+        "#9ECE6A", "#BB9AF7", "#7DCFFF", "#E0AF68",
+        "#F7768E", "#C0CAF5", "#565F89", "#A9B1D6"
+      ];
+      
+      // Construir array de datos del pie con cada empleado
+      const pieData = empleados.map((empleado, index) => ({
+        label: empleado,
+        value: logrados[index] || 0,
+        color: coloresEmpleados[index % coloresEmpleados.length]
+      }));
+      
+      // Agregar meta restante al final si existe
+      if (metaRestante > 0) {
+        pieData.push({
           label: "Meta Restante",
           value: metaRestante,
           color: "#D53D61"
-        }
-      ];
+        });
+      }
 
       pieChart = new Chart(document.getElementById("pieChart"), {
         type: "pie",
@@ -448,10 +500,14 @@ export async function obtenerGruposPorId(id) {
 }
 
 // API para obtener resumen del grupo (suma_comision_asesor_grupal)
-export async function obtenerGrupoPorId(id) {
+export async function obtenerGrupoPorId(id, mes = null, anio = 2026) {
   try {
     const token = localStorage.getItem("token");
-    const res = await fetch(`${API_BASE_URL}/grupos/${id}/resumen-mes`, {
+    let url = `${API_BASE_URL}/grupos/${id}/resumen-mes`;
+    if (mes !== null) {
+      url += `?mes=${mes}&anio=${anio}`;
+    }
+    const res = await fetch(url, {
       headers: { "Authorization": "Bearer " + token }
     });
     if (!res.ok) {

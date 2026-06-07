@@ -135,7 +135,7 @@ export function mostrarGestionMetas(){
                         </tbody>
                     </table>
                     <div class="total-comisiones-grupo" style="margin-top: 20px;">
-                        <strong>Total Comisiones del Grupo:</strong>
+                        <strong>TOTAL DESEMBOLSADO DEL GRUPO:</strong>
                         <span id="total-comisiones-grupo">0</span>
                     </div>
                 </div>

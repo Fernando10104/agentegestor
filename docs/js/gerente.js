@@ -323,9 +323,7 @@ async function cambiarGrupos() {
     ]);
 
     if (!dataIngresos || !dataGrupo || !dataMetas) return;
-    console.log("Datos de ingresos:", dataIngresos);
-    console.log("Datos del grupo:", dataGrupo);
-    console.log("Datos de metas: importante", dataMetas);
+
 
     // Obtener valores para KPIs
     const ingresosTotales = dataIngresos.suma_comision_asesor_grupal || 0;
@@ -339,13 +337,14 @@ async function cambiarGrupos() {
     document.getElementById('metaTotal').textContent = `Gs. ${metaTotal.toLocaleString()}`;
     document.getElementById('porcentajeAlcanzado').textContent = `${porcentaje}%`;
 
-    console.log(`Ingresos: ${ingresosTotales}, Meta: ${metaTotal}, Porcentaje: ${porcentaje}%`);
+
 
     // Preparar datos para el gráfico de barras
     const usuariosGrupo = dataIngresos.usuarios || [];
     const empleados = [];
     const logrados = [];
     const metas = [];
+    const carpeta_usuario = []; // Para usar en el gráfico si es necesario
 
     // Procesar cada usuario del grupo
     usuariosGrupo.forEach(usuario => {
@@ -355,6 +354,7 @@ async function cambiarGrupos() {
       // Buscar la meta personal del usuario en dataMetas
       const metaUsuario = dataMetas.find(meta => meta.usuario === usuario.usuario);
       metas.push(metaUsuario ? (metaUsuario.meta_personal || 0) : 0);
+      carpeta_usuario.push(metaUsuario ? (metaUsuario.cantidad_operaciones || 0) : 0);
     });
 
     console.log("Datos para gráfico:", { empleados, logrados, metas });
@@ -403,6 +403,11 @@ async function cambiarGrupos() {
               label: function (context) {
                 const label = context.dataset.label || '';
                 const value = context.parsed.x || 0;
+                if (label === "Logrado") {
+                  const dataIndex = context.dataIndex;
+                  const operaciones = carpeta_usuario[dataIndex] || 0;
+                  return `${label}: ${formatearGs(value)} (${operaciones} carpeta${operaciones !== 1 ? 's' : ''})`;
+                }
                 return `${label}: ${formatearGs(value)}`;
               }
             }
@@ -434,21 +439,34 @@ async function cambiarGrupos() {
 
     // Crear gráfico de pie con los datos de ingresos vs meta
     const metaRestante = Math.max(0, metaTotal - ingresosTotales);
-    const pieData = [
-      {
-        label: "Ingresos Logrados",
-        value: ingresosTotales,
-        color: "#0D86D9"
-      },
-      {
-        label: "Meta Restante",
-        value: metaRestante,
-        color: "#D53D61"
-      }
-    ];
-
+    
     // Solo mostrar gráfico si hay datos
     if (ingresosTotales > 0 || metaTotal > 0) {
+      // Paleta de colores para los empleados (20 colores)
+      const coloresEmpleados = [
+        "#0D86D9", "#FF6B6B", "#4ECDC4", "#45B7D1", 
+        "#FFA07A", "#98D8C8", "#F7DC6F", "#BB8FCE",
+        "#85C1E2", "#F8B88B", "#FF9E64", "#7AA2F7",
+        "#9ECE6A", "#BB9AF7", "#7DCFFF", "#E0AF68",
+        "#F7768E", "#C0CAF5", "#565F89", "#A9B1D6"
+      ];
+      
+      // Construir array de datos del pie con cada empleado
+      const pieData = empleados.map((empleado, index) => ({
+        label: empleado,
+        value: logrados[index] || 0,
+        color: coloresEmpleados[index % coloresEmpleados.length]
+      }));
+      
+      // Agregar meta restante al final si existe
+      if (metaRestante > 0) {
+        pieData.push({
+          label: "Meta Restante",
+          value: metaRestante,
+          color: "#D53D61"
+        });
+      }
+      
       pieChart = new Chart(document.getElementById("pieChart"), {
         type: "pie",
         data: {
