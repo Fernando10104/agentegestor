@@ -232,7 +232,6 @@ export async function obtenerGruposPorId(idGrupo) {
             throw new Error('Error al cargar grupo');
         }
         const data = await response.json();
-
         // Cargar datos del grupo en la tabla
         const grupoLista = document.getElementById('grupo-lista');
         grupoLista.innerHTML = ''; // Limpiar la tabla antes de cargar
