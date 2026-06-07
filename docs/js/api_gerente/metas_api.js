@@ -26,6 +26,7 @@ export function cargarMetas(busqueda = '') {
         const metasLista = document.getElementById('metas-lista');
         metasLista.innerHTML = ''; // Limpiar la lista antes de cargar nuevas metas
         const metas = data.metas || []; // Asegurarse de que metas sea un array
+        console.log("Metas obtenidas:", metas);
         metas.sort((a, b) => {
             const gananciaA = a.ganancia || 0;
             const gananciaB = b.ganancia || 0;
@@ -42,6 +43,7 @@ export function cargarMetas(busqueda = '') {
             const totalComisionFormateada = (meta.total_comision_asesor !== undefined && meta.total_comision_asesor !== null)
                 ? meta.total_comision_asesor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
                 : 'Sin comisión';
+            const carpetas = meta.cantidad_operaciones || "sin datos";
 
             row.innerHTML = `
                 <td class="acciones">
@@ -52,6 +54,7 @@ export function cargarMetas(busqueda = '') {
                 <td class="meta-nombre">${meta.nombre || 'Sin nombre'}</td>
                 <td class="meta-personal">${metaPersonalFormateada}</td>
                 <td class="meta-total-comision">${totalComisionFormateada}</td>
+                <td class="meta-cantidad-operaciones">${carpetas}</td>
                 <td class="meta-cumplimiento">
                     ${
                         (Number(meta.meta_personal) > 0 && Number(meta.total_comision_asesor) >= 0)
@@ -215,6 +218,7 @@ export async function obtenerGruposPorId(idGrupo) {
         grupoLista.innerHTML = '<tr><td colspan="4" class="text-center text-danger">seleccione un grupo</td></tr>';
         return;
     }
+    
     const url = `${API_BASE_URL}/grupos/${idGrupo}`;
     const token = localStorage.getItem('token');
 
@@ -228,6 +232,7 @@ export async function obtenerGruposPorId(idGrupo) {
             throw new Error('Error al cargar grupo');
         }
         const data = await response.json();
+
         // Cargar datos del grupo en la tabla
         const grupoLista = document.getElementById('grupo-lista');
         grupoLista.innerHTML = ''; // Limpiar la tabla antes de cargar
@@ -263,10 +268,13 @@ export async function obtenerGruposPorId(idGrupo) {
 
 
 
-export async function cargarListaUsuariosporGrupoId(grupoId) {
+export async function cargarListaUsuariosporGrupoId(grupoId, mes, anio) {
     if (!grupoId) return;
 
-    const url = `${API_BASE_URL}/grupos/${grupoId}/resumen-mes/comisiones`;
+    let url = `${API_BASE_URL}/grupos/${grupoId}/resumen-mes/comisiones`;
+    if (mes !== null && anio !== null) {
+        url += `?mes=${mes}&anio=${anio}`;
+    }
     const token = localStorage.getItem('token');
 
     try {

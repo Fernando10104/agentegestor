@@ -1,4 +1,4 @@
-import {cargarMetas,guardarMetas,CrearGrupo,cargarGruposEnSelect,obtenerGruposPorId,cargarListaUsuariosporGrupoId,guardarEditarGrupo,buscargrupoporid,EliminarGrupo} from '../api_admin/metas_api.js';
+import {cargarMetas,guardarMetas,CrearGrupo,cargarGruposEnSelect,obtenerGruposPorId,cargarListaUsuariosporGrupoId,guardarEditarGrupo,buscargrupoporid,EliminarGrupo} from '../api_gerente/metas_api.js';
 window.cargarMetas = cargarMetas;
 window.guardarMetas = guardarMetas;
 window.CrearGrupo = CrearGrupo;
@@ -26,6 +26,7 @@ export function mostrarGestionMetas(){
                                 <th>Nombre</th>
                                 <th>Meta Personal</th>
                                 <th>Meta lograda</th>
+                                <th>Carpetas</th>
                                 <th>% Cumplimiento</th>
                                 <th>Ganancia</th>
                             </tr>
