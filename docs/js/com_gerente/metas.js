@@ -234,8 +234,7 @@ export function mostrarGestionMetas(){
     document.getElementById('cerrar-modal-btn').addEventListener('click', cerrarModal);
     document.getElementById('cerrar-modal-editar-grupo-btn').addEventListener('click', cerrarModalGrupo);
     document.getElementById('cerrar-modal-grupo-btn').addEventListener('click', cerrarModalCrearGrupo);
-
-
+    
     const grupoSelect = document.getElementById('grupo-select');
     const mesSelect = document.getElementById('mesSelect_metas');
     const anioSelect = document.getElementById('anioSelect_metas');

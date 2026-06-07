@@ -275,7 +275,6 @@ export async function cargarListaUsuariosporGrupoId(grupoId, mes, anio) {
         url += `?mes=${mes}&anio=${anio}`;
     }
     const token = localStorage.getItem('token');
-
     try {
         const response = await fetch(url, {
             headers: {
