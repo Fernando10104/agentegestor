@@ -145,7 +145,7 @@ export function mostrarHistorial() {
           <div class="form-group">
             <label for="estado">Estado:</label>
             <select id="estado" name="estado">
-              <option value="CANCELADO">Cancelado</option>
+              <option value="CANCELADO">Anulado</option>
               <option value="INGRESADO">Ingresado</option>
               <option value="APROBADO">Aprobado</option>
               <option value="DESEMBOLSADO">Desembolsado</option>
@@ -168,7 +168,7 @@ export function mostrarHistorial() {
       <!-- ------------------------Botones de paginación y exportación------------------------------------------------------->
     </div>
     <div class="pagination">
-        <button id="cancelado" style="background-color: red; color: white;">Cancelado</button>
+        <button id="cancelado" style="background-color: red; color: white;">Anulado</button>
         <button id="ingresado" style="background-color: orange; color: white;">Ingresado</button>
         <button id="aprobado" style="background-color: blue; color: white;">Aprobado</button>
         <button id="desembolsado" style="background-color: green; color: white;">Desembolsado</button>

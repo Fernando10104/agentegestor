@@ -77,7 +77,7 @@ export function mostrarCreditos() {
     </div>
     
     <div class="pagination">
-      <button id="cancelado" onclick="filtrarPorEstado('cancelado')">Cancelado</button>
+      <button id="cancelado" onclick="filtrarPorEstado('cancelado')">Anulado</button>
       <button id="ingresado" onclick="filtrarPorEstado('ingresado')">Ingresado</button>
       <button id="aprobado" onclick="filtrarPorEstado('aprobado')">Aprobado</button>
       <button id="desembolsado" onclick="filtrarPorEstado('desembolsado')">Desembolsado</button>

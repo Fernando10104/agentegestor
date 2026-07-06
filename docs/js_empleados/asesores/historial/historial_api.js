@@ -98,6 +98,7 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
       const total = data.totalPages ?? 0;
       const totalPages = total;
       const totalDatos = data.totalItems ?? 0;
+
       // Guardar todas las filas para filtro local
       todasLasFilas = historial;
 
@@ -107,7 +108,8 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
       } else {
         tbody.innerHTML = historial.map(item => {
           const fechaFormateada = item.fecha ? item.fecha.split('T')[0].split('-').reverse().join('/') : '';
-          const estado = (item.estado ?? '').toLowerCase();
+          const estado = (item.estado ?? '').toLowerCase().trim();
+          const estadoTexto = estado === 'cancelado' ? 'ANULADO' : (item.estado ?? '');
 
           const className = {
             desembolsado: 'estado-desembolsado',
@@ -136,7 +138,7 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
               <td>${item.importe ? parseFloat(item.importe).toFixed(2).replace(/\.00$/, '') : ''}</td>
               <td>${item.responsable ?? ''}</td>
               <td>${item.comision ?? ''}</td>
-              <td><button class="${className}">${item.estado ?? ''}</button></td>
+              <td><button class="${className}">${estadoTexto}</button></td>
               <td>${item.obs ?? ''}</td>
               
             </tr>
@@ -147,7 +149,7 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
       return { 
         totalPages: totalPages,
         totalDatos: totalDatos
-       };
+      };
     })
     .catch(err => {
       const tbody = document.querySelector('.table-responsive tbody');
@@ -373,20 +375,42 @@ export function guardarActualizacion() {
       tipo,
       faja,
       categoria,
-      importe,
+      // enviar como número o omitir si está vacío
+      ...(importe !== '' ? { importe: Number(importe) } : {}),
       responsable,
-      comision,
+      ...(comision !== '' ? { comision: Number(comision) } : {}),
       estado,
       obs,
       fecha
     }),
   })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Error al actualizar el historial");
+    .then(async response => {
+      let data;
+      try {
+        data = await response.json();
+      } catch (err) {
+        if (!response.ok) throw new Error(`Error al actualizar el historial (status ${response.status})`);
+        return {};
       }
-      return response.json();
-    })
+
+      if (!response.ok) {
+        let mensaje = "Error al actualizar el historial";
+        if (data) {
+          if (Array.isArray(data.detail)) {
+            mensaje = data.detail.map(d => d.msg || JSON.stringify(d)).join("; ");
+          } else if (typeof data.detail === 'object') {
+            mensaje = data.detail.message || JSON.stringify(data.detail);
+          } else if (data.detail) {
+            mensaje = data.detail;
+          } else if (data.message) {
+            mensaje = data.message;
+          }
+        }
+        throw new Error(mensaje);
+      }
+
+      return data;
+  })
     .then(data => {
       showDialog("success", "Crédito actualizado correctamente");
 
