@@ -319,7 +319,7 @@ async function cambiarGrupos() {
     const [dataIngresos, dataGrupo, dataMetas] = await Promise.all([
       obtenerGrupoPorId(grupoSeleccionado, mes, anio),
       obtenerGruposPorId(grupoSeleccionado),
-      buscarMetas()
+      buscarMetas(mes, anio)
     ]);
 
     if (!dataIngresos || !dataGrupo || !dataMetas) return;
@@ -564,10 +564,14 @@ export async function obtenerGrupoPorId(id, mes = null, anio = 2026) {
   }
 }
 
-export function buscarMetas() {
+export function buscarMetas(mes = null, anio = null) {
   const url = new URL(`${API_BASE_URL}/metas`);
-  const token = localStorage.getItem('token');
 
+  // Enviar mes/anio como query params para que el backend filtre
+  if (mes) url.searchParams.append("mes", mes);
+  if (anio) url.searchParams.append("anio", anio);
+
+  const token = localStorage.getItem('token');
   if (!token) return [];
 
   const headers = new Headers();
@@ -589,7 +593,6 @@ export function buscarMetas() {
       return [];
     });
 }
-
 // Llamar al cargar el dashboard
 window.mostrarDashboardIngresos = mostrarDashboardIngresos;
 window.cargarGruposEnSelect = cargarGruposEnSelect;
