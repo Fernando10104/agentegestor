@@ -291,6 +291,13 @@ export async function cargarGruposEnSelect() {
     defaultOption.value = "";
     defaultOption.textContent = "Seleccione un grupo";
     select.appendChild(defaultOption);
+
+    // ✅ NUEVO: opción global (toda la empresa)
+    const globalOption = document.createElement('option');
+    globalOption.value = "all";
+    globalOption.textContent = "Toda la empresa (Global)";
+    select.appendChild(globalOption);
+
     grupos.grupos.forEach(grupo => {
       const option = document.createElement('option');
       option.value = grupo.id_grupo;
@@ -301,33 +308,49 @@ export async function cargarGruposEnSelect() {
     console.error('Error al cargar grupos en el select:', error);
   }
 }
+
 async function cambiarGrupos() {
   const select = document.getElementById('grupoSelect');
   if (!select) return;
   const grupoSeleccionado = select.value;
   const mesSelect = document.getElementById('mesSelect');
   const anioSelect = document.getElementById('anioSelect');
-  
+
   const mes = mesSelect ? mesSelect.value : new Date().getMonth() + 1;
   const anio = anioSelect ? anioSelect.value : 2026;
-  
+
   console.log("Grupo seleccionado:", grupoSeleccionado);
   console.log("Mes:", mes, "Año:", anio);
 
   try {
-    // Obtener ambos datos en paralelo
-    const [dataIngresos, dataGrupo, dataMetas] = await Promise.all([
-      obtenerGrupoPorId(grupoSeleccionado, mes, anio),
-      obtenerGruposPorId(grupoSeleccionado),
-      buscarMetas(mes, anio)
-    ]);
+    let dataIngresos, dataMetas, metaTotal;
 
-    if (!dataIngresos || !dataGrupo || !dataMetas) return;
+    if (grupoSeleccionado === "all") {
+      // ✅ MODO GLOBAL: todos los grupos juntos (toda la empresa)
+      [dataIngresos, dataMetas] = await Promise.all([
+        obtenerResumenGlobal(mes, anio),
+        buscarMetas(mes, anio)
+      ]);
+      metaTotal = dataIngresos ? dataIngresos.meta_total || 0 : 0;
+    } else {
+      // Modo por grupo (comportamiento original)
+      const resultados = await Promise.all([
+        obtenerGrupoPorId(grupoSeleccionado, mes, anio),
+        obtenerGruposPorId(grupoSeleccionado),
+        buscarMetas(mes, anio)
+      ]);
+      dataIngresos = resultados[0];
+      const dataGrupo = resultados[1];
+      dataMetas = resultados[2];
 
+      if (!dataIngresos || !dataGrupo || !dataMetas) return;
+      metaTotal = dataGrupo.meta_grupo || 0;
+    }
+
+    if (!dataIngresos || !dataMetas) return;
 
     // Obtener valores para KPIs
     const ingresosTotales = dataIngresos.suma_comision_asesor_grupal || 0;
-    const metaTotal = dataGrupo.meta_grupo || 0;
 
     // Calcular porcentaje
     const porcentaje = metaTotal > 0 ? ((ingresosTotales / metaTotal) * 100).toFixed(1) : 0;
@@ -336,8 +359,6 @@ async function cambiarGrupos() {
     document.getElementById('ingresosTotales').textContent = `Gs. ${ingresosTotales.toLocaleString()}`;
     document.getElementById('metaTotal').textContent = `Gs. ${metaTotal.toLocaleString()}`;
     document.getElementById('porcentajeAlcanzado').textContent = `${porcentaje}%`;
-
-
 
     // Preparar datos para el gráfico de barras
     const usuariosGrupo = dataIngresos.usuarios || [];
@@ -439,25 +460,25 @@ async function cambiarGrupos() {
 
     // Crear gráfico de pie con los datos de ingresos vs meta
     const metaRestante = Math.max(0, metaTotal - ingresosTotales);
-    
+
     // Solo mostrar gráfico si hay datos
     if (ingresosTotales > 0 || metaTotal > 0) {
       // Paleta de colores para los empleados (20 colores)
       const coloresEmpleados = [
-        "#0D86D9", "#FF6B6B", "#4ECDC4", "#45B7D1", 
+        "#0D86D9", "#FF6B6B", "#4ECDC4", "#45B7D1",
         "#FFA07A", "#98D8C8", "#F7DC6F", "#BB8FCE",
         "#85C1E2", "#F8B88B", "#FF9E64", "#7AA2F7",
         "#9ECE6A", "#BB9AF7", "#7DCFFF", "#E0AF68",
         "#F7768E", "#C0CAF5", "#565F89", "#A9B1D6"
       ];
-      
+
       // Construir array de datos del pie con cada empleado
       const pieData = empleados.map((empleado, index) => ({
         label: empleado,
         value: logrados[index] || 0,
         color: coloresEmpleados[index % coloresEmpleados.length]
       }));
-      
+
       // Agregar meta restante al final si existe
       if (metaRestante > 0) {
         pieData.push({
@@ -466,7 +487,7 @@ async function cambiarGrupos() {
           color: "#D53D61"
         });
       }
-      
+
       pieChart = new Chart(document.getElementById("pieChart"), {
         type: "pie",
         data: {
@@ -518,6 +539,34 @@ async function cambiarGrupos() {
     console.error('Error al calcular datos del grupo:', error);
   }
 }
+
+export async function obtenerResumenGlobal(mes = null, anio = null) {
+  try {
+    const token = localStorage.getItem("token");
+    let url = `${API_BASE_URL}/resumen-global`;
+
+    if (mes !== null && anio !== null) {
+      url += `?mes=${mes}&anio=${anio}`;
+    }
+
+    const res = await fetch(url, {
+      headers: { "Authorization": "Bearer " + token }
+    });
+    if (!res.ok) {
+      console.error("Error al obtener resumen global");
+      return null;
+    }
+    const data = await res.json();
+    console.log("Resumen global obtenido:", data);
+    return data;
+  } catch (error) {
+    console.error('Error al obtener resumen global:', error);
+    return null;
+  }
+}
+
+
+
 // de aqui quitamos el meta_grupo-
 export async function obtenerGruposPorId(id) {
   try {
