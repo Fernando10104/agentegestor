@@ -863,7 +863,7 @@ nav button {
     font-size: 1rem;
   }
   canvas {
-    max-height: 300px;
+    max-height: none;
   }
 
 /* Contenedor principal de usuarios conectados */

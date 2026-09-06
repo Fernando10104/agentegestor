@@ -388,8 +388,13 @@ async function cambiarGrupos() {
     // Destruir gráfico existente
     if (barChart) barChart.destroy();
 
+    // Altura del canvas según cantidad de usuarios (2 barras por usuario)
+    const barCanvas = document.getElementById("barChart");
+    const altoBarras = Math.max(400, empleados.length * 40);
+    barCanvas.style.height = `${altoBarras}px`;
+
     // Crear gráfico de barras horizontales
-    barChart = new Chart(document.getElementById("barChart"), {
+    barChart = new Chart(barCanvas, {
       type: "bar",
       data: {
         labels: empleados,
@@ -399,14 +404,16 @@ async function cambiarGrupos() {
             data: logrados,
             backgroundColor: "rgba(54, 162, 235, 0.8)",
             borderColor: "rgba(54, 162, 235, 1)",
-            borderWidth: 1
+            borderWidth: 1,
+            barThickness: 18
           },
           {
             label: "Meta Personal",
             data: metas,
             backgroundColor: "rgba(255, 99, 132, 0.8)",
             borderColor: "rgba(255, 99, 132, 1)",
-            borderWidth: 1
+            borderWidth: 1,
+            barThickness: 18
           }
         ]
       },
@@ -473,11 +480,25 @@ async function cambiarGrupos() {
       ];
 
       // Construir array de datos del pie con cada empleado
-      const pieData = empleados.map((empleado, index) => ({
-        label: empleado,
-        value: logrados[index] || 0,
-        color: coloresEmpleados[index % coloresEmpleados.length]
-      }));
+      // y limitar a los PIE_MAX mayores + "Otros" para no saturar el gráfico
+      const PIE_MAX = 12;
+      let pieData = empleados
+        .map((empleado, index) => ({
+          label: empleado,
+          value: logrados[index] || 0,
+          color: coloresEmpleados[index % coloresEmpleados.length]
+        }))
+        .filter(u => u.value > 0)
+        .sort((a, b) => b.value - a.value);
+
+      if (pieData.length > PIE_MAX) {
+        const resto = pieData.slice(PIE_MAX);
+        const sumaResto = resto.reduce((s, u) => s + u.value, 0);
+        pieData = [
+          ...pieData.slice(0, PIE_MAX),
+          { label: `Otros (${resto.length})`, value: sumaResto, color: "#6B7280" }
+        ];
+      }
 
       // Agregar meta restante al final si existe
       if (metaRestante > 0) {
@@ -507,7 +528,8 @@ async function cambiarGrupos() {
               position: 'bottom',
               labels: {
                 color: '#ffffff',
-                padding: 20,
+                padding: 8,
+                boxWidth: 12,
                 usePointStyle: true
               }
             },
