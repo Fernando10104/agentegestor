@@ -31,8 +31,46 @@ En el dashboard de ingresos (modo por grupo y sobre todo "Toda la empresa (Globa
   se ordenan de mayor a menor y si hay más de 12 empleados se agrupa el resto en una sola
   porción "Otros (N)" de color gris (#6B7280). Se conserva la porción "Meta Restante" al final.
   (Requerido cambiar `const pieData` → `let pieData`.)
-- **Leyenda del pie más compacta** (~líneas 529-533): `padding: 8`, `boxWidth: 12`
-  (antes `padding: 20`), para que entren más ítems sin desbordar la tarjeta.
+- **Leyenda del pie más compacta** (~líneas 538-561): `padding: 10`, `boxWidth: 12`
+  (antes `padding: 20`) y **nombres truncados**: `generateLabels` muestra los nombres
+  de la leyenda con máximo 16 caracteres + "…" (`truncarNombre`). El tooltip sigue
+  mostrando el nombre completo (usa `context.label`, que conserva los labels originales).
+
+## Corrección de bug (06/09/2026)
+
+**Síntoma:** los gráficos del dashboard crecían sin fin ( contenido crecía hasta el infinito).
+
+**Causa (bucle de ResizeObserver de Chart.js):** ambos `#barChart` e `#pieChart` usan
+`responsive: true` + `maintainAspectRatio: false`. Chart.js lee el tamaño de su contenedor
+directo (`.card`, alto basado en contenido) y fija el canvas a ese tamaño. El canvas crece →
+`.card` crece → Chart.js lee un `.card` más grande → canvas crece más… bucle sin fin.
+
+La regla CSS original `canvas { max-height: 300px }` lo ocultaba al topear el canvas en 300px;
+al quitarla el bucle se hizo visible y los gráficos crecían sin parar.
+
+**Arreglo (wrapper de altura fija):** se envolvió cada canvas en un `div` con `position: relative`
+y `height` explícito (patrón oficial de Chart.js para `maintainAspectRatio: false`):
+
+```html
+<!-- barChart -->
+<div id="barChartWrapper" style="position: relative; height: 400px;">
+  <canvas id="barChart"></canvas>
+</div>
+
+<!-- pieChart -->
+<div id="pieChartWrapper" style="position: relative; height: 300px;">
+  <canvas id="pieChart"></canvas>
+</div>
+```
+
+- El wrapper tiene altura fija → Chart.js la lee, fija el canvas y el wrapper no cambia → bucle roto.
+- Para el `#barChart` la altura del wrapper se calcula dinámicamente
+  `Math.max(400, empleados.length * 40)` según usuarios; la página scrollea hacia abajo.
+- El `#pieChart` tiene 300px fijos; con PIE_MAX=12 la leyenda cabe en el espacio restante.
+
+**Regla:** siempre usar wrappers con `height` explícito alrededor de canvases con
+`maintainAspectRatio: false` + `responsive: true`. Nunca depender de `max-height` CSS
+para frenar bucles de redimensionamiento.
 
 ## Notas
 

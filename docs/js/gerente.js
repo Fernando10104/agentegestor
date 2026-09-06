@@ -242,12 +242,16 @@ export function mostrarDashboardIngresos() {
         <div class="grid-charts">
           <div class="card">
             <h3>Metas vs Logros</h3>
-            <canvas id="barChart" style="height: 400px;"></canvas>
+            <div id="barChartWrapper" style="position: relative; height: 400px;">
+              <canvas id="barChart"></canvas>
+            </div>
           </div>
           
           <div class="card">
             <h3>Modos de Crédito</h3>
-            <canvas id="pieChart"></canvas>
+            <div id="pieChartWrapper" style="position: relative; height: 300px;">
+              <canvas id="pieChart"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -385,16 +389,23 @@ async function cambiarGrupos() {
       return "Gs. " + valor.toLocaleString("es-PY");
     }
 
+    // Función para truncar nombres largos en la leyenda del gráfico de pie
+    function truncarNombre(nombre, max = 16) {
+      if (typeof nombre !== "string") return nombre;
+      return nombre.length > max ? nombre.slice(0, max - 1) + "…" : nombre;
+    }
+
     // Destruir gráfico existente
     if (barChart) barChart.destroy();
 
-    // Altura del canvas según cantidad de usuarios (2 barras por usuario)
-    const barCanvas = document.getElementById("barChart");
+    // Altura del wrapper según cantidad de usuarios (2 barras por usuario).
+    // Se ajusta el WRAPPER y no el canvas para evitar el bucle de ResizeObserver de Chart.js.
+    const barWrapper = document.getElementById("barChartWrapper");
     const altoBarras = Math.max(400, empleados.length * 40);
-    barCanvas.style.height = `${altoBarras}px`;
+    barWrapper.style.height = `${altoBarras}px`;
 
     // Crear gráfico de barras horizontales
-    barChart = new Chart(barCanvas, {
+    barChart = new Chart(document.getElementById("barChart"), {
       type: "bar",
       data: {
         labels: empleados,
@@ -528,9 +539,24 @@ async function cambiarGrupos() {
               position: 'bottom',
               labels: {
                 color: '#ffffff',
-                padding: 8,
+                padding: 10,
                 boxWidth: 12,
-                usePointStyle: true
+                usePointStyle: true,
+                generateLabels(chart) {
+                  const meta = chart.getDatasetMeta(0);
+                  return chart.data.labels.map((label, i) => {
+                    const style = meta.controller.getStyle(i);
+                    return {
+                      text: truncarNombre(label),
+                      fillStyle: style.backgroundColor,
+                      strokeStyle: style.borderColor,
+                      lineWidth: style.borderWidth || 0,
+                      hidden: meta.hidden,
+                      index: i,
+                      pointStyle: 'circle'
+                    };
+                  });
+                }
               }
             },
             tooltip: {
