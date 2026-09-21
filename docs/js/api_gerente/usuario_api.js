@@ -51,7 +51,7 @@ export function CargarUsuarios(valor = "", rol2 = null) {
         }
         
         if (!usuarios.length) {
-            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">No se encontraron usuarios</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;">No se encontraron usuarios</td></tr>`;
         } else {
             tbody.innerHTML = usuarios.map(usuario => `
                 <tr id="${usuario[0] || ''}">
@@ -63,6 +63,7 @@ export function CargarUsuarios(valor = "", rol2 = null) {
                     <td>${usuario[10] || ''}</td>
                     <td>${usuario[8] || ''}</td>
                     <td>${usuario[11] || ''}</td>
+                    <td>${usuario[usuario.length - 1] || ''}</td>
                     <td class="acciones">
                         <button class="btn-editar" style="background-color: transparent;" data-id="${usuario[0]}">
                             ${SVG_EDITAR}
@@ -147,6 +148,11 @@ export async function mostrarEditarUsuario(id) {
                 </div>
         
                 <div class="form-group">
+                    <label for="fecha-ingreso-editar">Fecha Ingreso</label>
+                    <input type="date" id="fecha-ingreso-editar" value=""/>
+                </div>
+
+                <div class="form-group">
                     <label for="grupos-editar">Grupos *</label>
                     <select id="grupos-editar">
                         <option value="">Cargando grupos...</option>
@@ -226,6 +232,7 @@ export function BuscarUsuarioPorId(id) {
         document.getElementById('correo-editar').value = usuario.correo || '';
         document.getElementById('password-editar').value = ''; // No llenar la contraseña por seguridad
         document.getElementById('estado-editar').value = usuario.estado || '';
+        document.getElementById('fecha-ingreso-editar').value = usuario.fecha_ingreso || '';
         
         // Verificar si el usuario es supervisor
         const selectSupervisorEditar = document.getElementById('supervisor-editar');
@@ -267,6 +274,7 @@ export function guardarEditarUsuario(id_usuario) {
     const password = document.getElementById('password-editar').value;
     const grupo = document.getElementById('grupos-editar').value; // Agregar grupo
     const estado = document.getElementById('estado-editar').value; // Agregar estado
+    const fechaIngreso = document.getElementById('fecha-ingreso-editar').value;
     
     const url = `${API_BASE_URL}/usuarios/${id}`;
     const token = localStorage.getItem('token');
@@ -283,6 +291,11 @@ export function guardarEditarUsuario(id_usuario) {
         estado: estado // Agregar estado a los datos
 
     };
+
+    // Agregar fecha de ingreso solo si se proporcionó
+    if (fechaIngreso) {
+        datos.fecha_ingreso = fechaIngreso;
+    }
 
     fetch(url, {
         method: 'PUT',
@@ -321,6 +334,7 @@ export function CrearUsuario(){
         const supervisor = document.getElementById('supervisor').value;
         const correo = document.getElementById('correo').value;
         const password = document.getElementById('password').value;
+        const fechaIngreso = document.getElementById('fecha-ingreso').value;
 
         const url = `${API_BASE_URL}/usuarios`;
         const token = localStorage.getItem('token');
@@ -334,6 +348,11 @@ export function CrearUsuario(){
             telefono: telefono,
             correo: correo,
         };
+
+        // Agregar fecha de ingreso solo si se proporcionó (si no, el backend pone la fecha actual)
+        if (fechaIngreso) {
+            datos.fecha_ingreso = fechaIngreso;
+        }
 
         fetch(url, {
             method: 'POST',

@@ -147,8 +147,9 @@ export function cargarHistorial(campo = "num_operacion", valor = "", page = 1, l
         }).join('');
       }
 
-      return { 
+      return {
         totalPages: totalPages,
+        totalItems: totalDatos,
         totalDatos: totalDatos
       };
     })
