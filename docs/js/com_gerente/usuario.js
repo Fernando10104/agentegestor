@@ -42,6 +42,7 @@ export function mostrarGestionUsuario() {
                             <th>Teléfono</th>
                             <th>Supervisor</th>
                             <th>Grupo</th>
+                            <th>Fecha Ingreso</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -108,6 +109,11 @@ export function mostrarGestionUsuario() {
                     <div class="form-group">
                     <label for="correo">Correo Electrónico</label>
                     <input type="email" id="correo"  />
+                    </div>
+
+                    <div class="form-group">
+                    <label for="fecha-ingreso">Fecha Ingreso</label>
+                    <input type="date" id="fecha-ingreso" />
                     </div>
 
                     <div class="modal-footer">
