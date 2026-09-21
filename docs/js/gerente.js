@@ -10,9 +10,6 @@ import { mostrarGestionMarcas } from "./com_gerente/marcas.js";
 import { mostrarGestionMetas } from "./com_gerente/metas.js";
 import {mostrarGestionImport} from "./com_gerente/importacion.js";
 import{svg_importar} from "../src/svg/svg.js";
-import { mascaraFecha, fechaValida, primerDiaMesFormateado, hoyFormateado } from "./componentes/mascaraFecha.js";
-
-window.mascaraFecha = mascaraFecha;
 
 
 /**
@@ -200,12 +197,31 @@ export function mostrarDashboardIngresos() {
             </select>
           </div>
           <div class="card">
-            <h3>Desde</h3>
-            <input type="text" id="fechaDesdeInput" placeholder="dd/mm/aaaa" maxlength="10" oninput="mascaraFecha(this)" onchange="cambiarGrupos()" />
+            <h3>Mes</h3>
+            <select id="mesSelect" onchange="cambiarGrupos()">
+              <option value="1">Enero</option>
+              <option value="2">Febrero</option>
+              <option value="3">Marzo</option>
+              <option value="4">Abril</option>
+              <option value="5">Mayo</option>
+              <option value="6">Junio</option>
+              <option value="7">Julio</option>
+              <option value="8">Agosto</option>
+              <option value="9">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
           </div>
           <div class="card">
-            <h3>Hasta</h3>
-            <input type="text" id="fechaHastaInput" placeholder="dd/mm/aaaa" maxlength="10" oninput="mascaraFecha(this)" onchange="cambiarGrupos()" />
+            <h3>Año</h3>
+            <select id="anioSelect" onchange="cambiarGrupos()">
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026" selected>2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+            </select>
           </div>
           <div class="card">
             <h3>Ingresos Totales</h3>
@@ -243,12 +259,6 @@ export function mostrarDashboardIngresos() {
 
   // ✅ AGREGAR al final del contenido existente, no reemplazar
   contenedor.insertAdjacentHTML('beforeend', dashboardHTML);
-
-  // Valores por defecto del rango de fechas (mes actual → hoy)
-  const inputDesde = document.getElementById("fechaDesdeInput");
-  const inputHasta = document.getElementById("fechaHastaInput");
-  if (inputDesde) inputDesde.value = primerDiaMesFormateado();
-  if (inputHasta) inputHasta.value = hoyFormateado();
 
   // Cargar Chart.js si no está cargado
   if (typeof Chart === 'undefined') {
@@ -307,24 +317,14 @@ async function cambiarGrupos() {
   const select = document.getElementById('grupoSelect');
   if (!select) return;
   const grupoSeleccionado = select.value;
+  const mesSelect = document.getElementById('mesSelect');
+  const anioSelect = document.getElementById('anioSelect');
 
-  const inputDesde = document.getElementById('fechaDesdeInput');
-  const inputHasta = document.getElementById('fechaHastaInput');
-  const fechaInicio = inputDesde ? inputDesde.value.trim() : '';
-  const fechaFin = inputHasta ? inputHasta.value.trim() : '';
-
-  // Validar formato y orden de las fechas
-  if ((fechaInicio && !fechaValida(fechaInicio)) || (fechaFin && !fechaValida(fechaFin))) {
-    showDialog('error', 'Formato de fecha inválido. Use dd/mm/aaaa');
-    return;
-  }
-  if (fechaInicio && fechaFin && fechaInicio > fechaFin) {
-    showDialog('error', 'La fecha "Desde" no puede ser mayor a "Hasta"');
-    return;
-  }
+  const mes = mesSelect ? mesSelect.value : new Date().getMonth() + 1;
+  const anio = anioSelect ? anioSelect.value : 2026;
 
   console.log("Grupo seleccionado:", grupoSeleccionado);
-  console.log("Rango:", fechaInicio, "-", fechaFin);
+  console.log("Mes:", mes, "Año:", anio);
 
   try {
     let dataIngresos, dataMetas, metaTotal;
@@ -332,16 +332,16 @@ async function cambiarGrupos() {
     if (grupoSeleccionado === "all") {
       // ✅ MODO GLOBAL: todos los grupos juntos (toda la empresa)
       [dataIngresos, dataMetas] = await Promise.all([
-        obtenerResumenGlobal(fechaInicio, fechaFin),
-        buscarMetas(fechaInicio, fechaFin)
+        obtenerResumenGlobal(mes, anio),
+        buscarMetas(mes, anio)
       ]);
       metaTotal = dataIngresos ? dataIngresos.meta_total || 0 : 0;
     } else {
       // Modo por grupo (comportamiento original)
       const resultados = await Promise.all([
-        obtenerGrupoPorId(grupoSeleccionado, fechaInicio, fechaFin),
+        obtenerGrupoPorId(grupoSeleccionado, mes, anio),
         obtenerGruposPorId(grupoSeleccionado),
-        buscarMetas(fechaInicio, fechaFin)
+        buscarMetas(mes, anio)
       ]);
       dataIngresos = resultados[0];
       const dataGrupo = resultados[1];
@@ -588,15 +588,14 @@ async function cambiarGrupos() {
   }
 }
 
-export async function obtenerResumenGlobal(fechaInicio = null, fechaFin = null) {
+export async function obtenerResumenGlobal(mes = null, anio = null) {
   try {
     const token = localStorage.getItem("token");
     let url = `${API_BASE_URL}/resumen-global`;
 
-    const params = [];
-    if (fechaInicio) params.push(`fecha_inicio=${encodeURIComponent(fechaInicio)}`);
-    if (fechaFin) params.push(`fecha_fin=${encodeURIComponent(fechaFin)}`);
-    if (params.length) url += '?' + params.join('&');
+    if (mes !== null && anio !== null) {
+      url += `?mes=${mes}&anio=${anio}`;
+    }
 
     const res = await fetch(url, {
       headers: { "Authorization": "Bearer " + token }
@@ -636,16 +635,15 @@ export async function obtenerGruposPorId(id) {
   }
 }
 // retorna monto total del grupo. desde suma comision asesor grupal.
-export async function obtenerGrupoPorId(id, fechaInicio = null, fechaFin = null) {
+export async function obtenerGrupoPorId(id, mes = null, anio = 2026) {
   try {
     const token = localStorage.getItem("token");
     let url = `${API_BASE_URL}/grupos/${id}/resumen-mes`;
     
-    // Agregar parámetros de rango de fechas (dd/mm/aaaa) si se proporcionan
-    const params = [];
-    if (fechaInicio) params.push(`fecha_inicio=${encodeURIComponent(fechaInicio)}`);
-    if (fechaFin) params.push(`fecha_fin=${encodeURIComponent(fechaFin)}`);
-    if (params.length) url += '?' + params.join('&');
+    // Agregar parámetros de mes y año a la URL si se proporcionan
+    if (mes !== null) {
+      url += `?mes=${mes}&anio=${anio}`;
+    }
     
     const res = await fetch(url, {
       headers: { "Authorization": "Bearer " + token }
@@ -663,12 +661,12 @@ export async function obtenerGrupoPorId(id, fechaInicio = null, fechaFin = null)
   }
 }
 
-export function buscarMetas(fechaInicio = null, fechaFin = null) {
+export function buscarMetas(mes = null, anio = null) {
   const url = new URL(`${API_BASE_URL}/metas`);
 
-  // Enviar fechas como query params para que el backend filtre por rango
-  if (fechaInicio) url.searchParams.append("fecha_inicio", fechaInicio);
-  if (fechaFin) url.searchParams.append("fecha_fin", fechaFin);
+  // Enviar mes/anio como query params para que el backend filtre
+  if (mes) url.searchParams.append("mes", mes);
+  if (anio) url.searchParams.append("anio", anio);
 
   const token = localStorage.getItem('token');
   if (!token) return [];
