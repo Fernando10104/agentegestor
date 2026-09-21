@@ -302,11 +302,16 @@ export function mostrarDashboardIngresos() {
         <div class="grid-charts">
           <div class="card">
             <h3>Metas vs Logros</h3>
-            <canvas id="barChart" style="height: 400px;"></canvas>
+            <div id="barChartWrapper" style="position: relative; height: 400px;">
+              <canvas id="barChart"></canvas>
+            </div>
           </div>
+          
           <div class="card">
             <h3>Modos de Crédito</h3>
-            <canvas id="pieChart"></canvas>
+            <div id="pieChartWrapper" style="position: relative; height: 300px;">
+              <canvas id="pieChart"></canvas>
+            </div>
           </div>
         </div>
       </div>
@@ -356,6 +361,13 @@ export async function cargarGruposEnSelect() {
     defaultOption.value = "";
     defaultOption.textContent = "Seleccione un grupo";
     select.appendChild(defaultOption);
+
+    // ✅ Opción global (toda la empresa)
+    const globalOption = document.createElement('option');
+    globalOption.value = "all";
+    globalOption.textContent = "Toda la empresa (Global)";
+    select.appendChild(globalOption);
+
     grupos.grupos.forEach(grupo => {
       const option = document.createElement('option');
       option.value = grupo.id_grupo;
@@ -390,21 +402,39 @@ async function cambiarGrupos() {
   console.log("Rango:", fechaInicio, "-", fechaFin);
 
   try {
-    // Obtener ambos datos en paralelo
-    const [dataIngresos, dataGrupo, dataMetas] = await Promise.all([
-      obtenerGrupoPorId(grupoSeleccionado, fechaInicio, fechaFin),
-      obtenerGruposPorId(grupoSeleccionado),
-      buscarMetas(fechaInicio, fechaFin)
-    ]);
+    let dataIngresos, dataGrupo, dataMetas, metaTotal;
 
-    if (!dataIngresos || !dataGrupo || !dataMetas) return;
+    if (grupoSeleccionado === "all") {
+      // ✅ MODO GLOBAL: todos los grupos juntos (toda la empresa)
+      const resultados = await Promise.all([
+        obtenerResumenGlobal(fechaInicio, fechaFin),
+        buscarMetas(fechaInicio, fechaFin)
+      ]);
+      dataIngresos = resultados[0];
+      dataMetas = resultados[1];
+      metaTotal = dataIngresos ? dataIngresos.meta_total || 0 : 0;
+    } else {
+      // Modo por grupo (comportamiento original)
+      const resultados = await Promise.all([
+        obtenerGrupoPorId(grupoSeleccionado, fechaInicio, fechaFin),
+        obtenerGruposPorId(grupoSeleccionado),
+        buscarMetas(fechaInicio, fechaFin)
+      ]);
+      dataIngresos = resultados[0];
+      dataGrupo = resultados[1];
+      dataMetas = resultados[2];
+
+      if (!dataIngresos || !dataGrupo || !dataMetas) return;
+      metaTotal = dataGrupo.meta_grupo || 0;
+    }
+
+    if (!dataIngresos || !dataMetas) return;
     console.log("Datos de ingresos:", dataIngresos);
     console.log("Datos del grupo:", dataGrupo);
     console.log("Datos de metas: importante", dataMetas);
 
     // Obtener valores para KPIs
     const ingresosTotales = dataIngresos.suma_comision_asesor_grupal || 0;
-    const metaTotal = dataGrupo.meta_grupo || 0;
 
     // Calcular porcentaje
     const porcentaje = metaTotal > 0 ? ((ingresosTotales / metaTotal) * 100).toFixed(1) : 0;
@@ -421,6 +451,7 @@ async function cambiarGrupos() {
     const empleados = [];
     const logrados = [];
     const metas = [];
+    const carpeta_usuario = []; // Para usar en el gráfico si es necesario
 
     // Procesar cada usuario del grupo
     usuariosGrupo.forEach(usuario => {
@@ -430,6 +461,7 @@ async function cambiarGrupos() {
       // Buscar la meta personal del usuario en dataMetas
       const metaUsuario = dataMetas.find(meta => meta.usuario === usuario.usuario);
       metas.push(metaUsuario ? (metaUsuario.meta_personal || 0) : 0);
+      carpeta_usuario.push(metaUsuario ? (metaUsuario.cantidad_operaciones || 0) : 0);
     });
 
     console.log("Datos para gráfico:", { empleados, logrados, metas });
@@ -439,8 +471,20 @@ async function cambiarGrupos() {
       return "Gs. " + valor.toLocaleString("es-PY");
     }
 
+    // Función para truncar nombres largos en la leyenda del gráfico de pie
+    function truncarNombre(nombre, max = 16) {
+      if (typeof nombre !== "string") return nombre;
+      return nombre.length > max ? nombre.slice(0, max - 1) + "…" : nombre;
+    }
+
     // Destruir gráfico existente
     if (barChart) barChart.destroy();
+
+    // Altura del wrapper según cantidad de usuarios (2 barras por usuario).
+    // Se ajusta el WRAPPER y no el canvas para evitar el bucle de ResizeObserver de Chart.js.
+    const barWrapper = document.getElementById("barChartWrapper");
+    const altoBarras = Math.max(400, empleados.length * 40);
+    barWrapper.style.height = `${altoBarras}px`;
 
     // Crear gráfico de barras horizontales
     barChart = new Chart(document.getElementById("barChart"), {
@@ -478,6 +522,11 @@ async function cambiarGrupos() {
               label: function (context) {
                 const label = context.dataset.label || '';
                 const value = context.parsed.x || 0;
+                if (label === "Logrado") {
+                  const dataIndex = context.dataIndex;
+                  const operaciones = carpeta_usuario[dataIndex] || 0;
+                  return `${label}: ${formatearGs(value)} (${operaciones} carpeta${operaciones !== 1 ? 's' : ''})`;
+                }
                 return `${label}: ${formatearGs(value)}`;
               }
             }
@@ -509,21 +558,48 @@ async function cambiarGrupos() {
 
     // Crear gráfico de pie con los datos de ingresos vs meta
     const metaRestante = Math.max(0, metaTotal - ingresosTotales);
-    const pieData = [
-      {
-        label: "Ingresos Logrados",
-        value: ingresosTotales,
-        color: "#0D86D9"
-      },
-      {
-        label: "Meta Restante",
-        value: metaRestante,
-        color: "#D53D61"
-      }
-    ];
 
     // Solo mostrar gráfico si hay datos
     if (ingresosTotales > 0 || metaTotal > 0) {
+      // Paleta de colores para los empleados (20 colores)
+      const coloresEmpleados = [
+        "#0D86D9", "#FF6B6B", "#4ECDC4", "#45B7D1",
+        "#FFA07A", "#98D8C8", "#F7DC6F", "#BB8FCE",
+        "#85C1E2", "#F8B88B", "#FF9E64", "#7AA2F7",
+        "#9ECE6A", "#BB9AF7", "#7DCFFF", "#E0AF68",
+        "#F7768E", "#C0CAF5", "#565F89", "#A9B1D6"
+      ];
+
+      // Construir array de datos del pie con cada empleado
+      // y limitar a los PIE_MAX mayores + "Otros" para no saturar el gráfico
+      const PIE_MAX = 12;
+      let pieData = empleados
+        .map((empleado, index) => ({
+          label: empleado,
+          value: logrados[index] || 0,
+          color: coloresEmpleados[index % coloresEmpleados.length]
+        }))
+        .filter(u => u.value > 0)
+        .sort((a, b) => b.value - a.value);
+
+      if (pieData.length > PIE_MAX) {
+        const resto = pieData.slice(PIE_MAX);
+        const sumaResto = resto.reduce((s, u) => s + u.value, 0);
+        pieData = [
+          ...pieData.slice(0, PIE_MAX),
+          { label: `Otros (${resto.length})`, value: sumaResto, color: "#6B7280" }
+        ];
+      }
+
+      // Agregar meta restante al final si existe
+      if (metaRestante > 0) {
+        pieData.push({
+          label: "Meta Restante",
+          value: metaRestante,
+          color: "#D53D61"
+        });
+      }
+
       pieChart = new Chart(document.getElementById("pieChart"), {
         type: "pie",
         data: {
@@ -543,8 +619,24 @@ async function cambiarGrupos() {
               position: 'bottom',
               labels: {
                 color: '#ffffff',
-                padding: 20,
-                usePointStyle: true
+                padding: 10,
+                boxWidth: 12,
+                usePointStyle: true,
+                generateLabels(chart) {
+                  const meta = chart.getDatasetMeta(0);
+                  return chart.data.labels.map((label, i) => {
+                    const style = meta.controller.getStyle(i);
+                    return {
+                      text: truncarNombre(label),
+                      fillStyle: style.backgroundColor,
+                      strokeStyle: style.borderColor,
+                      lineWidth: style.borderWidth || 0,
+                      hidden: meta.hidden,
+                      index: i,
+                      pointStyle: 'circle'
+                    };
+                  });
+                }
               }
             },
             tooltip: {
@@ -594,6 +686,32 @@ export async function obtenerGruposPorId(id) {
     return null;
   }
 }
+export async function obtenerResumenGlobal(fechaInicio = null, fechaFin = null) {
+  try {
+    const token = localStorage.getItem("token");
+    let url = `${API_BASE_URL}/resumen-global`;
+
+    const params = [];
+    if (fechaInicio) params.push(`fecha_inicio=${encodeURIComponent(fechaInicio)}`);
+    if (fechaFin) params.push(`fecha_fin=${encodeURIComponent(fechaFin)}`);
+    if (params.length) url += '?' + params.join('&');
+
+    const res = await fetch(url, {
+      headers: { "Authorization": "Bearer " + token }
+    });
+    if (!res.ok) {
+      console.error("Error al obtener resumen global");
+      return null;
+    }
+    const data = await res.json();
+    console.log("Resumen global obtenido:", data);
+    return data;
+  } catch (error) {
+    console.error('Error al obtener resumen global:', error);
+    return null;
+  }
+}
+
 // retorna monto total del grupo. desde suma comision asesor grupal.
 export async function obtenerGrupoPorId(id, fechaInicio = null, fechaFin = null) {
   try {
