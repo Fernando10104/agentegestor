@@ -56,6 +56,7 @@ verificarToken(); // Verificamos el token al cargar la página
 // ✅ CARGAR USUARIOS AL INICIAR LA PÁGINA
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("Antes:", document.getElementById('btn-admin'));
+    await verificarToken(); // Esperar id_usuario, nombre_usuario, url_imagen
     await mostrarInicio();
     console.log("Después:", document.getElementById('btn-admin'));
     verificarRolYMostrarAdmin(); // Verificar rol y mostrar botón admin si corresponde

@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../../../js/config.js';
+import { verificarToken } from '../../../js/componentes/verificarToken.js';
 import {svg_grupo,svg_contactos,svg_logrado,svg_meta,svg_circulo } from '../../../src/svg/svg.js';
 
 async function cargarTopAsesores() {
@@ -92,9 +93,16 @@ async function obtenerMensajeMotivacional() {
 
 export async function mostrarInicio() {
   try {
-    const idUsuario = localStorage.getItem('id_usuario');
     const token = localStorage.getItem('token');
-    
+
+    // Si es el primer render después del login, id_usuario todavía no existe:
+    // esperamos a verificarToken() para no pedir /usuarios/null/inicio
+    let idUsuario = localStorage.getItem('id_usuario');
+    if (!idUsuario) {
+      await verificarToken();
+      idUsuario = localStorage.getItem('id_usuario');
+    }
+
     // Obtener datos del usuario y mensaje motivacional en paralelo
     const [responseUsuario, mensajeMotivacional] = await Promise.all([
       fetch(`${API_BASE_URL}/usuarios/${idUsuario}/inicio`, {
@@ -114,6 +122,7 @@ export async function mostrarInicio() {
 
     const urlImagen = localStorage.getItem('url_imagen');
     const roluser = localStorage.getItem('rol');
+    const nombreUsuario = data.nombre || localStorage.getItem('nombre_usuario') || 'Usuario';
 
     
     cargarTopAsesores();
@@ -127,11 +136,11 @@ export async function mostrarInicio() {
         ${
           urlImagen
           ? `<img src="${urlImagen}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">`
-          : (data.nombre ? data.nombre.charAt(0).toUpperCase() : 'U')
+          : nombreUsuario.charAt(0).toUpperCase()
         }
         </div>
         <div class="user-header-info">
-        <h2>${data.nombre || 'Usuario'}</h2>
+        <h2>${nombreUsuario}</h2>
         <div class="user-badges">
           <span class="badge badge-admin">${roluser}</span>
           <span class="badge badge-active">Activo</span>

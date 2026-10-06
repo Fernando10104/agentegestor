@@ -104,6 +104,7 @@ verificarToken(); // Verificamos el token al cargar la página
 
 // ✅ CARGAR USUARIOS AL INICIAR LA PÁGINA
 document.addEventListener('DOMContentLoaded', async () => {
+    await verificarToken(); // Esperar id_usuario, nombre_usuario, url_imagen
     await mostrarInicio(); // Mostrar la pantalla de inicio al cargar la página
 });
 

@@ -50,6 +50,12 @@ document.getElementById('usuario-icono').addEventListener('click', () => {
 actualizarFechaHoraParaguay(); // Actualizamos la fecha y hora al cargar la página
 verificarToken(); // Verificamos el token al cargar la página
 
+// ✅ CARGAR EL PANEL DE INICIO AL CARGAR LA PÁGINA (antes no existía este listener)
+document.addEventListener('DOMContentLoaded', async () => {
+    await verificarToken(); // Esperar id_usuario, nombre_usuario, url_imagen
+    await mostrarInicio();
+});
+
 const token = localStorage.getItem('token');
 const payload = JSON.parse(atob(token.split('.')[1]));
         const rol = payload.rol;

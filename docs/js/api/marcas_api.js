@@ -1,10 +1,9 @@
+import { API_BASE_URL } from '../config.js';
+
 export function cargarMarcas() {
   const token = localStorage.getItem("token");
   const id_usuario = localStorage.getItem("id_usuario") || 8; // Por defecto 8 si no existe
   
-  // Usa la URL correcta de tu API
-  const API_BASE_URL = "https://api.evolucionpy.com.py";
-
   return fetch(`${API_BASE_URL}/marcas_all?id_usuario=${id_usuario}`, {
     headers: {
       Authorization: "Bearer " + token,

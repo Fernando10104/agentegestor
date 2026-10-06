@@ -51,7 +51,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
     formData.append("password", password); 
     
     const URL_api = "https://api.evolucionpy.com.py"; // Cambia esto por tu URL base
-    //const URL_api = "http://localhost:8000"; // Cambia esto por tu URL base
+    //const URL_api = "http://localhost:8000";
 
     try {
         const response = await fetch(`${URL_api}/login`, {
@@ -69,6 +69,31 @@ document.getElementById("login-form").addEventListener("submit", async function 
             // Guardar JWT y opcionalmente el rol
             localStorage.setItem("token", token);
             localStorage.setItem("rol", data.rol); // si lo necesitás más adelante
+
+            // Cargar los datos del usuario (id, nombre, imagen) ANTES de redirigir,
+            // para que la página destino los tenga disponibles al renderizar.
+            try {
+                const verificar = await fetch(`${URL_api}/verificar-token`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (verificar.ok) {
+                    const usuario = (await verificar.json()).usuario;
+                    localStorage.setItem("id_usuario", usuario.id_usuario);
+                    localStorage.setItem("nombre_usuario", usuario.nombre);
+                    localStorage.setItem("superior", usuario.superior);
+                    localStorage.setItem("url_imagen", usuario.url_imagen || "");
+                } else {
+                    console.warn("No se pudieron cargar los datos del usuario en el login.");
+                }
+            } catch (error) {
+                console.warn("No se pudieron cargar los datos del usuario en el login:", error);
+            }
+
             const rol = data.rol;
             if(rol === "admin"){
                 //window.location.href = "/agentegestor/index.html";
