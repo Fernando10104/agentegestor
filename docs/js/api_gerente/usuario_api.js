@@ -130,6 +130,7 @@ export async function mostrarEditarUsuario(id) {
                     <label for="rol-editar">Rol *</label>
                     <select id="rol-editar" >
                         <option value="ninguna">Ninguna</option>
+                        <option value="administrativa">Administrativa</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
@@ -185,7 +186,7 @@ export async function mostrarEditarUsuario(id) {
         const selectSupervisorEditar = document.getElementById('supervisor-editar');
         
         selectRolEditar.addEventListener('change', function() {
-            if (this.value === 'supervisor') {
+            if (this.value === 'supervisor' || this.value === 'administrativa') {
                 // Obtener el ID del gerente
                 const gerenteId = localStorage.getItem('id_usuario');
                 
@@ -234,10 +235,10 @@ export function BuscarUsuarioPorId(id) {
         document.getElementById('estado-editar').value = usuario.estado || '';
         document.getElementById('fecha-ingreso-editar').value = usuario.fecha_ingreso || '';
         
-        // Verificar si el usuario es supervisor
+        // Verificar si el usuario es supervisor o administrativa
         const selectSupervisorEditar = document.getElementById('supervisor-editar');
-        if (usuario.rol === 'supervisor') {
-            // Si es supervisor, establecer el ID del gerente y deshabilitar
+        if (usuario.rol === 'supervisor' || usuario.rol === 'administrativa') {
+            // Si es supervisor o administrativa, establecer el ID del gerente y deshabilitar
             const gerenteId = localStorage.getItem('id_usuario');
             selectSupervisorEditar.innerHTML = `<option value="${gerenteId}">${gerenteId}</option>`;
             selectSupervisorEditar.value = gerenteId;

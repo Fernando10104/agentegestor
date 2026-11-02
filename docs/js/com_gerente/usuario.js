@@ -20,6 +20,7 @@ export function mostrarGestionUsuario() {
                     <input type="text" placeholder="Buscar por CI o nombre" id="filtro-input">
                     <select name="roles" id="roles">
                         <option value=>Todos</option>
+                        <option value="administrativa">Administrativa</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
@@ -94,6 +95,7 @@ export function mostrarGestionUsuario() {
                     <label for="rol">Rol *</label>
                     <select id="rol" required>
                         <option value="">Ninguno</option>
+                        <option value="administrativa">Administrativa</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
@@ -154,7 +156,7 @@ export function mostrarGestionUsuario() {
     const selectSupervisor = document.getElementById('supervisor');
     
     selectRol.addEventListener('change', function() {
-        if (this.value === 'Supervisor') {
+        if (this.value === 'supervisor' || this.value === 'administrativa') {
             // Obtener el ID del gerente desde sessionStorage o donde lo tengas guardado
             const gerenteId = localStorage.getItem('id_usuario'); // Ajusta según tu implementación
             console.log("ID del gerente:", gerenteId);

@@ -1,11 +1,21 @@
 import { SVG_EDITAR, SVG_CREAR2,SVG_ELIMINAR } from '../../src/svg/svg.js';
 
-export function cargarMetas(busqueda = '') {
+let periodoMetas = null;
+
+export function cargarMetas(mes = null, anio = null) {
+    if (mes !== null && anio !== null) {
+        periodoMetas = { mes, anio };
+    } else if (periodoMetas) {
+        mes = periodoMetas.mes;
+        anio = periodoMetas.anio;
+    }
+
     const url = new URL(`${API_BASE_URL}/metas`);
     const token = localStorage.getItem('token');
 
-    if (busqueda) {
-        url.searchParams.append("busqueda", busqueda);
+    if (mes !== null && anio !== null) {
+        url.searchParams.append("mes", mes);
+        url.searchParams.append("anio", anio);
     }
 
     fetch(url, {
@@ -24,11 +34,12 @@ export function cargarMetas(busqueda = '') {
     .then(data => {
         
         const metasLista = document.getElementById('metas-lista');
+        if (!metasLista) return;
         metasLista.innerHTML = ''; // Limpiar la lista antes de cargar nuevas metas
         const metas = data.metas || []; // Asegurarse de que metas sea un array
         metas.sort((a, b) => {
-            const gananciaA = a.ganancia || 0;
-            const gananciaB = b.ganancia || 0;
+            const gananciaA = Number(a.ganancia_gerente) || 0;
+            const gananciaB = Number(b.ganancia_gerente) || 0;
             return gananciaB - gananciaA; // Orden descendente
         });
         
@@ -60,7 +71,7 @@ export function cargarMetas(busqueda = '') {
                     }
                 </td>
                 <td class="ganancia">
-                    ${meta.ganancia ? meta.ganancia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : 'Sin ganancia'}
+                    ${(meta.ganancia_gerente !== undefined && meta.ganancia_gerente !== null) ? Number(meta.ganancia_gerente).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : 'Sin ganancia'}
                 </td>
             `;
             metasLista.appendChild(row);

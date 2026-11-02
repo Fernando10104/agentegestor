@@ -12,6 +12,7 @@ import {mostrarGestionImport} from "./com_admin/importacion.js";
 import{svg_importar} from "./../src/svg/svg.js";
 import {mostrarMenuBackup} from './com_admin/backup.js';
 import { mascaraFecha, fechaValida, primerDiaMesFormateado, hoyFormateado } from "./componentes/mascaraFecha.js";
+import { mostrarAsistenciasGlobales } from "./com_admin/asistencias_global.js";
 
 window.mascaraFecha = mascaraFecha;
 
@@ -31,6 +32,7 @@ window.mostrarGestionMarcas = mostrarGestionMarcas;
 window.mostrarGestionMetas = mostrarGestionMetas;
 window.mostrarGestionImport = mostrarGestionImport;
 window.mostrarMenuBackup = mostrarMenuBackup;
+window.mostrarAsistenciasGlobales = mostrarAsistenciasGlobales;
 
 window.cerrarSesion = cerrarSesion;
 window.svg_importar = svg_importar;
@@ -59,6 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "/supervisores.html";
       } else if (payload.rol === "asesor" || payload.rol === "Asesor") {
         window.location.href = "/asesores.html";
+      } else if (payload.rol === "gerente") {
+        window.location.href = "/gerente.html";
+      } else if (payload.rol === "administrativa") {
+        window.location.href = "/administrativa.html";
       }
     } catch (e) {
       console.error("Token inválido", e);
