@@ -148,6 +148,7 @@ export function mostrarGestionMetas(){
                                 <th>usuario</th>
                                 <th>Nombre usuario</th>
                                 <th>Meta lograda</th>
+                                <th>Carpetas</th>
 
                             </tr>
                         </thead>
@@ -163,6 +164,10 @@ export function mostrarGestionMetas(){
                     <div class="total-comisiones-grupo" style="margin-top: 20px;">
                         <strong>TOTAL DESEMBOLSADO DEL GRUPO:</strong>
                         <span id="total-comisiones-grupo">0</span>
+                    </div>
+                    <div class="total-carpetas-grupo" style="margin-top: 10px;">
+                        <strong>TOTAL CARPETAS DEL GRUPO:</strong>
+                        <span id="total-carpetas-grupo">0</span>
                     </div>
                 </div>
             </div>

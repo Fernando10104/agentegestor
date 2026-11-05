@@ -296,23 +296,36 @@ export async function cargarListaUsuariosporGrupoId(grupoId, mes, anio) {
         }
         const data = await response.json();
 
+        const conteoPorAsesor = {};
+        (data.comisiones || []).forEach(c => {
+            const key = String(c.asesor);
+            conteoPorAsesor[key] = (conteoPorAsesor[key] || 0) + 1;
+        });
+
         // Mostrar usuarios en la tabla
         const usuariosLista = document.getElementById('usuarios-lista');
         if (usuariosLista) {
             usuariosLista.innerHTML = '';
             (data.usuarios || []).forEach(usuario => {
+                const carpetas = conteoPorAsesor[String(usuario.id_usuario)] || 0;
+                const totalComision = Number(usuario.total_comision || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${usuario.usuario}</td>
                     <td>${usuario.nombre}</td>
-                    <td>${usuario.total_comision}</td>
+                    <td>${totalComision}</td>
+                    <td>${carpetas}</td>
                 `;
                 usuariosLista.appendChild(row);
             });
         }
         const totalComisionesGrupo = document.getElementById('total-comisiones-grupo');
         if (totalComisionesGrupo) {
-            totalComisionesGrupo.textContent = data.suma_comision_asesor_grupal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") || 0;
+            totalComisionesGrupo.textContent = Number(data.suma_comision_asesor_grupal || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        const totalCarpetasGrupo = document.getElementById('total-carpetas-grupo');
+        if (totalCarpetasGrupo) {
+            totalCarpetasGrupo.textContent = (data.comisiones || []).length;
         }
 
         return data;
