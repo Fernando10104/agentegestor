@@ -1,5 +1,6 @@
 // inicio dela pagina de asesores y supervisores.
 import { API_BASE_URL } from './config.js';
+import "./componentes/notificaciones.js";
 import {SVG_EDITAR,SVG_ELIMINAR} from "../src/svg/svg.js";
 //../js_empleados/
 import { mostrarInicio } from "../js_empleados/asesores/inicio/inicio.js";

@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './config.js';
+import "./componentes/notificaciones.js";
 import { verificarToken } from "./componentes/verificarToken.js";
 import { cerrarSesion, marcarSalida } from "./componentes/cerrarSesion.js";
 import { actualizarFechaHoraParaguay } from "./componentes/Fechahora.js";

@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './config.js';
+import "./componentes/notificaciones.js";
 import {SVG_EDITAR,SVG_ELIMINAR} from "../src/svg/svg.js";
 
 import { mostrarInicio } from "./componentes/inicio.js";
