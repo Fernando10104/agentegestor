@@ -1,7 +1,6 @@
 # README — Cambios aplicados
 
 Fecha: 06/09/2026
-Ruta web: `C:\evolucionpy\agentegestor\docs`
 
 ## Problema
 
