@@ -1,0 +1,11 @@
+﻿sistema_api.py
+.env
+*.pyc
+__pycache__/
+.env.local
+credentials.json
+seguimiento_estado_vigilancia.json
+logs/
+*.log
+session-ses_e7da.md
+entrega_cliente/

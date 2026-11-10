@@ -13,8 +13,33 @@ export function mostrarGestionMetas(){
         <div class="menu-metas" style="display: flex; gap: 20px;">
             <div class="contenedor-metas">  
 
-                <div class="header">
+                <div class="header" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
                     <h1>Gestión de Metas</h1>
+                    <div class="filtro-periodo-metas" style="display: flex; gap: 8px; align-items: center;">
+                        <label for="mesSelect_tabla_metas">Mes</label>
+                        <select id="mesSelect_tabla_metas">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                        <label for="anioSelect_tabla_metas">Año</label>
+                        <select id="anioSelect_tabla_metas">
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="table-responsive table-responsive-hijo">
                     <table id="tabla-metas">
@@ -122,6 +147,7 @@ export function mostrarGestionMetas(){
                                 <th>usuario</th>
                                 <th>Nombre usuario</th>
                                 <th>Meta lograda</th>
+                                <th>Carpetas</th>
 
                             </tr>
                         </thead>
@@ -137,6 +163,10 @@ export function mostrarGestionMetas(){
                     <div class="total-comisiones-grupo" style="margin-top: 20px;">
                         <strong>TOTAL DESEMBOLSADO DEL GRUPO:</strong>
                         <span id="total-comisiones-grupo">0</span>
+                    </div>
+                    <div class="total-carpetas-grupo" style="margin-top: 10px;">
+                        <strong>TOTAL CARPETAS DEL GRUPO:</strong>
+                        <span id="total-carpetas-grupo">0</span>
                     </div>
                 </div>
             </div>
@@ -238,11 +268,35 @@ export function mostrarGestionMetas(){
     const grupoSelect = document.getElementById('grupo-select');
     const mesSelect = document.getElementById('mesSelect_metas');
     const anioSelect = document.getElementById('anioSelect_metas');
+
+    const mesTablaSelect = document.getElementById('mesSelect_tabla_metas');
+    const anioTablaSelect = document.getElementById('anioSelect_tabla_metas');
+    const hoy = new Date();
+    const mesActual = String(hoy.getMonth() + 1);
+    const anioActual = String(hoy.getFullYear());
+    if (![...anioTablaSelect.options].some(o => o.value === anioActual)) {
+        const opt = document.createElement('option');
+        opt.value = anioActual;
+        opt.textContent = anioActual;
+        anioTablaSelect.appendChild(opt);
+    }
+    mesTablaSelect.value = mesActual;
+    anioTablaSelect.value = anioActual;
+    mesSelect.value = mesActual;
+    anioSelect.value = anioActual;
+
     grupoSelect.addEventListener('change', cambiarGrupos_metas);
     mesSelect.addEventListener('change', cambiarGrupos_metas);
     anioSelect.addEventListener('change', cambiarGrupos_metas);
 
-   cargarMetas();
+    function recargarTablaMetas() {
+        cargarMetas(mesTablaSelect.value, anioTablaSelect.value);
+    }
+
+    mesTablaSelect.addEventListener('change', recargarTablaMetas);
+    anioTablaSelect.addEventListener('change', recargarTablaMetas);
+
+    recargarTablaMetas();
 
 
     function mostrarModalEditarMeta(idMeta) {

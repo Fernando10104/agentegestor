@@ -131,14 +131,22 @@ export async function mostrarEditarUsuario(id) {
                     <select id="rol-editar" >
                         <option value="admin">Admin</option>
                         <option value="gerente">Gerente</option>
+                        <option value="administrativa">Administrativa</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="grupo-superior-editar">
                     <label for="supervisor-editar">ID Supervisor</label>
                     <input type="number" id="supervisor-editar" value="" />
+                </div>
+
+                <div class="form-group" id="grupo-gerente-superior-editar" style="display:none;">
+                    <label for="gerente-superior-editar">Gerente Superior *</label>
+                    <select id="gerente-superior-editar">
+                        <option value="">Seleccionar gerente</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="correo-editar">Correo Electrónico *</label>
@@ -173,6 +181,18 @@ export async function mostrarEditarUsuario(id) {
         
         // Cargar grupos primero y luego los datos del usuario
         await cargarGruposEnSelect();
+        await cargarGerentesEnSelect('gerente-superior-editar');
+
+        const selectRolEditar = document.getElementById('rol-editar');
+        const grupoSuperiorEditar = document.getElementById('grupo-superior-editar');
+        const grupoGerenteSuperiorEditar = document.getElementById('grupo-gerente-superior-editar');
+
+        selectRolEditar.addEventListener('change', function() {
+            const esAdministrativa = this.value === 'administrativa';
+            grupoSuperiorEditar.style.display = esAdministrativa ? 'none' : 'block';
+            grupoGerenteSuperiorEditar.style.display = esAdministrativa ? 'block' : 'none';
+        });
+
         BuscarUsuarioPorId(id);
     }
 }
@@ -204,7 +224,22 @@ export function BuscarUsuarioPorId(id) {
         document.getElementById('ci-editar').value = usuario.usuario || '';
         document.getElementById('telefono-editar').value = usuario.telefono || '';
         document.getElementById('rol-editar').value = usuario.rol || '';
-        document.getElementById('supervisor-editar').value = usuario.superior || '';
+
+        const esAdministrativa = (usuario.rol || '') === 'administrativa';
+        const grupoSuperiorEditar = document.getElementById('grupo-superior-editar');
+        const grupoGerenteSuperiorEditar = document.getElementById('grupo-gerente-superior-editar');
+        if (grupoSuperiorEditar && grupoGerenteSuperiorEditar) {
+            grupoSuperiorEditar.style.display = esAdministrativa ? 'none' : 'block';
+            grupoGerenteSuperiorEditar.style.display = esAdministrativa ? 'block' : 'none';
+        }
+
+        if (esAdministrativa) {
+            const selectGerenteEditar = document.getElementById('gerente-superior-editar');
+            if (selectGerenteEditar) selectGerenteEditar.value = usuario.superior || '';
+        } else {
+            document.getElementById('supervisor-editar').value = usuario.superior || '';
+        }
+
         document.getElementById('correo-editar').value = usuario.correo || '';
         document.getElementById('password-editar').value = ''; // No llenar la contraseña por seguridad
         document.getElementById('estado-editar').value = usuario.estado || '';
@@ -232,6 +267,7 @@ export function guardarEditarUsuario(id_usuario) {
     const telefono = document.getElementById('telefono-editar').value;
     const rol = document.getElementById('rol-editar').value;
     const supervisor = document.getElementById('supervisor-editar').value;
+    const gerenteSuperior = document.getElementById('gerente-superior-editar')?.value || '';
     const correo = document.getElementById('correo-editar').value;
     const password = document.getElementById('password-editar').value;
     const grupo = document.getElementById('grupos-editar').value; // Agregar grupo
@@ -246,12 +282,21 @@ export function guardarEditarUsuario(id_usuario) {
         usuario: ci,
         password: password,
         rol: rol,
-        superior: supervisor,
         telefono: telefono,
         correo: correo,
         id_grupo: grupo, // Agregar grupo a los datos
         estado: estado // Agregar estado a los datos
     };
+
+    if (rol === 'administrativa') {
+        if (!gerenteSuperior) {
+            showDialog('error', 'Debe seleccionar el gerente superior de la administrativa');
+            return;
+        }
+        datos.superior = gerenteSuperior;
+    } else if (supervisor !== '' && supervisor !== null && supervisor !== undefined) {
+        datos.superior = supervisor;
+    }
 
     // Agregar fecha de ingreso solo si se proporcionó
     if (fechaIngreso) {
@@ -293,6 +338,7 @@ export function CrearUsuario(){
         const telefono = document.getElementById('telefono').value;
         const rol = document.getElementById('rol').value;
         const supervisor = document.getElementById('supervisor').value;
+        const gerenteSuperior = document.getElementById('gerente-superior')?.value || '';
         const correo = document.getElementById('correo').value;
         const password = document.getElementById('password').value;
         const fechaIngreso = document.getElementById('fecha-ingreso').value;
@@ -305,10 +351,20 @@ export function CrearUsuario(){
             usuario: ci,
             password: password,
             rol: rol,
-            superior: supervisor,
             telefono: telefono,
             correo: correo,
         };
+
+        // superior solo se envía si tiene valor (para roles que lo requieren)
+        if (rol === 'administrativa') {
+            if (!gerenteSuperior) {
+                showDialog('error', 'Debe seleccionar el gerente superior de la administrativa');
+                return;
+            }
+            datos.superior = gerenteSuperior;
+        } else if (supervisor !== '' && supervisor !== null && supervisor !== undefined) {
+            datos.superior = supervisor;
+        }
 
         // Agregar fecha de ingreso solo si se proporcionó (si no, el backend pone la fecha actual)
         if (fechaIngreso) {
@@ -529,6 +585,36 @@ export function cargarAsistencias(usuario, fechaInicio = null, fechaFin = null) 
         console.error('Error al cargar asistencias:', error);
         throw error;
     });
+}
+
+export async function cargarGerentesEnSelect(selectId) {
+    const url = new URL(`${API_BASE_URL}/usuarios`);
+    const token = localStorage.getItem('token');
+    url.searchParams.append("rol_select", "gerente");
+
+    try {
+        const response = await fetch(url, {
+            headers: { Authorization: "Bearer " + token },
+        });
+        if (!response.ok) {
+            throw new Error('Error al cargar gerentes');
+        }
+        const data = await response.json();
+        const select = document.getElementById(selectId);
+        if (!select) return;
+
+        select.innerHTML = '<option value="">Seleccionar gerente</option>';
+        (data.usuarios || []).forEach(g => {
+            const option = document.createElement('option');
+            option.value = g[0];
+            option.textContent = `${g[0]} - ${g[7] || ''}`;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error al cargar gerentes en select:', error);
+        const select = document.getElementById(selectId);
+        if (select) select.innerHTML = '<option value="">Error al cargar gerentes</option>';
+    }
 }
 
 export async function obtenerGrupos(){

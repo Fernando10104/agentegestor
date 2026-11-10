@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './config.js';
+import "./componentes/notificaciones.js";
 import {SVG_EDITAR,SVG_ELIMINAR} from "../src/svg/svg.js";
 
 import { mostrarInicio } from "./componentes/inicio.js";
@@ -6,7 +7,7 @@ import { mostrarHistorial } from "./componentes/historial.js";
 import { mostrarCreditos } from "./componentes/operaciones.js";
 import { mostrarComisiones } from "./componentes/comisiones.js";
 import { verificarToken } from "./componentes/verificarToken.js";
-import {cerrarSesion} from "./componentes/cerrarSesion.js";
+import {cerrarSesion, marcarSalida} from "./componentes/cerrarSesion.js";
 //import { mostrarConfiguracion } from "./componentes/configuracion.js"; 
 import {actualizarFechaHoraParaguay} from "./componentes/Fechahora.js";
 import 
@@ -37,6 +38,7 @@ window.mostrarHistorial = mostrarHistorial;
 window.mostrarCreditos = mostrarCreditos;
 window.mostrarComisiones = mostrarComisiones;
 window.cerrarSesion = cerrarSesion;
+window.marcarSalida = marcarSalida;
 window.showDialog = showDialog;
 
 // Función para redirigir a la página de administración según el rol
@@ -55,6 +57,8 @@ window.redirigirAdministracion = function() {
             window.location.href = "admin.html";
         } else if (rol === "gerente" || rol === "Gerente") {
             window.location.href = "gerente.html";
+        } else if (rol === "administrativa" || rol === "Administrativa") {
+            window.location.href = "administrativa.html";
         } else {
             // Si no es admin ni gerente, redirigir a admin por defecto o mostrar mensaje
             
@@ -83,6 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = "/supervisores.html";
         } else if (payload.rol === "gerente") {
             // Permitir acceso, no hacer nada
+        } else if (payload.rol === "administrativa") {
+            window.location.href = "/administrativa.html";
         } else {
             window.location.href = "/asesores.html";
         }
@@ -180,6 +186,7 @@ function marcarEntrada() {
             console.log("Entrada marcada exitosamente");
             // Guardar la fecha de hoy en localStorage
             localStorage.setItem('entradaMarcada', fechaHoy);
+            localStorage.removeItem('salidaMarcada');
         }
     }).catch(err => console.error("Error enviando marcar entrada", err));
 }

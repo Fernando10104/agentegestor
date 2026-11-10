@@ -1,4 +1,4 @@
-import { CargarUsuarios,mostrarEditarUsuario,guardarEditarUsuario,CrearUsuario,EliminarUsuario,MostrarModalAsistencia,cargarAsistencias } from "../api_admin/usuario_api.js"; // ✅ Corregir path
+import { CargarUsuarios,mostrarEditarUsuario,guardarEditarUsuario,CrearUsuario,EliminarUsuario,MostrarModalAsistencia,cargarAsistencias,cargarGerentesEnSelect } from "../api_admin/usuario_api.js"; // ✅ Corregir path
 window.mostrarEditarUsuario = mostrarEditarUsuario;
 window.guardarEditarUsuario = guardarEditarUsuario;
 window.EliminarUsuario = EliminarUsuario;
@@ -21,6 +21,7 @@ export function mostrarGestionUsuario() {
                         <option value=>Todos</option>
                         <option value="admin">Admin</option>
                         <option value="gerente">Gerente</option>
+                        <option value="administrativa">Administrativa</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
@@ -96,14 +97,22 @@ export function mostrarGestionUsuario() {
                     <select id="rol" required>
                         <option value="admin">Admin</option>
                         <option value="gerente">Gerente</option>
+                        <option value="administrativa">Administrativa</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="asesor">Asesor</option>
                     </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="grupo-superior">
                     <label for="supervisor">ID Supervisor</label>
                     <input type="number" id="supervisor"  />
+                    </div>
+
+                    <div class="form-group" id="grupo-gerente-superior" style="display:none;">
+                    <label for="gerente-superior">Gerente Superior *</label>
+                    <select id="gerente-superior">
+                        <option value="">Seleccionar gerente</option>
+                    </select>
                     </div>
 
                     <div class="form-group">
@@ -147,6 +156,19 @@ export function mostrarGestionUsuario() {
     // Cargar usuarios al iniciar la página
     CargarUsuarios();
     CrearUsuario();
+
+    const selectRolCrear = document.getElementById('rol');
+    const grupoSuperior = document.getElementById('grupo-superior');
+    const grupoGerenteSuperior = document.getElementById('grupo-gerente-superior');
+
+    selectRolCrear.addEventListener('change', function() {
+        const esAdministrativa = this.value === 'administrativa';
+        grupoSuperior.style.display = esAdministrativa ? 'none' : 'block';
+        grupoGerenteSuperior.style.display = esAdministrativa ? 'block' : 'none';
+        if (esAdministrativa) {
+            cargarGerentesEnSelect('gerente-superior');
+        }
+    });
 
     const tbody = document.getElementById("tabla-usuarios");
 

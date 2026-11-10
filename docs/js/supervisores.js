@@ -1,5 +1,6 @@
 // inicio dela pagina de asesores y supervisores.
 import { API_BASE_URL } from './config.js';
+import "./componentes/notificaciones.js";
 import {SVG_EDITAR,SVG_ELIMINAR} from "../src/svg/svg.js";
 //../js_empleados/
 import { mostrarInicio } from "../js_empleados/supervisores/inicio/inicio.js";
@@ -7,7 +8,7 @@ import { mostrarHistorial } from "../js_empleados/supervisores/historial/histori
 import { mostrarCreditos } from "../js_empleados/supervisores/operaciones/operaciones.js";
 import { mostrarComisiones } from "../js_empleados/supervisores/comisiones/comisiones.js";
 import { verificarToken } from "./componentes/verificarToken.js";
-import {cerrarSesion} from "./componentes/cerrarSesion.js";
+import {cerrarSesion, marcarSalida} from "./componentes/cerrarSesion.js";
 import {actualizarFechaHoraParaguay} from "./componentes/Fechahora.js";
 import {mostrarDashboardIngresos} from "../js_empleados/supervisores/administracion/administracion.js"
 import 
@@ -38,6 +39,7 @@ window.mostrarHistorial = mostrarHistorial;
 window.mostrarCreditos = mostrarCreditos;
 window.mostrarComisiones = mostrarComisiones;
 window.cerrarSesion = cerrarSesion;
+window.marcarSalida = marcarSalida;
 window.showDialog = showDialog;
 
 window.API_BASE_URL = API_BASE_URL;
@@ -134,6 +136,7 @@ function marcarEntrada() {
             console.log("Entrada marcada exitosamente");
             // Guardar la fecha de hoy en localStorage
             localStorage.setItem('entradaMarcada', fechaHoy);
+            localStorage.removeItem('salidaMarcada');
         }
     }).catch(err => console.error("Error enviando marcar entrada", err));
 }

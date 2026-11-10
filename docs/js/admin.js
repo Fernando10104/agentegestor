@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './config.js';
+import "./componentes/notificaciones.js";
 import { verificarToken } from "./componentes/verificarToken.js";
 import { cerrarSesion } from "./componentes/cerrarSesion.js";
 import { actualizarFechaHoraParaguay } from "./componentes/Fechahora.js";
@@ -12,6 +13,8 @@ import {mostrarGestionImport} from "./com_admin/importacion.js";
 import{svg_importar} from "./../src/svg/svg.js";
 import {mostrarMenuBackup} from './com_admin/backup.js';
 import { mascaraFecha, fechaValida, primerDiaMesFormateado, hoyFormateado } from "./componentes/mascaraFecha.js";
+import { mostrarAsistenciasGlobales } from "./com_admin/asistencias_global.js";
+import { mostrarGestionNotificaciones } from "./com_admin/notificaciones.js";
 
 window.mascaraFecha = mascaraFecha;
 
@@ -31,6 +34,8 @@ window.mostrarGestionMarcas = mostrarGestionMarcas;
 window.mostrarGestionMetas = mostrarGestionMetas;
 window.mostrarGestionImport = mostrarGestionImport;
 window.mostrarMenuBackup = mostrarMenuBackup;
+window.mostrarAsistenciasGlobales = mostrarAsistenciasGlobales;
+window.mostrarGestionNotificaciones = mostrarGestionNotificaciones;
 
 window.cerrarSesion = cerrarSesion;
 window.svg_importar = svg_importar;
@@ -59,6 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "/supervisores.html";
       } else if (payload.rol === "asesor" || payload.rol === "Asesor") {
         window.location.href = "/asesores.html";
+      } else if (payload.rol === "gerente") {
+        window.location.href = "/gerente.html";
+      } else if (payload.rol === "administrativa") {
+        window.location.href = "/administrativa.html";
       }
     } catch (e) {
       console.error("Token inválido", e);

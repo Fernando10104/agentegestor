@@ -107,6 +107,8 @@ document.getElementById("login-form").addEventListener("submit", async function 
             }else if(rol === "gerente" || rol === "Gerente"){
                 window.location.href = "/index.html";
                 //window.location.href = "/agentegestor/asesores.html";
+            }else if(rol === "administrativa" || rol === "Administrativa"){
+                window.location.href = "/administrativa.html";
             }
             
             
